@@ -6,54 +6,35 @@ import { HeightMapTerrainConfig } from "@/terrains/model/heightmapterrcfg";
 import { TDimension, TRange } from "@/common/types";
 import { XText } from "@/radix/data/xtext";
 import { TextStyle } from "@/radix/rdxtheme";
-import { TextureConfig } from "@/terrains/model/textureconfig";
-import { Terrains3dConfig } from "../terrains3dcfg";
-import { InputColor, InputColorRef } from "@/radix/input/inpcolor";
-import { genTextureFromHeightmap } from "@/terrains/functions/generatortexture";
-import { ColorRamp } from "@/terrains/model/colorramp";
-
 import { RangeConfig } from "@/common/rangeconfig";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { FtRangesColor } from "@/radix/future/ftrangescolor";
+import { Terrains3dConfig } from "src/app/terrains/terrains3dcfg";
+import { genTextureFromHeightmap } from "@/terrains/functions/generatortexture";
 
 
-const colorRangesConfig:RangeConfig = new RangeConfig({min:0,max:100},50,1);
 
+const colorRangesCfg:RangeConfig = new RangeConfig({min:0,max:100},50,1);
+
+const listColors:string[] = [
+    'rgb(250,202,139)',
+    'rgb( 26,175, 88)',
+    'rgb(149, 95, 24)'
+];
+//    'rgb( 47, 30,  7)',
 
 interface TextureEditorProps {
     terrainConfig: HeightMapTerrainConfig;
-    textColorCfg: TextureConfig;
     imagedimension: TDimension;
     imagedata: ImageData | null;
     onCreatedTextureColor: (imgColorData: ImageData) => void;
 };
-export function TextureEditor({ terrainConfig, 
-                                imagedimension, imagedata,
-                                textColorCfg, onCreatedTextureColor}: TextureEditorProps) {
+export function TextureEditor({ terrainConfig,imagedimension, imagedata,
+                                onCreatedTextureColor}: TextureEditorProps) {
 
-    const [coloRangesBias, setcoloRangesBias] = useState<number>(textColorCfg.bias);
-    const [colorRanges, setcolorRanges] = useState<any[]>(
-        [
-            textColorCfg.rampcolor.start,
-            textColorCfg.rampcolor.middle,
-            textColorCfg.rampcolor.end
-        ]
-    );
+    const [rangeBias, setRangeBias] = useState<number[]>([]);
 
-    const colorsRef = useRef<Array<React.RefObject<InputColorRef | null>>>([]);
-    if (colorsRef.current.length === 0) {
-        colorsRef.current = [
-            React.createRef<InputColorRef>(),
-            React.createRef<InputColorRef>(),
-            React.createRef<InputColorRef>()
-        ];
-    }
 
-    const listColors:string[] = [
-        textColorCfg.rampcolor.start,
-        textColorCfg.rampcolor.middle,
-        textColorCfg.rampcolor.end
-    ];
 
     useEffect(() => { 
         if(imagedata){
@@ -63,20 +44,21 @@ export function TextureEditor({ terrainConfig,
 
     const genTextureColor = () => {
         const colorBack:string= Terrains3dConfig.WATER_COLOR;
-        const colorRamp:ColorRamp 
-            = new ColorRamp(colorRanges[0],colorRanges[1],colorRanges[2]);    
+    
         const colorImageData:ImageData 
-            = genTextureFromHeightmap(imagedata!,colorRamp,coloRangesBias,colorBack);
+            = genTextureFromHeightmap(imagedata!,listColors,0.5,colorBack);
         onCreatedTextureColor(colorImageData);
     };
 
     const onColorChange = (id:string,rgbcolor:string) => {
        
+        /*
         const newColors: any[] = [...colorRanges];
         if (id === '0') { newColors[0] = rgbcolor; }
         else if (id === '1') { newColors[1] = rgbcolor; }
         else if (id === '2') { newColors[2] = rgbcolor; }
         setcolorRanges(newColors);
+        */
     };
 
     const onRangesChanges = (colors: string[], biases: number[]) => {
@@ -85,32 +67,13 @@ export function TextureEditor({ terrainConfig,
 
 
     return (
-        <Flex width="100%" direction="column" >
+        <Flex width="100%" direction="column" gapY="2">
             <Box>
                 <XText value="Texture Editor" style={TextStyle.ST_CONT_HEADER_COLOR} />
             </Box>
-            <Grid columns="25% 25% 25%" gapX="2" >
-
-                <Box gridRow="1" gridColumn="1">
-                    <InputColor id="0" ref={colorsRef.current[0]} label="start"
-                                colorinit={colorRanges[0]} onchange={onColorChange} />
-                </Box>
-
-                <Box gridRow="1" gridColumn="2">
-                    <InputColor id="1" ref={colorsRef.current[1]} label="middle"
-                                colorinit={colorRanges[1]} onchange={onColorChange} />
-                </Box>
-
-                <Box gridRow="1" gridColumn="3">
-                    <InputColor id="2" ref={colorsRef.current[2]} label="end"
-                                colorinit={colorRanges[2]} onchange={onColorChange} />
-                </Box>
-
-            </Grid>
 
             <Flex>
                 <FtRangesColor colorsinit={listColors} onchange={onRangesChanges} />                
-
             </Flex>
         </Flex>
     )

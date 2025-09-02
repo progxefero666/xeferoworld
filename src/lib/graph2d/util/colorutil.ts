@@ -26,9 +26,9 @@ export class ColorUtil {
             linear-gradient(red 0%, orange 25%, yellow 50%, green 75%, blue 100%);
     */
     public static getGradient(colors:string[],biases:number[]):string {
-        let data: string = 'colors[0] 0%,';
-        data += 'colors[1] 50%,';
-        data += 'colors[2] 100%,';
+        let data: string = colors[0] + ' 0%,';
+        data += (colors[1]+' 50%,');
+        data += (colors[2]+' 100%');
 
         const result:string = 'linear-gradient(to right, '.concat(data).concat(')');
         return result;

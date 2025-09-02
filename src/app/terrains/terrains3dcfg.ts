@@ -4,7 +4,7 @@ import { NumberParameter } from "@/common/numberparam";
 import { Option } from "@/common/option";
 import { TDimension, TRange } from "@/common/types";
 import { HeightMapTerrainConfig } from "@/terrains/model/heightmapterrcfg";
-import { TextureConfig } from "@/terrains/model/textureconfig";
+
 
 /**
  * class Terrains3dConfig.WATER_COLOR
@@ -81,6 +81,7 @@ export class Terrains3dConfig {
     // color material config    
     public static WATER_COLOR:string = 'rgb(0,0,255)';
     public static RANGES_BIAS:number = 0.5;
+    /*
     public static RANGES_COLOR_0:string = 'rgb(240,171,122)';
     public static RANGES_COLOR_1:string = 'rgb(55,150,0)';
     public static RANGES_COLOR_2:string = 'rgb(108,74,0)';
@@ -96,5 +97,6 @@ export class Terrains3dConfig {
         bias: Terrains3dConfig.RANGES_BIAS,
         scale: 100,
     };    
-    
+    */
+   
 };//end class

@@ -24,8 +24,6 @@ const dialogStyle: React.CSSProperties = {
     padding: '2px 0 2px 0'
 };
 
-
-
 const getColorBoxStyle = (color: string): CSSProperties => ({
     backgroundColor: color,
     border: '1px solid rgb(0, 0, 0)',
@@ -33,11 +31,8 @@ const getColorBoxStyle = (color: string): CSSProperties => ({
     transition: 'transform 0.2s ease',
 });
 
-const colorContStyle = {
-    border: '1px solid rgb(0, 0, 0)'
-};
 
-const slidersConfig = new RangeConfig({min:1,max:99},50,1);
+
 
 /**
  * jsx component for color ranges
@@ -48,14 +43,15 @@ interface FtRangesColorProps {
     onchange: (colors: string[], biases: number[]) => void;
 };
 
+const slidersConfig = new RangeConfig({min:1,max:99},50,1);
+
 export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
 
     const [selectedColorIndex, setSelectedColorIndex] = useState<number>(-1);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    const [tempColor, setTempColor] = useState<string>('');    
+    const [cromeColor, setCromeColor] = useState<string>('');    
     const [colors, setColors] = useState<string[]>(colorsinit);
     const [biases, setBiases] = useState<number[]>(new Array(colorsinit.length - 1).fill(50)); 
-
 
 
     const onHandlerElement = (newColors: string[], newBiases: number[]) => {
@@ -64,19 +60,19 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
 
     const handleColorClick = (index: number) => {
         setSelectedColorIndex(index);
-        setTempColor(colors[index]);
+        setCromeColor(colors[index]);
         setIsDialogOpen(true);
     };//end
 
     const handleColorChange = (color: any) => {
         const rgbColor = `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b})`;
-        setTempColor(rgbColor);
+        setCromeColor(rgbColor);
     };//end
 
     const handleColorConfirm = () => {
         if (selectedColorIndex >= 0) {
             const newColors = [...colors];
-            newColors[selectedColorIndex] = tempColor;
+            newColors[selectedColorIndex] = cromeColor;
             setColors(newColors);
             onHandlerElement(newColors, biases);
         }
@@ -87,7 +83,7 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
     const handleColorCancel = () => {
         setIsDialogOpen(false);
         setSelectedColorIndex(-1);
-        setTempColor('');
+        setCromeColor('');
     };//end
 
     const handleBiasChange = (sliderId: string,value:number) => {
@@ -99,68 +95,26 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
     };//end
 
     const getGradientColorStyle = (): CSSProperties => {
-        return {background:ColorUtil.getGradient(colors, biases)};
+        const rescolor:any = ColorUtil.getGradient(colors, biases);
+        return {background:rescolor};
     };//end
 
     // jsx render
     //.............................................................................
 
-    const renderColorSelector = () => {
-        return (
-            <Box>
-                <XText value="Colors" />
-                <Flex gap="2" mt="2" wrap="wrap">
-                    {colors.map((color, index) => (
-                        <Flex key={index} direction="column" align="center" gap="1">
-
-                            <Box width="auto" height="auto" style={colorContStyle}>
-                                <Box width="30px" height="30px"
-                                    style={getColorBoxStyle(color)}
-                                    onClick={() => handleColorClick(index)} />
-                            </Box>
-                            <Text size="1" >
-                                {index + 1}
-                            </Text>
-                        </Flex>
-                    ))}
-                </Flex>
-            </Box>            
-        )
-    };
-
-    const renderBiasControls = () => {
-        return (
-            <Flex direction="column" gapY="2">
-                <XText value="Bias Controls" />
-                
-                {biases.map((bias, index) => (
-                    <Flex key={index} direction="column" gapX="2" >
-                        <XText value={bias.toString()} />
-                        <SliderSimple
-                            id={index.toString()} 
-                            config={slidersConfig}
-                            onchange={handleBiasChange} />
-                    </Flex>
-                ))}
-            </Flex>     
-        )
-    };
-
     const renderCromePickerDlg = () => {
         return (
             <Dialog.Content style={dialogStyle}>
-                
-                <Dialog.Title>
+
+                <Dialog.Title>                    
                     <Text size={TextStyle.SIZE_TITLE_DIALOG}>
-                        Select Color {selectedColorIndex !== -1 ? selectedColorIndex + 1 : ''}
+                        Select Color {selectedColorIndex + 1}
                     </Text>
                 </Dialog.Title>
 
                 <Box mb="2">
-                    <ChromePicker
-                        color={tempColor}
-                        onChange={handleColorChange}
-                        disableAlpha={true}/>
+                    <ChromePicker color={cromeColor}
+                                  onChange={handleColorChange}/>
                 </Box>
 
                 <Flex width="100%" direction="row" justify="center" gap="2">
@@ -189,8 +143,19 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
 
             <Box width="100%" height="40px" style={getGradientColorStyle()} />
 
-            {renderColorSelector()}            
-            {renderBiasControls()}
+
+            {colors.map((color, index) => (
+                <Flex key={index} direction="row" width="auto" height="auto"                    
+                      gapX="2" style={{border:'1px solid rgb(0,0,0)'}}>
+
+                    <Box width="30px" height="30px"
+                        style={getColorBoxStyle(color)}
+                        onClick={() => handleColorClick(index)} />
+                    <SliderSimple id={index.toString()} 
+                                    config={slidersConfig}
+                                    onchange={handleBiasChange} />
+                </Flex>
+            ))} 
             
             <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 {renderCromePickerDlg()}
@@ -202,11 +167,24 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
 }//end
 
 /*
-position: 'relative' as React.CSSProperties["position"]
-useEffect(() => {
-    setColors(colorsinit);
-    // Reinicializar biases si el número de colores cambia, o ajustarlo si es necesario.
-    // Aquí asumimos que siempre queremos un bias por transición.
-    setBiases(new Array(colorsinit.length - 1).fill(0.5));
-}, [colorsinit]);
+            <Flex width="100%" direction="row" gapX="2">
+                {colors.map((color, index) => (
+                <Box key={index} width="auto" height="auto" 
+                     style={{border:'1px solid rgb(0, 0, 0)'}}>
+                    <Box width="30px" height="30px"
+                        style={getColorBoxStyle(color)}
+                        onClick={() => handleColorClick(index)} />
+                </Box>
+                ))}
+            </Flex> 
+
+            <Flex direction="column" gapY="2">                
+                {biases.map((bias, index) => (
+                    <Box key={index} width="auto" height="auto">
+                        <SliderSimple id={index.toString()} 
+                                      config={slidersConfig}
+                                      onchange={handleBiasChange} />
+                    </Box>
+                ))}
+            </Flex>   
 */
