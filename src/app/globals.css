@@ -1,0 +1,345 @@
+@import "tailwindcss";
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Fix cursor for interactive elements */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[type="button"]:not(:disabled),
+[type="submit"]:not(:disabled),
+[type="reset"]:not(:disabled),
+a[href],
+label[for],
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+select:not(:disabled),
+textarea:not(:disabled),
+.rt-Button:not([data-disabled="true"]),
+.rt-IconButton:not([data-disabled="true"]),
+.rt-Link[href],
+.rt-Checkbox:not([data-disabled="true"]),
+.rt-RadioGroupItem:not([data-disabled="true"]),
+.rt-Switch:not([data-disabled="true"]),
+.rt-SelectTrigger:not([data-disabled="true"]),
+.rt-Slider:not([data-disabled="true"]),
+.rt-TabsTrigger:not([data-disabled="true"]),
+.rt-AccordionTrigger:not([data-disabled="true"]),
+.rt-DialogTrigger:not([data-disabled="true"]),
+.rt-PopoverTrigger:not([data-disabled="true"]),
+.rt-HoverCardTrigger:not([data-disabled="true"]),
+.rt-TooltipTrigger:not([data-disabled="true"]),
+.rt-DropdownMenuTrigger:not([data-disabled="true"]),
+.rt-ContextMenuTrigger:not([data-disabled="true"]),
+.rt-ToggleGroupItem:not([data-disabled="true"]),
+.rt-SegmentedControlItem:not([data-disabled="true"]),
+.rt-MenubarTrigger:not([data-disabled="true"]),
+.rt-NavigationMenuTrigger:not([data-disabled="true"]),
+.rt-Card[role="button"]:not([data-disabled="true"]),
+.rt-CheckboxCards .rt-CheckboxCardsItem:not([data-disabled="true"]),
+.rt-RadioCards .rt-RadioCardsItem:not([data-disabled="true"]),
+[data-radix-collection-item]:not([data-disabled="true"]),
+.rt-BaseButton:not([data-disabled="true"]),
+.rt-BaseMenuTrigger:not([data-disabled="true"]),
+.rt-BaseMenuItem:not([data-disabled="true"]),
+.rt-BaseTabListTrigger:not([data-disabled="true"]) {
+    cursor: pointer !important;
+}
+
+/* Fix cursor for disabled elements */
+button:disabled,
+[role="button"][aria-disabled="true"],
+[type="button"]:disabled,
+[type="submit"]:disabled,
+[type="reset"]:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+.rt-Button[data-disabled="true"],
+.rt-IconButton[data-disabled="true"],
+.rt-Checkbox[data-disabled="true"],
+.rt-RadioGroupItem[data-disabled="true"],
+.rt-Switch[data-disabled="true"],
+.rt-SelectTrigger[data-disabled="true"],
+.rt-Slider[data-disabled="true"],
+.rt-TabsTrigger[data-disabled="true"],
+.rt-AccordionTrigger[data-disabled="true"],
+.rt-DialogTrigger[data-disabled="true"],
+.rt-PopoverTrigger[data-disabled="true"],
+.rt-HoverCardTrigger[data-disabled="true"],
+.rt-TooltipTrigger[data-disabled="true"],
+.rt-DropdownMenuTrigger[data-disabled="true"],
+.rt-ContextMenuTrigger[data-disabled="true"],
+.rt-ToggleGroupItem[data-disabled="true"],
+.rt-SegmentedControlItem[data-disabled="true"],
+.rt-MenubarTrigger[data-disabled="true"],
+.rt-NavigationMenuTrigger[data-disabled="true"],
+.rt-Card[data-disabled="true"],
+.rt-CheckboxCards .rt-CheckboxCardsItem[data-disabled="true"],
+.rt-RadioCards .rt-RadioCardsItem[data-disabled="true"],
+[data-radix-collection-item][data-disabled="true"],
+.rt-BaseButton[data-disabled="true"],
+.rt-BaseMenuTrigger[data-disabled="true"],
+.rt-BaseMenuItem[data-disabled="true"],
+.rt-BaseTabListTrigger[data-disabled="true"] {
+    cursor: not-allowed !important;
+}
+
+/* Special handling for sliders and range inputs */
+.rt-Slider:not([data-disabled="true"]) .rt-SliderThumb,
+.rt-Slider:not([data-disabled="true"]) .rt-SliderTrack,
+input[type="range"]:not(:disabled) {
+    cursor: grab !important;
+}
+
+.rt-Slider:not([data-disabled="true"]) .rt-SliderThumb:active,
+input[type="range"]:not(:disabled):active {
+    cursor: grabbing !important;
+}
+
+/* Links should have pointer cursor */
+a,
+.rt-Link {
+    cursor: pointer !important;
+}
+
+/* Text cursor for text inputs */
+input[type="text"]:not(:disabled),
+input[type="email"]:not(:disabled),
+input[type="password"]:not(:disabled),
+input[type="search"]:not(:disabled),
+input[type="url"]:not(:disabled),
+input[type="tel"]:not(:disabled),
+input[type="number"]:not(:disabled),
+textarea:not(:disabled),
+.rt-TextField:not([data-disabled="true"]) input,
+.rt-TextArea:not([data-disabled="true"]) textarea {
+    cursor: text !important;
+}
+
+.SeparatorRoot {
+	background-color: var(--violet-6);
+}
+.SeparatorRoot[data-orientation="horizontal"] {
+	height: 1px;
+	width: 100%;
+}
+.SeparatorRoot[data-orientation="vertical"] {
+	height: 100%;
+	width: 1px;
+}
+
+
+.CaretDown {
+    position: relative;
+    color: var(--accent-10);
+    top: 1px;
+    transition: transform 250ms ease;
+    margin-left: 3px;
+}
+
+.Arrow {
+    position: relative;
+    top: 70%;
+    background-color: var(--gray-2);
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    border-top-left-radius: 2px;
+}
+
+.NavigationMenuRoot {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 1;
+}
+
+.NavigationMenuViewport {
+    position: relative;
+    transform-origin: top center;
+    margin-top: 10px;
+    width: var(--radix-navigation-menu-viewport-width);
+    background-color: var(--gray-2);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+    height: var(--radix-navigation-menu-viewport-height);
+    transition: width, height, 300ms ease;
+}
+
+.NavigationMenuViewport[data-state='open'] {
+    animation: scaleIn 200ms ease;
+}
+
+.NavigationMenuViewport[data-state='closed'] {
+    animation: scaleOut 200ms ease;
+}
+
+.NavigationMenuList {
+    display: flex;
+    justify-content: center;
+    background-color: var(--gray-a3);
+    padding: 4px;
+    border-radius: 6px;
+    list-style: none;
+    box-shadow: 0 2px 10px var(--black-a7);
+    margin: 0;
+}
+
+.NavigationMenuTrigger_ButtonLook,
+.NavigationMenuLink_ButtonLook {
+    padding: 8px 12px;
+    outline: none;
+    user-select: none;
+    font-weight: 500;
+    line-height: 1;
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--gray-11);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.NavigationMenuTrigger_ButtonLook:focus,
+.NavigationMenuLink_ButtonLook:focus {
+    box-shadow: 0 0 0 2px var(--accent-7);
+}
+
+.NavigationMenuTrigger_ButtonLook:hover,
+.NavigationMenuLink_ButtonLook:hover {
+    background-color: var(--accent-a3);
+}
+
+.NavigationMenuTrigger_ButtonLook[data-state='open'] {
+    background-color: var(--accent-5);
+    color: var(--accent-11);
+}
+
+
+.NavigationMenuContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    animation-duration: 250ms;
+    animation-timing-function: ease;
+}
+
+.NavigationMenuContent[data-motion='from-start'] {
+    animation-name: enterFromLeft;
+}
+
+.NavigationMenuContent[data-motion='from-end'] {
+    animation-name: enterFromRight;
+}
+
+.NavigationMenuContent[data-motion='to-start'] {
+    animation-name: exitToLeft;
+}
+
+.NavigationMenuContent[data-motion='to-end'] {
+    animation-name: exitToRight;
+}
+
+.NavigationMenuTrigger_ButtonLook[data-state='open']>.CaretDown {
+    transform: rotate(-180deg);
+}
+
+.NavigationMenuIndicator {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 10px;
+    top: 100%;
+    overflow: hidden;
+    z-index: 1;
+    transition: width, transform 250ms ease;
+}
+
+.NavigationMenuIndicator[data-state='visible'] {
+    animation: fadeIn 200ms ease;
+}
+
+.NavigationMenuIndicator[data-state='hidden'] {
+    animation: fadeOut 200ms ease;
+}
+
+.ViewportPosition {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    perspective: 2000px;
+}
+
+.NavigationMenuViewport {
+    position: relative;
+    transform-origin: top center;
+    margin-top: 10px;
+    width: var(--radix-navigation-menu-viewport-width);
+    background-color: var(--gray-2);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+    height: var(--radix-navigation-menu-viewport-height);
+    transition: width, height, 300ms ease;
+}
+
+.NavigationMenuViewport[data-state='open'] {
+    animation: scaleIn 200ms ease;
+}
+
+.NavigationMenuViewport[data-state='closed'] {
+    animation: scaleOut 200ms ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: rotateX(-30deg) scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotateX(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleOut {
+    from {
+        transform: rotateX(0deg) scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: rotateX(-10deg) scale(0.95);
+        opacity: 0;
+    }
+}

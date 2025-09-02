@@ -1,0 +1,140 @@
+//src\radix\collection\tablecollection.tsx
+
+//src\radix\input\inptext.tsx
+
+import React from "react";
+import { Box, Button, Flex, ScrollArea, Table, Text } from "@radix-ui/themes";
+import { RdxThContainers } from "@/radix/rdxthcontainers";
+import { renderItemBarNoEdit } from "@/radix/renders/renderitembar";
+import { TIdNameDescription } from "src/radix/rdxtypes";
+import { TablesStyle } from "../rdxtheme";
+import { Tasktype } from "@/db/model/tasktype";
+import { OpConstants } from "@/common/constants";
+
+import { DlgBtnDeleteConfirm } from "../dialog/dlgbtndelete";
+import { FormNewTasktype } from "@/app/workflows_old/tasktypes/forms/formtasktype";
+import { ManagerTasktype } from "@/lib/workflows/mantasktypes";
+import { Collections } from "@/common/collections";
+import { XFormsUtils } from "@/lib/forms/xforms";
+import { LIB_ICON } from "@/radix/rdxthicons";
+
+
+
+// Después
+interface TableCollectionProps<T> {
+    elementsClassName: string;
+    collection: Array<T>;
+    execOperation: (operationId:string,itemId:string|null) => void;
+};
+export function TableCollection<T>({ elementsClassName,collection, execOperation }: TableCollectionProps<T>) {
+
+    const onSubmmitNewItem= (entity: Tasktype) => {
+        alert("New item submited.");
+        console.log(JSON.stringify(entity));
+    };//end
+ 
+    const onSubmmitUpdatedItem= (entity: Tasktype) => {
+        alert("Updated item submited.");
+        console.log(JSON.stringify(entity));
+    };//end
+     
+    const renderTable = () => {
+        return (
+            <Table.Root >
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeaderCell>
+                            <Text size={TablesStyle.HEADER_CELL_TEXT_SIZE} 
+                                color={TablesStyle.HEADER_CELL_TEXT_COLOR} >
+                                Order
+                            </Text>
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>
+                            <Text size={TablesStyle.HEADER_CELL_TEXT_SIZE} 
+                                color={TablesStyle.HEADER_CELL_TEXT_COLOR} >
+                                Name
+                            </Text>
+                        </Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>
+                            <Text size={TablesStyle.HEADER_CELL_TEXT_SIZE} 
+                                color={TablesStyle.HEADER_CELL_TEXT_COLOR} >
+                                Action
+                            </Text>
+                        </Table.ColumnHeaderCell>
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body style={{ width: "100%" }} >                    
+                    {collection.map((item, index) => {
+                        const typedItem = item as TIdNameDescription;
+                        return (
+                            <Table.Row key={index.toString()} align="center" >
+
+                                <Table.Cell width="auto" justify="center" >
+                                    <Text size={TablesStyle.CELL_TEXT_SIZE} 
+                                        color={TablesStyle.CELL_TEXT_COLOR} >
+                                        {index.toString()}
+                                    </Text>                                        
+                                </Table.Cell>
+
+                                <Table.Cell width="100%" justify="start" >       
+                                    <Text size={TablesStyle.CELL_TEXT_SIZE} 
+                                        color={TablesStyle.CELL_TEXT_COLOR} >
+                                        {typedItem.name} 
+                                    </Text> 
+                                </Table.Cell>
+
+                                <Table.Cell width="auto%">
+                                    <Flex width="auto" direction="row" align="center" gapX="1" >
+
+                                        {/* for: Tasktype class .................................... */} 
+                                        <FormEditTasktype 
+                                            icon={LIB_ICON.EDIT}
+                                            title={XFormsUtils.getFormUpdateElementTitle(elementsClassName)} 
+                                            entityinit={item as Tasktype} 
+                                            onsubmit={onSubmmitUpdatedItem} />
+                                        {/* ......................................................... */} 
+
+                                        {renderItemBarNoEdit(typedItem.id ,execOperation,true,true)}
+                                    </Flex>
+                                </Table.Cell>
+                                
+                            </Table.Row>
+                        );
+                    })}    
+                </Table.Body>                            
+            </Table.Root>
+        )
+    };//end
+
+    return (
+        <Flex width="100%" direction="column" px="2" py="1" mb="2" gapY="2" 
+              style={RdxThContainers.PRIMARY_CONTENT}>
+
+            <ScrollArea type="always" scrollbars="vertical"   
+                        style={{width: "100%", height: '500px',paddingRight: "10px"}}>
+                {renderTable()}
+            </ScrollArea>   
+
+            <Flex width="100%" direction="row" justify="center" gapX="2" py="2" 
+                            style={RdxThContainers.CRUD_BAR} >
+                
+                {/* for: Tasktype class .................................... */}                  
+                <FormNewTasktype text={OpConstants.OP_TEXT_ADD} 
+                                 icon={LIB_ICON.ADD}
+                                 title={XFormsUtils.getFormAddElementTitle(elementsClassName)} 
+                                 entityinit={ManagerTasktype.getNewItem()} 
+                                 onsubmit={onSubmmitNewItem} />
+                {/* ......................................................... */}  
+
+                <DlgBtnDeleteConfirm 
+                        icon={LIB_ICON.DELETE_ALL}
+                        text={OpConstants.OP_TEXT_DELETE_ALL}
+                        message={Collections.MSG_CONF_DELETE_ALL}
+                        title="Clear Operation"
+                        onconfirm={() => (execOperation(OpConstants.OP_DELETE_ALL,null))} />
+            </Flex>
+        </Flex>
+    )
+
+};//end component

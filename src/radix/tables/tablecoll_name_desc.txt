@@ -1,0 +1,81 @@
+//src\radix\collection\tablecollection.tsx
+
+//src\radix\input\inptext.tsx
+
+import React, { useState,useEffect, useRef, forwardRef } from "react";
+import { Box, Flex, ScrollArea, Table, TextField } from "@radix-ui/themes";
+import { SInput } from "@/radix/input/inpsimpletext";
+import { RdxThContainers } from "@/radix/rdxthcontainers";
+import { renderCollCrudBarButtons, renderItemBarDefault } from "@/radix/renders/renderitembar";
+import { TIdNameDescription } from "src/radix/rdxtypes";
+
+
+/**
+ * TableCollection<T>
+ * 
+ */
+export function TableCollection<T> (collection: Array<T>,
+                                    onRowOperation:(action:string, index: number) => void,
+                                    exeCrudCollOperation:(operationId:string, index?: number)=> void) {
+
+    const rowIndex:number = 0;
+    const rowModeEdition:boolean = false;
+
+    return (
+        <Flex width="100%" direction="column" px="2" py="1" mb="2" gapY="2" 
+              style={RdxThContainers.PRIMARY_CONTENT}>
+
+            <ScrollArea type="always" scrollbars="vertical"   
+                        style={{width: "100%", height: '500px',paddingRight: "10px"}}>
+            <Table.Root >
+                
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeaderCell>Order</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
+                        <Table.ColumnHeaderCell>Action</Table.ColumnHeaderCell>
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body style={{ width: "100%" }} >
+                    
+                       {collection.map((item, index) => {
+                            const typedItem = item as TIdNameDescription;
+                            return (
+                                <Table.Row key={index.toString()} align="center" >
+                                    <Table.Cell width="auto" justify="center" >
+                                        {index.toString()}
+                                    </Table.Cell>                        
+                                    <Table.Cell width="35%" justify="start" >                                    
+                                        <SInput name="name" 
+                                                value={typedItem.name} 
+                                                minlen={3} 
+                                                maxlen={50}
+                                                disabled={!(index===rowIndex && rowModeEdition)} />
+                                    </Table.Cell>                                
+                                    <Table.Cell width="65%" justify="start" >
+                                        <SInput name="description" 
+                                                value={typedItem.description} 
+                                                minlen={0} 
+                                                maxlen={100}
+                                                disabled={!(index===rowIndex && rowModeEdition)}  />                             
+                                    </Table.Cell>             
+                                    <Table.Cell width="auto%">
+                                        {renderItemBarDefault(index,rowIndex, 
+                                                             onRowOperation, 
+                                                             exeCrudCollOperation)}
+                                    </Table.Cell>
+                                </Table.Row>
+                            );
+                        })}    
+                                 
+                </Table.Body>
+                
+            </Table.Root>
+            </ScrollArea>   
+            {renderCollCrudBarButtons(exeCrudCollOperation)}
+        </Flex>
+    )
+
+};//end component
