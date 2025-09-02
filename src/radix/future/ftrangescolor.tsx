@@ -1,6 +1,7 @@
 //src\radix\future\ftrangescolor.tsx
-import React, { useRef, useState, forwardRef, useImperativeHandle, CSSProperties } from "react";
-import { Box, Flex, Text, Dialog,Button, IconButton } from "@radix-ui/themes"
+
+import React, { useState, CSSProperties, useEffect } from "react"; // Agregamos useEffect
+import { Box, Flex, Text, Dialog, Button } from "@radix-ui/themes"
 import ChromePicker from "react-color/lib/components/chrome/Chrome";
 
 import { ButtonsStyle, TextStyle } from '@/radix/rdxtheme';
@@ -25,24 +26,52 @@ const dialogStyle: React.CSSProperties = {
 // Función para generar el gradiente CSS
 const generateGradient = (colors: string[], biases: number[]): string => {
     if (colors.length < 2) return `linear-gradient(to right, ${colors[0] || 'rgb(255,255,255)'})`;
-    
+
     const stops: string[] = [];
-    const totalSegments = colors.length - 1;
-    
-    for (let i = 0; i < colors.length; i++) {
-        if (i === 0) {
-            stops.push(`${colors[i]} 0%`);
-        } else if (i === colors.length - 1) {
+    let currentPosition = 0;
+
+    // El primer color siempre comienza en 0%
+    stops.push(`${colors[0]} 0%`);
+
+    // Calcular las posiciones para los colores intermedios y el final
+    for (let i = 1; i < colors.length; i++) {
+        if (i === colors.length - 1) {
+            // El último color siempre termina en 100%
             stops.push(`${colors[i]} 100%`);
         } else {
-            // Calcular posición basada en bias acumulado
-            const position = (i / totalSegments) * 100;
-            const biasAdjustment = (biases[i - 1] - 0.5) * 20; // Ajuste del bias
-            const finalPosition = Math.max(0, Math.min(100, position + biasAdjustment));
-            stops.push(`${colors[i]} ${finalPosition}%`);
+            // El bias[i-1] controla la distribución del espacio entre color[i-1] y color[i]
+            // Acumulamos la influencia de los biases anteriores para posicionar el color actual
+            const segmentLength = 100 / (colors.length - 1); // Longitud base de cada segmento
+            const biasInfluence = (biases[i - 1] - 0.5) * segmentLength; // Ajuste basado en el bias
+            
+            // La posición real del color intermedio es un promedio entre su posición esperada
+            // y los ajustes de los biases vecinos.
+            // Una forma más robusta es que cada bias controle el punto donde termina el color anterior
+            // y empieza el actual.
+
+            // Simplificando: cada bias[j] controla la proporción de la distancia entre color[j] y color[j+1]
+            // Vamos a usar los biases para influir en la posición de inicio del siguiente color.
+            // Para N colores, tendremos N-1 transiciones y por lo tanto N-1 biases (o puntos de control).
+            // Sin embargo, tu UI parece tener un bias por color intermedio, lo que implicaría N-2 biases.
+            // Si el slider 'Bias N' afecta la transición entre Color N y Color N+1,
+            // entonces necesitamos N-1 biases.
+
+            // Vamos a ajustar la lógica para que 'biases[i-1]' influya en la posición
+            // del color 'i'.
+            const prevColorPosition = i === 1 ? 0 : parseFloat(stops[stops.length - 1].split(' ')[1].replace('%', ''));
+            const nextBasePosition = (i / (colors.length - 1)) * 100;
+
+            // Este es un enfoque para que cada bias controle el punto de transición.
+            // El primer bias controla la transición de color[0] a color[1], etc.
+            // Un valor de 0.5 significa el punto medio.
+            const transitionPoint = prevColorPosition + ((nextBasePosition - prevColorPosition) * biases[i - 1]);
+            
+            // Aseguramos que los puntos de transición estén ordenados y dentro de 0-100%
+            currentPosition = Math.max(currentPosition, Math.min(100, transitionPoint));
+            stops.push(`${colors[i]} ${currentPosition}%`);
         }
     }
-    
+
     return `linear-gradient(to right, ${stops.join(', ')})`;
 };
 
@@ -52,15 +81,28 @@ interface FtRangesColorProps {
 }
 
 export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
-    
+
     const [colors, setColors] = useState<string[]>(colorsinit);
-    const [biases, setBiases] = useState<number[]>(new Array(colorsinit.length).fill(0.5));
+    // Los biases ahora son para las N-1 transiciones entre N colores.
+    // Si tenemos 3 colores, tenemos 2 transiciones (color1-color2, color2-color3), por lo tanto 2 biases.
+    const [biases, setBiases] = useState<number[]>(new Array(colorsinit.length - 1).fill(0.5)); // Ajuste aquí
+
     const [selectedColorIndex, setSelectedColorIndex] = useState<number>(-1);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [tempColor, setTempColor] = useState<string>('');
 
-    // Crear configs para los sliders de bias
-    const biasConfigs = biases.map(() => new RangeConfig({ min: 0, max: 1 }, 0.5, 0.01));
+    /*
+    useEffect(() => {
+        setColors(colorsinit);
+        // Reinicializar biases si el número de colores cambia, o ajustarlo si es necesario.
+        // Aquí asumimos que siempre queremos un bias por transición.
+        setBiases(new Array(colorsinit.length - 1).fill(0.5));
+    }, [colorsinit]);
+    */
+
+    const biasConfigs = Array.from(
+        { length: biases.length }, 
+        () => new RangeConfig({ min: 0.01, max: 0.99 }, 0.5, 0.01));
 
     const onHandlerElement = (newColors: string[], newBiases: number[]) => {
         onchange(newColors, newBiases);
@@ -82,7 +124,7 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
             const newColors = [...colors];
             newColors[selectedColorIndex] = tempColor;
             setColors(newColors);
-            onHandlerElement(newColors, biases);
+            onHandlerElement(newColors, biases); // Asegúrate de pasar los biases actuales
         }
         setIsDialogOpen(false);
         setSelectedColorIndex(-1);
@@ -94,14 +136,15 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
         setTempColor('');
     };
 
-    const handleBiasChange = (biasIndex: string, value: number) => {
-        const index = parseInt(biasIndex);
+    const handleBiasChange = (biasId: string, value: number) => {
+        const index = parseInt(biasId); // El id del slider es su índice
         const newBiases = [...biases];
-        newBiases[index] = value;
-        setBiases(newBiases);
-        onHandlerElement(colors, newBiases);
+        if (index >= 0 && index < newBiases.length) {
+            newBiases[index] = value;
+            setBiases(newBiases);
+            onHandlerElement(colors, newBiases);
+        }
     };
-
 
     const getGradientStyle = (): CSSProperties => ({
         background: generateGradient(colors, biases),
@@ -120,9 +163,9 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
         <Flex width="100%" direction="column" gapY="2" >
             {/* <XText value="Color Range Preview" /> */}
             <Flex width="100%" direction="column">
-                
-                <Box width="100%" height="40px" 
-                     style={getGradientStyle()} />
+
+                <Box width="100%" height="40px"
+                    style={getGradientStyle()} />
             </Flex>
 
             {/* Selectores de colores */}
@@ -134,7 +177,7 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
 
                             <Box width="30px" height="30px"
                                 style={getColorBoxStyle(color)}
-                                onClick={() => handleColorClick(index)}/>
+                                onClick={() => handleColorClick(index)} />
 
                             <Text size="1" >
                                 {index + 1}
@@ -144,7 +187,7 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
                 </Flex>
             </Box>
 
-            {/* Controles de bias */}
+            {/* bias controls */}
             <Box>
                 <XText value="Bias Controls" />
                 <Flex direction="column" gap="2" mt="2">
@@ -154,47 +197,44 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
                                 Bias {index + 1}: {bias.toFixed(2)}
                             </Text>
                             <SliderSimple
-                                id={index.toString()}
+                                id={index.toString()} 
                                 config={biasConfigs[index]}
-                                onchange={handleBiasChange}/>
+                                onchange={handleBiasChange} />
                         </Box>
                     ))}
                 </Flex>
             </Box>
 
-            {/* Dialog para color picker */}
+            {/* cromepicker dialog */}
             <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <Dialog.Content style={dialogStyle}>
                     <Dialog.Title>
                         <Text size={TextStyle.SIZE_TITLE_DIALOG}>
-                            Select Color {selectedColorIndex + 1}
+                            Select Color {selectedColorIndex !== -1 ? selectedColorIndex + 1 : ''}
                         </Text>
                     </Dialog.Title>
-                    
+
                     <Box mt="3" mb="4">
-                        <ChromePicker 
-                            color={tempColor} 
+                        <ChromePicker
+                            color={tempColor}
                             onChange={handleColorChange}
-                            disableAlpha={true}
-                        />
+                            disableAlpha={true}/>
                     </Box>
 
                     <Flex width="100%" direction="row" justify="center" gap="2">
-                        <Button 
+                        <Button
                             type="submit"
                             color={ButtonsStyle.COLOR_SAVE}
                             size={ButtonsStyle.BUTTON_SIZE}
                             radius={ButtonsStyle.BUTTON_RADIUS}
-                            onClick={handleColorConfirm}
-                        >
+                            onClick={handleColorConfirm}>
                             {OpConstants.OP_TEXT_OK}
                         </Button>
-                        <Button 
+                        <Button
                             color={ButtonsStyle.COLOR_CANCEL}
-                            size={ButtonsStyle.BUTTON_SIZE} 
+                            size={ButtonsStyle.BUTTON_SIZE}
                             radius={ButtonsStyle.BUTTON_RADIUS}
-                            onClick={handleColorCancel}
-                        >
+                            onClick={handleColorCancel}>
                             {OpConstants.OP_TEXT_CANCEL}
                         </Button>
                     </Flex>
@@ -202,4 +242,5 @@ export function FtRangesColor({ colorsinit, onchange }: FtRangesColorProps) {
             </Dialog.Root>
         </Flex>
     );
-}
+
+}//end

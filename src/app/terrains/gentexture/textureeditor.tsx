@@ -109,7 +109,7 @@ export function TextureEditor({ terrainConfig,
             </Grid>
 
             <Flex>
-                <FtRangesColor colorsinit={[]} onchange={onRangesChanges} />                
+                <FtRangesColor colorsinit={listColors} onchange={onRangesChanges} />                
 
             </Flex>
         </Flex>
