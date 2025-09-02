@@ -5,19 +5,18 @@ import { TextureColorUtil } from "@/terrains/functions/texturecolorutil";
 import { ColorUtil } from "@/lib/graph2d/util/colorutil";
 
 
-/**
- * Generates a colored texture from a heightmap ImageData.
- * @param heightmap The source heightmap ImageData (grayscale).
- * @param colorRamp The color ramp with start, middle, and end colors, and a bias.
- * @param waterColorHex The hex color for water (areas of 0 height).
- * @returns A new ImageData object representing the colored texture.
+/*
+ Generates a colored texture from a heightmap ImageData.
+    - The heightmap is: 0=black=highest, 255=white=lowest
+    - normalize it to a 0-1 range where 0 is the start of land 
+      and 1 is the highest peak.
  */
-export function genTextureFromHeightmap(heightmap: ImageData,
-                                        colors: string[],
-                                        bias: number,
-                                        waterColorHex: string): ImageData {
+export function genTextureHeightmap(heightmap:ImageData,
+                                        backColor:string,
+                                        colors:string[],bias:number,
+                                        applyCoastalEff:boolean): ImageData {
     
-    const color_back:number[]  = ColorUtil.toRgbArray(waterColorHex);
+    const color_back:number[]  = ColorUtil.toRgbArray(backColor);
 
     const color_0:number[] = ColorUtil.toRgbArray(colors[0]);
     const color_1:number[] = ColorUtil.toRgbArray(colors[1]);
@@ -28,36 +27,32 @@ export function genTextureFromHeightmap(heightmap: ImageData,
     const textureData = new Uint8ClampedArray(width * height * 4);
 
     for (let i = 0; i < data.length; i += 4) {
-        // Height is stored in the R channel (it's grayscale)
+
         const heightValue = data[i];
         const pixelIndex = i;
 
-        // Pure white (255) in the heightmap is the lowest point (water)
+        // Pure white (255) --> back color
         if (heightValue === 255) {
             textureData[pixelIndex] = color_back[0];
             textureData[pixelIndex + 1] = color_back[1];
             textureData[pixelIndex + 2] = color_back[2];
             textureData[pixelIndex + 3] = 255;
         } else {
-            // The heightmap is: 0=black=highest, 255=white=lowest
-            // We normalize it to a 0-1 range where 0 is the start of land and 1 is the highest peak.
+
             // Use 254 to prevent full white from being land
             const normalizedHeight = (254 - heightValue) / 254.0; 
 
             let finalColor: number[];
-
             if (normalizedHeight <= bias) {
-                // Interpolate between start and middle
-                const factor = normalizedHeight / bias; // scale 0-bias range to 0-1
+                const factor = normalizedHeight / bias; 
                 finalColor = TextureColorUtil.getLerpColor(color_0, color_1, factor);
-            } else {
-                // Interpolate between middle and end
-                // scale bias-1 range to 0-1
+            } 
+            else {
                 const factor = (normalizedHeight - bias) / (1 - bias); 
                 finalColor = TextureColorUtil.getLerpColor(color_1, color_2, factor);
             }
 
-            textureData[pixelIndex] = finalColor[0];
+            textureData[pixelIndex]     = finalColor[0];
             textureData[pixelIndex + 1] = finalColor[1];
             textureData[pixelIndex + 2] = finalColor[2];
             textureData[pixelIndex + 3] = 255;
@@ -65,11 +60,8 @@ export function genTextureFromHeightmap(heightmap: ImageData,
     }
 
     const resImageData = new ImageData(textureData, width, height);
-
-    // Apply the coastal effect
     //const resImageDim:TDimension = {width:width,height:height};
     //TextureColorUtil.applyCoastalEffect(resImageDim,resImageData,waterColor,startColor,8);
-
     return resImageData;
 }//end 
 

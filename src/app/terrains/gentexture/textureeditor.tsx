@@ -10,7 +10,7 @@ import { RangeConfig } from "@/common/rangeconfig";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { FtRangesColor } from "@/radix/future/ftrangescolor";
 import { Terrains3dConfig } from "src/app/terrains/terrains3dcfg";
-import { genTextureFromHeightmap } from "@/terrains/functions/generatortexture";
+import { genTextureHeightmap } from "@/terrains/functions/generatortexture";
 
 
 
@@ -34,8 +34,6 @@ export function TextureEditor({ terrainConfig,imagedimension, imagedata,
 
     const [rangeBias, setRangeBias] = useState<number[]>([]);
 
-
-
     useEffect(() => { 
         if(imagedata){
             genTextureColor();
@@ -46,12 +44,11 @@ export function TextureEditor({ terrainConfig,imagedimension, imagedata,
         const colorBack:string= Terrains3dConfig.WATER_COLOR;
     
         const colorImageData:ImageData 
-            = genTextureFromHeightmap(imagedata!,listColors,0.5,colorBack);
+            = genTextureHeightmap(imagedata!,colorBack,listColors,0.5,false);
         onCreatedTextureColor(colorImageData);
     };
 
-    const onColorChange = (id:string,rgbcolor:string) => {
-       
+    const onColorChange = (id:string,rgbcolor:string) => {       
         /*
         const newColors: any[] = [...colorRanges];
         if (id === '0') { newColors[0] = rgbcolor; }
