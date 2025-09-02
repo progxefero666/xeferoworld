@@ -7,17 +7,18 @@ import ChromePicker from "react-color/lib/components/chrome/Chrome";
 import { ButtonsStyle, TextStyle } from '@/radix/rdxtheme';
 import { OpConstants } from "@/common/constants";
 import { XText } from "src/radix/data/xtext";
+import { ColorUtil } from "@/lib/graph2d/util/colorutil";
 
 
 export interface InputColorProps {
     id: string;
     label: string;
     colorinit: any;
-    onchange: (id:string,value:any) => void;
+    onchange: (id:string,rgbcolor:string) => void;
 };
 
 export interface InputColorRef {
-    changeValue: (newValue: number) => void;
+    changeValue: (newColor: string) => void;
 }
 
 export const InputColor = forwardRef<InputColorRef, InputColorProps>((props, ref) => {
@@ -32,10 +33,12 @@ export const InputColor = forwardRef<InputColorRef, InputColorProps>((props, ref
         changeValue,
     }), []);
 
-    //must be hexadecimal
+    //rgba
     const changeValue = (newColor: any) => {
-        setCurrentColor(newColor);
-        onchange(id, newColor);
+        const rgbcolor =ColorUtil.convertToStringRgb(newColor);//`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b}`;
+        console.log(rgbcolor); 
+        setCurrentColor(rgbcolor);
+        onchange(id, rgbcolor);
     };//end
 
     const showCromePicker = () =>{

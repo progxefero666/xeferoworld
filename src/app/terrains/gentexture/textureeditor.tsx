@@ -49,11 +49,11 @@ export function TextureEditor({ terrainConfig,
     }
 
     const listColors:string[] = [
-        '0',
-        '1',
-        '2'
+        textColorCfg.rampcolor.start,
+        textColorCfg.rampcolor.middle,
+        textColorCfg.rampcolor.end
     ];
-    
+
     useEffect(() => { 
         if(imagedata){
             genTextureColor();
@@ -69,12 +69,12 @@ export function TextureEditor({ terrainConfig,
         onCreatedTextureColor(colorImageData);
     };
 
-    const onColorChange = (id: string, value: any) => {
-        console.log(`Color for ${id}: ${value}`);
+    const onColorChange = (id:string,rgbcolor:string) => {
+       
         const newColors: any[] = [...colorRanges];
-        if (id === '0') { newColors[0] = value; }
-        else if (id === '1') { newColors[1] = value; }
-        else if (id === '2') { newColors[2] = value; }
+        if (id === '0') { newColors[0] = rgbcolor; }
+        else if (id === '1') { newColors[1] = rgbcolor; }
+        else if (id === '2') { newColors[2] = rgbcolor; }
         setcolorRanges(newColors);
     };
 

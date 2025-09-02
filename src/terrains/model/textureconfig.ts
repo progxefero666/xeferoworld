@@ -9,7 +9,7 @@ import { ColorRamp } from "@/terrains/model/colorramp";
 export class TextureConfig {
     
     public sideImage: number;
-    public backcolor: any = '#FFFFFF';
+    public backcolor: any = 'rgb(255, 255, 255)';
     public rampcolor: ColorRamp;
     public bias: number; // 0-1, midpoint for color transition
     public scale: number;
