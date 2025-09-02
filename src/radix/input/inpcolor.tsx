@@ -8,9 +8,16 @@ import { ButtonsStyle, TextStyle } from '@/radix/rdxtheme';
 import { OpConstants } from "@/common/constants";
 import { XText } from "src/radix/data/xtext";
 import { ColorUtil } from "@/lib/graph2d/util/colorutil";
+import { RGBColor } from "@/lib/graph2d/types2d";
 
 
-export interface InputColorProps {
+interface ColorResult {
+    rgb: RGBColor;
+    hex: string;
+}
+
+
+interface InputColorProps {
     id: string;
     label: string;
     colorinit: any;
@@ -28,18 +35,15 @@ export const InputColor = forwardRef<InputColorRef, InputColorProps>((props, ref
     const contColorRef = useRef<HTMLDivElement>(null);
     const [currentColor, setCurrentColor] = useState<any>(colorinit);
     
+    useImperativeHandle(ref, () => ({changeValue,}), []);
+    const changeValue = (newColor: string) => {};//end
 
-    useImperativeHandle(ref, () => ({
-        changeValue,
-    }), []);
-
-    //rgba
-    const changeValue = (newColor: any) => {
-        const rgbcolor =ColorUtil.convertToStringRgb(newColor);//`rgb(${newColor.rgb.r}, ${newColor.rgb.g}, ${newColor.rgb.b}`;
+    const onValueChange = (newColor: ColorResult) => {
+        const rgbcolor = ColorUtil.convertToStringRgb(newColor);
         console.log(rgbcolor); 
         setCurrentColor(rgbcolor);
-        onchange(id, rgbcolor);
-    };//end
+        onchange(id, rgbcolor);        
+    }
 
     const showCromePicker = () =>{
         hiddenRef.current?.click();
@@ -73,7 +77,7 @@ export const InputColor = forwardRef<InputColorRef, InputColorProps>((props, ref
                         <Dialog.Title>
                             <Text size={TextStyle.SIZE_TITLE_DIALOG}>Select color</Text>
                         </Dialog.Title>
-                        <ChromePicker color={currentColor} onChange={changeValue} />
+                        <ChromePicker color={currentColor} onChange={onValueChange} />
                         <Dialog.Close>
                             <Flex width="100%" direction="row" justify="center" gapX="2" mt="2">
                                 <Button type="submit"

@@ -1,5 +1,18 @@
 //src\graphic\graphtypes.ts
 
+export type RGBColor = {
+    r: number;
+    g: number;
+    b: number;
+}
+
+export type RGBAColor = {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+}
+
 // System 2D Types
 // ..........................................................
 export type Point2d = {

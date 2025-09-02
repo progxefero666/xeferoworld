@@ -79,11 +79,11 @@ export class Terrains3dConfig {
     public static GLMONITOR_HEIGHTMAP_DIM: TDimension = { width: 512, height: 512 };
 
     // color material config    
-    public static WATER_COLOR:string = '#0505ff';
+    public static WATER_COLOR:string = 'rgb(0,0,255)';
     public static RANGES_BIAS:number = 0.5;
-    public static RANGES_COLOR_0:string = '#f0ab7a';
-    public static RANGES_COLOR_1:string = '#379600';
-    public static RANGES_COLOR_2:string = '#6c4a00';
+    public static RANGES_COLOR_0:string = 'rgb(240,171,122)';
+    public static RANGES_COLOR_1:string = 'rgb(55,150,0)';
+    public static RANGES_COLOR_2:string = 'rgb(108,74,0)';
 
     public static TEXTCOLOR_CONFIG: TextureConfig = {
         sideImage: Terrains3dConfig.IMAGE_SIZE_DEF,

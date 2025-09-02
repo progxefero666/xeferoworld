@@ -14,6 +14,7 @@ import { ColorRamp } from "@/terrains/model/colorramp";
 
 import { RangeConfig } from "@/common/rangeconfig";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
+import { FtRangesColor } from "@/radix/future/ftrangescolor";
 
 
 const colorRangesConfig:RangeConfig = new RangeConfig({min:0,max:100},50,1);
@@ -78,11 +79,10 @@ export function TextureEditor({ terrainConfig,
         setcolorRanges(newColors);
     };
 
-    const onBiasChange = (id:string,value:number) => {
-        if(id==='bias_01'){
-           console.log('bias 01:' + value) 
-        }
+    const onRangesChanges = (colors: string[], biases: number[]) => {
+
     };
+
 
     return (
         <Flex width="100%" direction="column" >
@@ -109,11 +109,21 @@ export function TextureEditor({ terrainConfig,
             </Grid>
 
             <Flex>
-                <SliderSimple id="bias_01"
-                              config={colorRangesConfig}
-                               onchange={onBiasChange} />
+                <FtRangesColor colorsinit={[]} onchange={onRangesChanges} />                
+
             </Flex>
         </Flex>
     )
 
 }//end component
+
+/*
+const onBiasChange = (id:string,value:number) => {
+    if(id==='bias_01'){
+        console.log('bias 01:' + value) 
+    }
+};
+<SliderSimple id="bias_01"
+                config={colorRangesConfig}
+                onchange={onBiasChange} />
+*/

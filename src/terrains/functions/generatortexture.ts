@@ -4,6 +4,7 @@
 import { ColorRamp } from "@/terrains/model/colorramp";
 import { TextureColorUtil } from "@/terrains/functions/texturecolorutil";
 import { TDimension } from "@/common/types";
+import { ColorUtil } from "@/lib/graph2d/util/colorutil";
 
 
 /**
@@ -13,19 +14,17 @@ import { TDimension } from "@/common/types";
  * @param waterColorHex The hex color for water (areas of 0 height).
  * @returns A new ImageData object representing the colored texture.
  */
-export function genTextureFromHeightmap(
-    heightmap: ImageData,
-    colorRamp: ColorRamp,
-    bias: number,
-    waterColorHex: string): ImageData {
+export function genTextureFromHeightmap(heightmap: ImageData,
+                                        colorRamp: ColorRamp,bias: number,
+                                        waterColorHex: string): ImageData {
 
     const { width, height, data } = heightmap;
     const textureData = new Uint8ClampedArray(width * height * 4);
 
-    const startColor:number[] = TextureColorUtil.hexToRgb(colorRamp.start);
-    const middleColor:number[] = TextureColorUtil.hexToRgb(colorRamp.middle);
-    const endColor:number[] = TextureColorUtil.hexToRgb(colorRamp.end);
-    const waterColor:number[] = TextureColorUtil.hexToRgb(waterColorHex);
+    const startColor:number[]  = ColorUtil.toRgbArray(colorRamp.start);
+    const middleColor:number[] = ColorUtil.toRgbArray(colorRamp.middle);
+    const endColor:number[]    = ColorUtil.toRgbArray(colorRamp.end);
+    const waterColor:number[]  = ColorUtil.toRgbArray(waterColorHex);
 
 
     for (let i = 0; i < data.length; i += 4) {
