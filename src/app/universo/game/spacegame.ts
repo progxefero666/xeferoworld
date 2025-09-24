@@ -5,7 +5,7 @@ import RAPIER from "@dimforge/rapier3d-compat";
 
 import { GameConfig } from '@/app/universo/game/gameconfig';
 
-import { GameScene } from '@/app/universo/game/scene/universoscene';
+import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
 import { GamePlayer, PlShipCfg } from '@/app/universo/game/player/gameplayer';
 

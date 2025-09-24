@@ -34,7 +34,7 @@ export class GameConfig {
 
     public static PLCAM_FOV:number = 50.0;
     public static PLCAM_NEAR:number = 0.1;
-    public static PLCAM_FAR:number = 5000;
+    public static PLCAM_FAR:number = 3000;
     public static PLCAM_DIST:number = 20.0;
     public static PLCAM_INCY:number = 4.0;
 

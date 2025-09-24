@@ -5,7 +5,7 @@ import * as THREE from 'three'
 
 import { Box, Flex } from "@radix-ui/themes";
 import { TDimension } from "@/common/types";
-import { GameScene } from "../scene/universoscene";
+import { GameScene } from "../gamescene";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { GameConfig } from "@/app/universo/game/gameconfig";
 import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";

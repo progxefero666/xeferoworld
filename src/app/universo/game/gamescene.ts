@@ -9,6 +9,8 @@ import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { GenColorMaterial } from '@/zone3d/three/materials/genmatcolor';
 import * as THREE from 'three';
 
+import {SkyBoxGenerator} from '@/system3d/util/genskybox';
+import { TDimension3d } from '@/common/types';
 
 /**
  * class GameScene
@@ -20,6 +22,9 @@ export class GameScene {
     public plane: THREE.Mesh|null = null;
     public modeGrid:boolean = true;
 
+    public skyboxInit:THREE.Mesh|null=null;
+
+    
     //,onSceneCharged:() => void
     constructor(showGrid:boolean) {
         this.scene = new THREE.Scene();
@@ -27,7 +32,6 @@ export class GameScene {
         this.loadLights();
         this.loadInitObjects();
     }//end
-
 
     public loadLights = () => {   
         const ambientLight = new THREE.AmbientLight('#ffffff', 1.0);                
@@ -40,8 +44,14 @@ export class GameScene {
         this.scene.add(directionalLight);                      
     };//end
 
+    public  loadInitObjects = async () => {    
+        
+        const skyboxFolder = "/spacegame/skybox/skyboxspace_a";
+        const skyboxDim:TDimension3d = {width:7000,height:7000,depth:7000};
 
-    public  loadInitObjects = async () => {       
+        this.skyboxInit = await SkyBoxGenerator
+            .genSkyBoxBlack(skyboxFolder,'skybox','jpg',skyboxDim,1);
+
         //this.terrain = await GlbUtil.loadGLB_object(GameConfig.SRC_TERRAIN);
         //this.terrain.position.set(0,-5.0,0);
         //this.scene.add(this.terrain);

@@ -24,7 +24,7 @@ import { PlayerOrbitMonitor, PlayerOrbitMonitorRef }
 import { GameMonitor, GameMonitorRef } from "@/app/universo/game/monitor/gamemonitor";
 import { SpaceGame } from "@/app/universo/game/spacegame";
 import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
-import { GameScene } from "./game/scene/universoscene";
+import { GameScene } from "./game/gamescene";
 
 import { OrthoMonitor } from "./game/monitor/orthomonitor";
 import { PlShipCfg } from "./game/player/gameplayer";
@@ -204,7 +204,7 @@ export default function UniversoMain() {
         const result = await game.init(layoutDimRef.current);
         if (!result) { alert("Error loading game"); return; }
 
-        const game_scene: GameScene = new GameScene(false);
+        const game_scene: GameScene = new GameScene(true);
         game_scene.loadPlayer(game.player!.glmachine!,game.player!.glCrosshair!);
         //game.chargeRapierWorld(game_scene);
 
