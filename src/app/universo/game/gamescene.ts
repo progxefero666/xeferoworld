@@ -44,17 +44,19 @@ export class GameScene {
         this.scene.add(directionalLight);                      
     };//end
 
-    public  loadInitObjects = async () => {    
-        
+    public  loadInitObjects = async () => {            
         const skyboxFolder = "/spacegame/skybox/skyboxspace_a";
-        const skyboxDim:TDimension3d = {width:7000,height:7000,depth:7000};
-
+        const skyboxDim:TDimension3d = {width:5000,height:5000,depth:5000};
         this.skyboxInit = await SkyBoxGenerator
-            .genSkyBoxBlack(skyboxFolder,'skybox','jpg',skyboxDim,1);
+            .genSkyBoxBlack(skyboxFolder,'skybox','jpg',skyboxDim,1); 
+        this.scene.add(this.skyboxInit);           
+    };//end
 
+    public loadTerrain(glObject:THREE.Object3D,glTarget:THREE.Sprite){
         //this.terrain = await GlbUtil.loadGLB_object(GameConfig.SRC_TERRAIN);
         //this.terrain.position.set(0,-5.0,0);
         //this.scene.add(this.terrain);
+
         let material: THREE.MeshStandardMaterial| null = null;
         if(this.modeGrid) {
             material = GenColorMaterial.getGridMaterial(GameConfig.TERRAIN_GRID_COLOR,0.9);
@@ -66,7 +68,7 @@ export class GameScene {
         this.plane = new THREE.Mesh(planeGeometry,material);
         this.plane.position.set(0,-5.0,0); 
         //this.scene.add(this.plane); 
-    };//end
+    }//end 
 
     public loadPlayer(glObject:THREE.Object3D,glTarget:THREE.Sprite){
         this.scene.add(glObject);

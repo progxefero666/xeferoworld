@@ -7,7 +7,8 @@ import { GameConfig } from '@/app/universo/game/gameconfig';
 
 import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
-import { GamePlayer, PlShipCfg } from '@/app/universo/game/player/gameplayer';
+import { SpacePlayer } from '@/app/universo/game/player/player';
+import { PlayerConfig } from './player/playerconfig';
 
 export const initRapier = async () => {
     // carga del .wasm (asíncrona, pero una sola vez)
@@ -25,7 +26,7 @@ export const initRapier = async () => {
 export class SpaceGame {
 
     public world: RAPIER.World|null = null;
-    public player:GamePlayer|null = null;
+    public player:SpacePlayer|null = null;
    
     //config 
     public readonly PITCH_AXIS_VECTOR = new THREE.Vector3(1, 0, 0);
@@ -39,7 +40,7 @@ export class SpaceGame {
     constructor() {};
 
     public init = async (canvasDim:TDimension):Promise<boolean> => {
-        this.player = new GamePlayer();
+        this.player = new SpacePlayer();
         const result = await this.player.init();
         if(!result){alert('load player error');
             return false;
@@ -78,8 +79,8 @@ export class SpaceGame {
         const sign      = rollRight ? -1 : 1;
         const old       = this.player!.roll_angle;
         const valueCurr = old + sign * this.player!.roll_velocity;
-        const valueMin  = -PlShipCfg.ROLL_ANGLE_MAX;
-        const valueMax  = PlShipCfg.ROLL_ANGLE_MAX;        
+        const valueMin  = -PlayerConfig.ROLL_ANGLE_MAX;
+        const valueMax  = PlayerConfig.ROLL_ANGLE_MAX;        
         const target    = THREE.MathUtils.clamp(valueCurr,valueMin,valueMax);
         const delta     = target - old;
 
@@ -91,7 +92,7 @@ export class SpaceGame {
         this.player!.roll_angle = target;
 
         //update player pivot manually
-        this.player!.pivotRotate(PlShipCfg.ROLL_AXIS, delta);
+        this.player!.pivotRotate(PlayerConfig.ROLL_AXIS, delta);
     };//end
 
     public execPlayerPitch = (pitchDown: boolean) => {
@@ -100,8 +101,8 @@ export class SpaceGame {
         const sign      = pitchDown ? -1 : 1;
         const old       = this.player!.pitch_angle;
         const valueCurr = old + sign * this.player!.pitch_velocity;
-        const valueMin  = -PlShipCfg.PITCH_ANGLE_MAX;
-        const valueMax  = PlShipCfg.PITCH_ANGLE_MAX;
+        const valueMin  = -PlayerConfig.PITCH_ANGLE_MAX;
+        const valueMax  = PlayerConfig.PITCH_ANGLE_MAX;
         const target    = THREE.MathUtils.clamp(valueCurr,valueMin,valueMax);
         const delta     = target - old;
 
@@ -113,7 +114,7 @@ export class SpaceGame {
         this.player!.pitch_angle = target;
 
         //update player pivot manually
-        this.player!.pivotRotate(PlShipCfg.PITCH_AXIS, delta);
+        this.player!.pivotRotate(PlayerConfig.PITCH_AXIS, delta);
     };//end
 
     public changePlayerVelocity = (increment:boolean) => {

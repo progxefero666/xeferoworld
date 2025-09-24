@@ -16,20 +16,22 @@ export class SkyBoxGenerator {
 	public static getAllPaths(folder:string,fname:string,typeExtension:string) {		
 		const baseFilename = folder + '/' + fname;
 		const fileType = '.'+ typeExtension;
-		const pathStings = SkyBoxGenerator.SIDES.map(side => {
+		const allpaths = SkyBoxGenerator.SIDES.map(side => {
 		    return baseFilename + "_" + side + fileType;
 		});		
-		return pathStings;
+		return allpaths;
 	}//end
 
+    /*
+                depthWrite: false,
+            depthTest: false,   
+    */
     public static async getMaterial(path:string,colorBase:any,alpha?:number): Promise<THREE.MeshBasicMaterial> {
         const colorMap = await MaterialMapLoader.loadTextureMap(path);
         const material = new THREE.MeshBasicMaterial({
             color: colorBase, 
             map: colorMap,
             side: THREE.BackSide,
-            depthWrite: false,
-            depthTest: false,       
             transparent: true,
             opacity:alpha
         });
@@ -38,9 +40,10 @@ export class SkyBoxGenerator {
 
     public static async genSkyBoxBlack(folder:string,fname:string,typeExtension:string,
                                        dimension:TDimension3d,
-                                       alpha?:number ):Promise<THREE.Mesh|null> {
+                                       alpha?:number ):Promise<THREE.Mesh> {
         const colorBase:any ="#FFFFFF";                               
         const listPaths:string[]= SkyBoxGenerator.getAllPaths(folder,fname,typeExtension);
+        console.log(listPaths);
         const skyboxMaterials:THREE.MeshBasicMaterial[] = await Promise.all(
             listPaths.map(path => 
                 SkyBoxGenerator.getMaterial(path,colorBase,alpha)

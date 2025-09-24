@@ -7,7 +7,8 @@ import { TCylinderConfig, Vector3d } from '@/common/types';
 import { System3d } from '@/system3d/system3d';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { BulletSimple } from '@/app/universo/game/armament/bulletsimple';
-import { GamePlayer, PlShipCfg } from 'src/app/universo/game/player/gameplayer';
+import { SpacePlayer } from '@/app/universo/game/player/player';
+import { PlayerConfig } from './playerconfig';
 
 
 /*
@@ -25,17 +26,17 @@ Típico: 1.5–2.5 s.
 export class PlayerArmy {
 
     //force attack
-    public player:GamePlayer;
+    public player:SpacePlayer;
     //public cannonsCoord:Vector3d[] = [];
     public bulletsA_mat:THREE.MeshBasicMaterial;  
     public bulletsA: BulletSimple[];
 
     //constructor
-    constructor(player:GamePlayer){
+    constructor(player:SpacePlayer){
         this.player = player;
 
         this.bulletsA_mat = new THREE.MeshBasicMaterial
-                ({color:PlShipCfg.BULLETS_A_CFG.color});
+                ({color:PlayerConfig.BULLETS_A_CFG.color});
         this.bulletsA = [];
     }//end
 
@@ -43,9 +44,9 @@ export class PlayerArmy {
         console.log('bullet fired');
         const bullet = new BulletSimple(
             this.bulletsA_mat,
-            PlShipCfg.BULLETS_A_CFG,            
-            PlShipCfg.ATT_TIME_TO_CONVERG,
-            PlShipCfg.BULLETS_A_PHYVEL,
+            PlayerConfig.BULLETS_A_CFG,            
+            PlayerConfig.ATT_TIME_TO_CONVERG,
+            PlayerConfig.BULLETS_A_PHYVEL,
             coordsInit,direction);
         return bullet;    
     }//end

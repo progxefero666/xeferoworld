@@ -27,7 +27,7 @@ import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
 import { GameScene } from "./game/gamescene";
 
 import { OrthoMonitor } from "./game/monitor/orthomonitor";
-import { PlShipCfg } from "./game/player/gameplayer";
+import { PlayerConfig } from "./game/player/playerconfig";
 
 
 const glLayoutGridStyle = {
@@ -261,7 +261,7 @@ export default function UniversoMain() {
 
             <Flex width="40%" direction="column" py="1" mb="2">
                 {wglready ? <PlFlyControls phyvelocity={game.player!.getCurrVelocityKmH()}
-                                   maxphyvelocity={PlShipCfg.getMaxVelocityKmH()}
+                                   maxphyvelocity={PlayerConfig.getMaxVelocityKmH()}
                                    changevelocity={game.changePlayerVelocity}
                                    execroll={game.execPlayerRoll}
                                    execpitch={game.execPlayerPitch} /> : null}
