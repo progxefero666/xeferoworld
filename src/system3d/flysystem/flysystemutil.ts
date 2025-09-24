@@ -2,7 +2,7 @@
 //src\system3d\flysystem\flysystemutil.ts
 
 
-import { GameConfig } from "@/universo3d/game/gameconfig";
+import { GameConfig } from "@/app/universo/game/gameconfig";
 import { Physic3D } from "src/system3d/physic";
 import { FlyTelemetry } from "./flytelemetry";
 import { GamePlayer } from "@/universo3d/game/player/gameplayer";

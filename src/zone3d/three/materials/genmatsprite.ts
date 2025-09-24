@@ -1,6 +1,7 @@
 //src\zone3d\three\materials\genmatsprite.ts
 
 import * as THREE from 'three';
+import { MaterialMapLoader } from './matmaploader';
 
 
 /**
@@ -10,19 +11,9 @@ export class GenSpriteMaterials {
 
     public static textureLoader = new THREE.TextureLoader();
 
-    public static async loadTexture(path: string): Promise<THREE.Texture> {
-        return new Promise((resolve, reject) => {
-            this.textureLoader.load(
-                path,
-                texture => resolve(texture),
-                undefined,
-                err => reject(err)
-            );
-        });
-    }//end 
     
     public static async getSpriteMaterial(path:string,sizeAtt:boolean,color:any,alpha?:number): Promise<THREE.SpriteMaterial> {
-        const colorMap = await GenSpriteMaterials.loadTexture(path);
+        const colorMap = await MaterialMapLoader.loadTextureMap(path);
         const material = new THREE.SpriteMaterial( {
             color: color,
             map: colorMap,

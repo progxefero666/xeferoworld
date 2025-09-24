@@ -7,12 +7,12 @@ import { Box, Flex } from "@radix-ui/themes";
 import { TDimension } from "@/common/types";
 import { GameScene } from "../scene/universoscene";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
-import { GameConfig } from "@/universo3d/game/gameconfig";
+import { GameConfig } from "@/app/universo/game/gameconfig";
 import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { LIB_ICON } from "@/radix/rdxthicons";
-import { SpaceGame } from "@/universo3d/game/spacegame";
+import { SpaceGame } from "@/app/universo/game/spacegame";
 
 
 

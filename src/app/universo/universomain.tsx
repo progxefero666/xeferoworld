@@ -8,7 +8,6 @@ import * as THREE from 'three'
 import { RdxThContainers } from "@/radix/rdxthcontainers";
 
 import { TDimension } from "@/common/types";
-
 import { GAMEPAD_BUTTONS, GAMEPAD_DEADZONE } from '@/lib/gamepad';
 
 import { GamepadsContext } from '@/lib/gamepad/GamepadContext';
@@ -23,11 +22,12 @@ import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { PlayerOrbitMonitor, PlayerOrbitMonitorRef }
     from "@/app/universo/game/monitor/playerorbitmonitor";
 import { GameMonitor, GameMonitorRef } from "@/app/universo/game/monitor/gamemonitor";
-import { SpaceGame } from "@/universo3d/game/spacegame";
-import { PlFlyControls } from "@/universo3d/game/player/controls/flycontrols";
+import { SpaceGame } from "@/app/universo/game/spacegame";
+import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
 import { GameScene } from "./game/scene/universoscene";
-import { PlShipCfg } from "@/universo3d/game/player/gameplayer";
+
 import { OrthoMonitor } from "./game/monitor/orthomonitor";
+import { PlShipCfg } from "./game/player/gameplayer";
 
 
 const glLayoutGridStyle = {

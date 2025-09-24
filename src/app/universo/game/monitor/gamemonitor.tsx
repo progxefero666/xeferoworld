@@ -6,11 +6,11 @@ import * as THREE from 'three'
 import { Box, Flex } from "@radix-ui/themes";
 import { TDimension } from "@/common/types";
 import { GameScene } from "../scene/universoscene";
-import { GameConfig } from "@/universo3d/game/gameconfig";
+import { GameConfig } from "@/app/universo/game/gameconfig";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { LIB_ICON } from "@/radix/rdxthicons";
 import { ButtonsStyle } from "@/radix/rdxtheme";
-import { SpaceGame } from "@/universo3d/game/spacegame";
+import { SpaceGame } from "@/app/universo/game/spacegame";
 import { FlySystemUtil } from "@/system3d/flysystem/flysystemutil";
 
 const divOverCanvasStyle = {

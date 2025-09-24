@@ -2,11 +2,12 @@
 
 import * as THREE from 'three';
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
-import { GamePlayer, PlShipCfg } from '@/universo3d/game/player/gameplayer';
-import { BulletSimple } from '../military/bullets/bulletsimple';
+
 import { TCylinderConfig, Vector3d } from '@/common/types';
 import { System3d } from '@/system3d/system3d';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
+import { BulletSimple } from '@/universo3d/game/military/bullets/bulletsimple';
+import { GamePlayer, PlShipCfg } from 'src/app/universo/game/player/gameplayer';
 
 
 /*

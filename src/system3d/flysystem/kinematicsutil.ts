@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import { Plane3dPoint, Vector3d } from "@/common/types";
 import { Physic3D } from "@/system3d/physic";
-import { GameConfig } from "@/universo3d/game/gameconfig";
+import { GameConfig } from "@/app/universo/game/gameconfig";
 import { FlySystemUtil } from "@/system3d/flysystem/flysystemutil";
 
 /*

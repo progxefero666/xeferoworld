@@ -7,7 +7,7 @@ import { FXRowSlider } from "@/radix/future/rowslider";
 import { FXColumnSlider } from "@/radix/future/columnslider";
 import { Radar } from "../monitor/radar";
 import { FlyRollMonitor, FlyRollControlRef } 
-    from "@/universo3d/game/player/monitor/flyrollmonitor";
+    from "@/app/universo/game/player/monitor/flyrollmonitor";
 import { FlyControlRoll } from "./flycontrolroll";
 
 

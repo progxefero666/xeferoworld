@@ -1,7 +1,7 @@
 //src\system3d\flysystem\kinematicorbiter_plane.ts
 
 import { Vector3d } from "@/common/types";
-import { GameConfig } from "@/universo3d/game/gameconfig";
+import { GameConfig } from "@/app/universo/game/gameconfig";
 
 /*
 Crear: const orb = new KinematicOrbiterPlane({x:0,y:0,z:0}, 300, 0.01, {x:0,y:1,z:0});

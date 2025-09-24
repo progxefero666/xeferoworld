@@ -1,7 +1,7 @@
 //src\system3d\flysystem\kinematicorbiterxz.ts
 
 import { Plane3dPoint } from "@/common/types";
-import { GameConfig } from "@/universo3d/game/gameconfig";
+import { GameConfig } from "@/app/universo/game/gameconfig";
 import { KinematicsUtil } from "@/system3d/flysystem/kinematicsutil";
 
 /*

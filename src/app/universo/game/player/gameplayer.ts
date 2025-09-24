@@ -8,7 +8,7 @@ import { Pivot3d } from '@/math3d/pivot/pivot3d';
 import { Plane3dPoint, TCylinderConfig, TDimension3d, Vector3d } from "@/common/types";
 import { System3d } from "@/system3d/system3d";
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
-import { GameConfig } from '@/universo3d/game/gameconfig';
+import { GameConfig } from '@/app/universo/game/gameconfig';
 import { Sys3dThreeUtil } from '@/system3d/util/sys3dthreeutil';
 import { ThreeUtil } from '@/zone3d/three/util/threeutil';
 import { PlayerArmy } from './playerarmy';

@@ -3,10 +3,11 @@
 import * as THREE from 'three'
 import RAPIER from "@dimforge/rapier3d-compat";
 
-import { GameConfig } from '@/universo3d/game/gameconfig';
-import { GamePlayer, PlShipCfg } from './player/gameplayer';
+import { GameConfig } from '@/app/universo/game/gameconfig';
+
 import { GameScene } from '@/app/universo/game/scene/universoscene';
 import { TDimension } from '@/common/types';
+import { GamePlayer, PlShipCfg } from '@/app/universo/game/player/gameplayer';
 
 export const initRapier = async () => {
     // carga del .wasm (asíncrona, pero una sola vez)
@@ -17,7 +18,7 @@ export const initRapier = async () => {
 };
 
 /**
- * 
+ * SkyBoxGenerator
     public playerPivot: GamePlayerPivot | null = null;
  * class Universe Space Game
  */

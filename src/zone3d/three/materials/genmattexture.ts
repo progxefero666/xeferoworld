@@ -1,6 +1,7 @@
 
 import * as THREE from 'three';
 import { LineBasicMaterial, MeshStandardMaterial } from 'three'
+import { MaterialMapLoader } from './matmaploader';
 
 
 /**
@@ -8,7 +9,7 @@ import { LineBasicMaterial, MeshStandardMaterial } from 'three'
  * geometry.computeVertexNormals(); // Recalcula normales
 geometry.normalizeNormals();     // Normaliza vectores
  */
-export class TextureMaterials {
+export class GenMatTextures {
 
     public static textureLoader = new THREE.TextureLoader();
 
@@ -24,9 +25,9 @@ export class TextureMaterials {
         normalScale: number = 0.5 
     ): Promise<THREE.MeshStandardMaterial> {
         
-        const texture = await this.loadTexture(texturePath);
+        const texture = await MaterialMapLoader.loadTextureMap(texturePath);
         const normalMap = normalMapPath 
-            ? await this.loadTexture(normalMapPath)
+            ? await MaterialMapLoader.loadTextureMap(normalMapPath)
             : null;
 
         // Aplicar configuración de repetición
@@ -54,16 +55,6 @@ export class TextureMaterials {
         });
     }
 
-    public static loadTexture(path: string): Promise<THREE.Texture> {
-        return new Promise((resolve, reject) => {
-            this.textureLoader.load(
-                path,
-                texture => resolve(texture),
-                undefined,
-                err => reject(err)
-            );
-        });
-    }
 
 
 }//end class

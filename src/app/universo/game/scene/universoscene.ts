@@ -3,7 +3,7 @@
 
 import { TerrainControl } from '@/terrains/xterrains/terraincontrol';
 import { XTerrMaterial } from '@/terrains/xterrains/xterrains';
-import { GameConfig } from '@/universo3d/game/gameconfig';
+import { GameConfig } from '@/app/universo/game/gameconfig';
 import { GeoFunction } from '@/zone3d/three/functions/geofunction';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { GenColorMaterial } from '@/zone3d/three/materials/genmatcolor';
