@@ -58,9 +58,9 @@ export class SpaceGame {
     public chargeCameraPlayer = (canvasDim:TDimension) => {
         const aspect  =canvasDim.width/ canvasDim.height;
         this.cameraPlayer = new THREE.PerspectiveCamera
-            (GameConfig.PLCAM_FOV,aspect,GameConfig.PLCAM_NEAR,GameConfig.PLCAM_FAR);
+            (GameConfig.M_CAMERA_FOV,aspect,GameConfig.M_CAMERA_NEAR,GameConfig.M_CAMERA_FAR);
         this.cameraPlayer.position
-            .set(0,GameConfig.PLCAM_INCY,GameConfig.PLCAM_DIST);   
+            .set(0,GameConfig.M_CAMERA_PLINCY,GameConfig.M_CAMERA_PLDIST);   
         this.player!.glmachine?.add(this.cameraPlayer);
     };//end
 

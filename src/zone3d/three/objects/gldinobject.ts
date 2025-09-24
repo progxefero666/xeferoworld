@@ -6,7 +6,7 @@ import { Vector3d } from "@/common/types";
 import { System3dConfig} from "@/system3d/system3dcfg";
 import { ThreeFbxUtil } from '../loaders/threefbxutil';
 import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
-import { PlMachineConfig } from '@/universo3d/game/player/machineconfig';
+
 import { ThreeModel3d } from '../threetypes';
 
 
@@ -41,7 +41,7 @@ export class GlObject  {
                               = ThreeFbxUtil.getFbxObjectVertex(this.object3d);
                               
         let arrayVertex:Float32Array = this.pivot.rotateArrayPointsInAxis
-            (PlMachineConfig.ROLL_AXIS,(positionVertex.array as Float32Array),angle);
+            (0,(positionVertex.array as Float32Array),angle);
         this.object3d.geometry.setAttribute('position', new THREE.BufferAttribute(arrayVertex,3));
         this.object3d.geometry.attributes.position.needsUpdate = true;
         this.object3d.geometry.computeBoundingBox();
@@ -58,7 +58,7 @@ export class GlObject  {
         let vertexAngle = angle;
         if(this.applyInverse) {vertexAngle *= (-1);}                      
         let arrayVertex:Float32Array = this.pivot.rotateArrayPointsInAxis
-            (PlMachineConfig.PITCH_AXIS,(positionVertex.array as Float32Array),vertexAngle);
+            (2,(positionVertex.array as Float32Array),vertexAngle);
 
         this.object3d.geometry.setAttribute('position', new THREE.BufferAttribute(arrayVertex,3));
         this.object3d.geometry.attributes.position.needsUpdate = true;

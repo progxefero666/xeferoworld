@@ -88,7 +88,7 @@ export class SpacePlayer {
             PlayerConfig.GL_CRHAIR_SCALE,
             PlayerConfig.GL_CRHAIR_SCALE); 
         this.glCrosshair.position.set
-            (0,GameConfig.PLCAM_INCY,PlayerConfig.ATT_DIST_TO_CONVERG);   
+            (0,GameConfig.M_CAMERA_PLINCY,PlayerConfig.ATT_DIST_TO_CONVERG);   
         this.glmachine!.add(this.glCrosshair);     
     };//end 
 

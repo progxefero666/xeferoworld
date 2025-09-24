@@ -57,9 +57,9 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
 
         const aspect  =canvasdim.width/ canvasdim.height;
         monCamera = new THREE.PerspectiveCamera(
-            GameConfig.PLCAM_FOV,aspect, 
-            GameConfig.PLCAM_NEAR,
-            GameConfig.PLCAM_FAR);
+            GameConfig.M_CAMERA_FOV,aspect, 
+            GameConfig.M_CAMERA_NEAR,
+            GameConfig.M_CAMERA_FAR);
         monCamera.position.set(0,0,-6);
         monCamera.lookAt(0,0,0);
 

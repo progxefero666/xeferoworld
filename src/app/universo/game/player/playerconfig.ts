@@ -27,6 +27,10 @@ relation factor: 1/290 = 0,003448
 
 /**
  * class PlShipCfg.GL_CRHAIR_SCALE
+ * ext box:
+ *   width:6.2
+ *   height:1.9
+ *   deepth:7.2
  */
 export class PlayerConfig {
 
@@ -34,7 +38,9 @@ export class PlayerConfig {
 
     public static CROSSHAIR_MAP_PATH: string = '/spacegame/spritemaps/crosshairwhite.png'
 
-    public static DIMENSION: TDimension3d = {width:11.76,height:2.4,depth:13.4};
+    public static GLOBJECT_DIM: TDimension3d = {width:11.76,height:2.4,depth:13.4};
+    public static COLLIDER_DIM: TDimension3d = {width:11.96,height:2.6,depth:13.6};
+    
     public static PHY_VELOCITY_MAX = 290; //m/s 
     public static PHY_ACELERATION_MAX = 36.297; //m/s² 
     public static LN_VEL_MIN: number = 0.001;
@@ -169,17 +175,17 @@ export class PlayerConfig {
 
         const coordZ = PlayerConfig.ATT_DIST_TO_CONVERG * (-1);
         gunRefObj_RU.position.set(PlayerConfig.CANNON_RU_COORDS.x,
-                                  GameConfig.PLCAM_INCY+PlayerConfig.CANNON_RU_COORDS.y,
+                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_RU_COORDS.y,
                                   coordZ);
         gunRefObj_RD.position.set(PlayerConfig.CANNON_RD_COORDS.x,
-                                  GameConfig.PLCAM_INCY+PlayerConfig.CANNON_RD_COORDS.y,
+                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_RD_COORDS.y,
                                   coordZ); 
 
         gunRefObj_LU.position.set(PlayerConfig.CANNON_LU_COORDS.x,
-                                  GameConfig.PLCAM_INCY+PlayerConfig.CANNON_LU_COORDS.y,
+                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_LU_COORDS.y,
                                   coordZ);
         gunRefObj_LD.position.set(PlayerConfig.CANNON_LD_COORDS.x,
-                                  GameConfig.PLCAM_INCY+PlayerConfig.CANNON_LD_COORDS.y,
+                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_LD_COORDS.y,
                                   coordZ); 
 
         const glTargets:THREE.Mesh[] = [];

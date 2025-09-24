@@ -13,8 +13,6 @@ import { GenColorMaterial } from '../materials/genmatcolor';
  */
 export class ThreeGenSpheres {  
 
-    public static MINISPHERES_RADIUS_MIN: number = 0.005;
-    public static MINISPHERES_RADIUS_MAX: number = 0.6;
 
     public static generateSphere(center:Vector3d,radius:number,subdiv:number,color:any): THREE.Mesh {       
         //const spCenter: Vector3d = System3d.CC;
@@ -24,18 +22,6 @@ export class ThreeGenSpheres {
         sphere.position.set(center.x,center.y,center.z);
         return sphere;
     };//end
-
-    public static generateSphereAtCC(radius:number,subdiv:number,color:any): THREE.Mesh {       
-        //const spCenter: Vector3d = System3d.CC;
-        const geometry = new THREE.SphereGeometry(radius,subdiv,subdiv);
-        const material:THREE.MeshStandardMaterial = GenColorMaterial.getStandardMaterial(color,0.3,0.7);
-        const sphere = new THREE.Mesh(geometry, material);
-        return sphere;
-    };//end
-
-
-    //const textureLoader = new THREE.TextureLoader();
-    //new THREE.MeshStandardMaterial( { map: THREE.ImageUtils.loadTexture('images/earth.jpg') } );
 
 
     public static generateTextureSphere(radius:number,subdiv:number,texture: HTMLImageElement): THREE.Mesh {       
@@ -56,15 +42,19 @@ export class ThreeGenSpheres {
             map: threeTexture,
             roughness: 0.7,
             metalness: 0.1
-        });
-        
+        });        
         const sphere = new THREE.Mesh(geometry, material);
         return sphere;
-    };//end
+    };//en
 
-    /**
-     * get THREE.PlaneGeometry
-     */
+    
+};//end class
+
+    /*
+
+    public static MINISPHERES_RADIUS_MIN: number = 0.005;
+    public static MINISPHERES_RADIUS_MAX: number = 0.6;     
+    
     public static getAleatMiniSphereRadius(): number {
         const range: number = ThreeGenSpheres.MINISPHERES_RADIUS_MAX - ThreeGenSpheres.MINISPHERES_RADIUS_MIN;
         return (range) * Math.random() + ThreeGenSpheres.MINISPHERES_RADIUS_MIN;
@@ -96,8 +86,12 @@ export class ThreeGenSpheres {
         }
         return miniSpheres;
     };//end    
-
+     */
+    
     /*
+    
+    public static MINISPHERES_RADIUS_MIN: number = 0.005;
+    public static MINISPHERES_RADIUS_MAX: number = 0.6;
         const loadTestObjectsB = async() => {
             const geo = new THREE.BoxGeometry(2, 2, 2);
             const points = new THREE.Points(geo);
@@ -118,5 +112,3 @@ const geometry = new THREE.BufferGeometry().setFromPoints( points );
 const line = new THREE.Line( geometry, material );
 scene.add( line );        
     */
-    
-};//end class
