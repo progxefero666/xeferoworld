@@ -1,0 +1,68 @@
+    /*
+
+    public static async readAnimationDuration(url: string): Promise<number> {
+        const loader = new GLTFLoader();
+        return new Promise((resolve, reject) => {
+            loader.load(url, (gltf: GLTF) => {
+                resolve(gltf.animations[0].duration);
+            }, undefined, reject);
+        });
+    }//end
+
+    public static getAnimationCountTracks(animation: GLTF): number {
+        return animation.animations[0].tracks.length;
+    }//end    
+
+    public static getAnimationTimeUnit(animation: GLTF, countFrames: number): number {
+        return animation.animations[0].duration / countFrames;
+    }//end    
+
+    public static getAnimationTimes(animation: GLTF, countFrames: number): number[] {
+        const timeUnit = animation.animations[0].duration / countFrames;
+        const times: number[] = [];
+        for (let frameIdx = 0; frameIdx < countFrames; frameIdx++) {
+            times.push(frameIdx * timeUnit);
+        }
+        return times;
+    }//end 
+
+    public static async getEsceneAtTime(url: string, time: number): Promise<THREE.Group> {
+        const loader = new GLTFLoader();
+        return new Promise((resolve, reject) => {
+            loader.load(url, (gltf: GLTF) => {
+                const mixer = new THREE.AnimationMixer(gltf.scene);
+                const action = mixer.clipAction(gltf.animations[0]);
+                action.play();
+                mixer.setTime(time);
+                const pose = gltf.scene.clone(true);
+                resolve(pose);
+            }, undefined, reject);
+        });
+    }//end
+
+
+
+    public static async getAnimationFrameRate(url: string): Promise<number> {
+        const loader = new GLTFLoader();
+
+        return new Promise((resolve, reject) => {
+            loader.load(url, (gltf: GLTF) => {
+                const clip = gltf.animations[0];
+                const deltas: number[] = [];
+
+                clip.tracks.forEach(track => {
+                    const times = (track as any).times as Float32Array;
+                    for (let i = 1; i < times.length; i++) {
+                        deltas.push(times[i] - times[i - 1]);
+                    }
+                });
+
+                // media de intervalos entre keyframes
+                const avgDelta = deltas.reduce((a, b) => a + b, 0) / deltas.length;
+
+                const fps = avgDelta > 0 ? Math.round(1 / avgDelta) : 0;
+                resolve(fps);
+            }, undefined, reject);
+        });
+    }//end
+    */

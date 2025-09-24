@@ -1,0 +1,108 @@
+
+public async calculateParams() {
+    //PlayerCfg.SRC_AN_WALKSTART_DISP
+    const anWalkStartPos:Vector3d[] = await GlbAnUtil
+                .getRootPositions(PlayerCfg.SRC_AN_WALKSTART_DISP);
+    const anWalkStatDuration:number = await GlbAnUtil
+                .readAnimationDuration(PlayerCfg.SRC_AN_WALKSTART_DISP);               
+    const anWalkStartDirDisp:number = anWalkStartPos[anWalkStartPos.length-1].x - anWalkStartPos[0].x;   
+    const anWalkStartVelocity:number = anWalkStartDirDisp / anWalkStatDuration;
+
+    //PlayerCfg.SRC_AN_WALKFRONT_DISP
+    const anWalkFrontPos:Vector3d[] = await GlbAnUtil
+                .getRootPositions(PlayerCfg.SRC_AN_WALKFRONT_DISP);
+    const anWalkFrontDuration:number = await GlbAnUtil
+                .readAnimationDuration(PlayerCfg.SRC_AN_WALKFRONT_DISP);
+                
+    const anWalkFrontDirDisp:number = anWalkFrontPos[anWalkFrontPos.length-1].x - anWalkFrontPos[0].x;
+    const anWalkFrontVelocity:number = anWalkFrontDirDisp / anWalkFrontDuration; 
+}//end
+
+
+/**
+ * class CharacterPlayer
+ */
+export class CharacterPlayer {
+
+  
+    public pivot: Pivot3d;
+    public glBody: THREE.Object3D|null = null;
+    public glGun: THREE.Object3D|null = null;
+
+    constructor() {        
+        this.pivot = new Pivot3d();    
+    }//end
+
+    public async init(scene: THREE.Scene) {
+
+        this.glBody = await GlbLoaderObject.loadGLB_uniqueMesh(PlayerCfg.SRC_POSE_T);        
+        //this.glGun = await GlbLoaderObject.loadGLB_uniqueMesh(PlayerCfg.SRC_BLASTER);
+        
+        //.........................................................................................
+        const sceneCalc = new THREE.Scene();
+
+        const animation:GLTF = await GlbAnimationLoader.readAnimation(PlayerCfg.SRC_AN_WALKSTART);
+
+        /*
+        const countTracks = animation.animations[0].tracks.length;
+        const times:number[]= GlbAnUtil.getAnimationTimes(animation,countTracks);
+
+        let plAnWalkStart: ArmShooterAnimation | null= new ArmShooterAnimation
+            (sceneCalc,animation,PlayerCfg.BONE_HANDRIGHT,PlayerCfg.GUN_INIT_POS);
+    
+        const positions: (THREE.BufferAttribute | THREE.InterleavedBufferAttribute)[] = [];        
+        for(let idx=0;idx<times.length;idx++){
+            const geometry: THREE.BufferGeometry = plAnWalkStart!.update(times[idx]);
+            positions.push(geometry.getAttribute('position')); 
+        }*/
+        //.........................................................................................
+       
+        //const objAtTime:THREE.Object3D|null = await GlbUtil.getObjectAtTimeOld(PlayerCfg.SRC_AN_WALKSTART,0.1);
+
+        /*
+        if(!(this.glBody instanceof THREE.Mesh)) {return null;}
+        this.glBody.geometry.setAttribute('position', positions[10]);
+        this.glBody.geometry.attributes.position.needsUpdate = true;
+        this.glBody.geometry.computeBoundingBox();
+        this.glBody.geometry.computeBoundingSphere(); 
+        */
+
+        console.log('start')
+        const listObj:THREE.Object3D[] = await GlbAnUtil.readAnimationObjects(PlayerCfg.SRC_AN_WALKSTART);
+        scene.add(listObj[1]);
+        alert('end');
+
+    }//end 
+
+
+}//end
+
+/*
+    public glBody:GlPlayerObject|null = null;
+
+    public async initOld(scene: THREE.Scene) {
+        const object3d: THREE.Object3D 
+            = await GlbLoaderObject.loadGLB_uniqueMesh(PlayerCfg.SRE_POSET_GUNUP);
+        this.glBody = new GlPlayerObject(object3d);
+        scene.add(this.glBody.object3d!);
+    }//end 
+    public async calculateParams() {
+        //PlayerCfg.SRC_AN_WALKSTART_DISP
+        const anWalkStartPos:Vector3d[] = await GlbAnUtil
+                    .getRootPositions(PlayerCfg.SRC_AN_WALKSTART_DISP);
+        const anWalkStatDuration:number = await GlbAnUtil
+                    .readAnimationDuration(PlayerCfg.SRC_AN_WALKSTART_DISP);               
+        const anWalkStartDirDisp:number = anWalkStartPos[anWalkStartPos.length-1].x - anWalkStartPos[0].x;   
+        const anWalkStartVelocity:number = anWalkStartDirDisp / anWalkStatDuration;
+
+        //PlayerCfg.SRC_AN_WALKFRONT_DISP
+        const anWalkFrontPos:Vector3d[] = await GlbAnUtil
+                    .getRootPositions(PlayerCfg.SRC_AN_WALKFRONT_DISP);
+        const anWalkFrontDuration:number = await GlbAnUtil
+                    .readAnimationDuration(PlayerCfg.SRC_AN_WALKFRONT_DISP);
+                   
+        const anWalkFrontDirDisp:number = anWalkFrontPos[anWalkFrontPos.length-1].x - anWalkFrontPos[0].x;
+        const anWalkFrontVelocity:number = anWalkFrontDirDisp / anWalkFrontDuration; 
+    }//end
+*/
+

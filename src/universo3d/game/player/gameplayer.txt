@@ -1,0 +1,47 @@
+
+    
+    public globjdir: THREE.Mesh | null = null;
+    
+    //calculate new position
+    //.................................................
+    //this.applyRollAutolevel();<--bad
+    //this.applyGravityEnergy();
+    //this.applyAirDrag()
+
+    public applyGravityEnergy(): void {
+        const p = this.pitch_angle;
+        if (Math.abs(p) < GameConfig.PITCH_ENERGY_DEADZONE) return;
+
+        const acc = -Physic3D.GRAVITY * Math.sin(p);
+        const dv = FlySystemUtil.accToTickDelta(acc);
+        const vmaxTick = Math.min(
+            PlMachineConfig.LN_VEL_MAX,
+            FlySystemUtil.msToTick(PlMachineConfig.VELOCITY_MAX)
+        );
+
+        this.ln_velocity = Math.max(
+            PlMachineConfig.LN_VEL_MIN,
+            Math.min(this.ln_velocity + dv, vmaxTick)
+        );
+    }//end
+
+    public applyAirDrag(): void {
+        const v = this.getSpeedMs();
+        if (v <= 1e-6) return;
+        const aDrag = -GameConfig.DRAG_COEFF * v * v; // dv/dt = -k·v²
+        const dv = FlySystemUtil.accToTickDelta(aDrag);
+
+        const vmaxTick = Math.min(
+            PlMachineConfig.LN_VEL_MAX,
+            FlySystemUtil.msToTick(PlMachineConfig.VELOCITY_MAX)
+        );
+        this.ln_velocity = Math.max(
+            PlMachineConfig.LN_VEL_MIN,
+            Math.min(this.ln_velocity + dv, vmaxTick)
+        );
+    }//end
+
+    Método 1: 
+    const worldPosition = new THREE.Vector3();
+    this.glGunsObjs[0].getWorldPosition(worldPosition);
+       

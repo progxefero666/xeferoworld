@@ -1,0 +1,184 @@
+// src\radix\sliders\horizontalslider.tsx
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Flex } from "@radix-ui/themes";
+
+const sectionStyle = {
+    border: '1px solid #888888',
+    borderRadius: '4px'
+};
+
+const handleStyle = {
+    width: "12px",
+    backgroundColor: 'rgba(70, 70, 70, 1)',
+    border: '1px solid #1038ff',
+    height: '28px',
+    borderRadius: '3px',
+    cursor: 'grab',
+    transition: 'background-color 0.2s ease'
+};
+
+const activeHandleStyle = {
+    ...handleStyle,
+    backgroundColor: 'rgba(100, 100, 100, 1)',
+    cursor: 'grabbing'
+};
+
+interface SliderRowProps {
+    id: string;
+    height?: number;
+    onchange: (id: string, dirCcw: boolean | undefined) => void;
+};
+
+export function SliderRow({ id, onchange,  height }: SliderRowProps) {
+
+    const sliderBarRef = useRef<HTMLDivElement>(null);
+    const [leftSpacerWidth, setLeftSpacerWidth] = useState<number>(0);
+    const [directionCcw, setDirectionCcw] = useState<boolean | undefined>(undefined);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+
+    const barHeight = height ?? 32;
+    const contHeight = barHeight.toString() +'px';
+    const handleWidth = 20;
+    const handleWidthHalf = handleWidth / 2;
+ 
+    const calculateDirection = useCallback((spacerWidth: number, barWidth: number) => {
+        const handleCenterOffset = spacerWidth + handleWidthHalf;
+        const centerOfBar = barWidth / 2;
+        const threshold = 5; // Píxeles tolerance
+
+        //Ccw rotation inverse
+        if (handleCenterOffset < centerOfBar - threshold) {
+            return false; // Izquierda
+        } 
+        // Ccw rotation
+        else if (handleCenterOffset > centerOfBar + threshold) {
+            return true; 
+        } 
+        // Not rotation
+        else {
+            return undefined;
+        }
+    }, [handleWidth]);
+
+    // Actualizar dirección
+    const updateDirection = useCallback((newSpacerWidth: number) => {
+        if (!sliderBarRef.current) return;
+
+        const newDirection = calculateDirection
+            (newSpacerWidth, sliderBarRef.current.clientWidth);
+
+        if (newDirection !== directionCcw) {
+            setDirectionCcw(newDirection);
+            onchange(id, newDirection);
+        }
+    }, [directionCcw, id, onchange, calculateDirection]);
+
+    // Inicializar solo una vez al montar
+    useEffect(() => {
+        if (!sliderBarRef.current) return;
+
+        const initialSpacerWidth = (sliderBarRef.current.clientWidth / 2) - handleWidthHalf;
+
+        setLeftSpacerWidth(initialSpacerWidth);
+        updateDirection(initialSpacerWidth);
+    }, []); 
+
+    // Evento de arrastre
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (!isDragging || !sliderBarRef.current) return;
+
+        // calculate an limit new position
+        const sliderBarRect = sliderBarRef.current.getBoundingClientRect();
+        let newSpacerWidth:number = e.clientX - sliderBarRect.left - (handleWidth / 2);
+        let valueMin:number = Math.min(newSpacerWidth, sliderBarRect.width - handleWidth);
+        newSpacerWidth = Math.max(0, valueMin);
+
+        setLeftSpacerWidth(newSpacerWidth);
+        updateDirection(newSpacerWidth);
+    }, [isDragging, updateDirection]);
+
+    // Evento para soltar el click
+    const handleMouseUp = useCallback(() => {
+        setIsDragging(false);
+        document.body.style.cursor = 'default';
+    }, []);
+
+    // Evento para presionar el click
+    const onMouseDownHandle = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.preventDefault();
+        setIsDragging(true);
+        document.body.style.cursor = 'grabbing';
+    }, []);
+
+    // Efecto para los event listeners
+    useEffect(() => {
+        if (isDragging) {
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
+
+            return () => {
+                window.removeEventListener('mousemove', handleMouseMove);
+                window.removeEventListener('mouseup', handleMouseUp);
+            };
+        }
+    }, [isDragging, handleMouseMove, handleMouseUp]);
+
+    const renderSquareLeft = () => {
+        return (
+            <Box width="10%" height={contHeight} style={sectionStyle}>
+                {isDragging && directionCcw === false && (
+                    <Box width="100%" height="100%" style={{ backgroundColor: 'red', opacity: 0.6 }} />
+                )}
+            </Box>
+        );
+    };
+
+    const renderSquareRight = () => {
+        return (
+            <Box width="10%" height={contHeight} style={sectionStyle}>
+                {isDragging && directionCcw === true && (
+                    <Box width="100%" height="100%" style={{ backgroundColor: 'red', opacity: 0.6 }} />
+                )}
+            </Box>
+        );
+    };
+
+    return (
+        <Flex width="100%" height="auto" direction="row" px="2" gapX="2"
+            align="center" justify="center" style={{ userSelect: 'none' }}>
+
+            {renderSquareLeft()}
+
+            {/* Barra del slider */}
+            <Flex
+                ref={sliderBarRef}
+                width="80%"
+                height={contHeight}
+                direction="row"
+                align="center"
+                style={sectionStyle} >
+
+                {/* Espaciador a la izquierda */}
+                <div style={{
+                    width: leftSpacerWidth + 'px',
+                    flexShrink: 0,
+                    height: '100%',
+                    backgroundColor: isDragging && directionCcw === false ? 'rgba(255,0,0,0.2)' : 'transparent',
+                    transition: 'background-color 0.2s ease'}} />
+
+                {/* La palanca */}
+                <div style={isDragging ? activeHandleStyle : handleStyle}
+                     onMouseDown={onMouseDownHandle}/>
+
+                {/* Espacio restante a la derecha */}
+                <div style={{
+                    flex: 1,
+                    height: '100%',
+                    backgroundColor: isDragging && directionCcw === true ? 'rgba(255,0,0,0.2)' : 'transparent',
+                    transition: 'background-color 0.2s ease'}} />
+            </Flex>
+
+            {renderSquareRight()}
+        </Flex>
+    );
+}

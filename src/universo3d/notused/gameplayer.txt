@@ -1,0 +1,30 @@
+
+let angleDegrees = 0;
+if(sliderValue>=180){
+    angleDegrees = sliderValue - 180;
+}
+else{
+    angleDegrees = (180-sliderValue) * (-1);
+}
+
+if(dirCCW){
+    this.roll_value = XMath2d
+        .getAngleInc(this.roll_value,this.roll_velocity);
+}
+else {
+    this.roll_value = XMath2d
+        .getAngleDec(this.roll_value,this.roll_velocity);            
+}
+const roll_degrees = XMath2dUtil.toDegrees(this.roll_value);
+console.log(roll_degrees);
+
+public rotate(axis:number,angle:number) { 
+    this.glmachine!.rotate(axis,angle);        
+};//end
+public moveToTarget(target: Vector3d): void {
+    this.glmachine.worldPosition = target;
+    //this.position = System3dUtil.getAsArray(this.worldPosition);        
+};//end
+const object3d:THREE.Object3D = await loadGLB(PlMachineConfig.SOURCE_URL);
+const vertex: THREE.BufferAttribute | THREE.InterleavedBufferAttribute  = FbxLoaderUtil.getFbxObjectVertex(object3d);
+this.model3d = {object3d:object3d,vertex:vertex};

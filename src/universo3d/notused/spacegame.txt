@@ -1,0 +1,58 @@
+
+
+public execPlayerRollOld = (rollRight:boolean) => {        
+    let rollAngle=this.player!.roll_velocity;
+    if(rollRight) { rollAngle *= (-1); }
+    this.tmpQ.setFromAxisAngle(this.AXIS_Z,rollAngle);
+    this.player!.glmachine!.quaternion.multiply(this.tmpQ);
+    this.player!.glmachine!.quaternion.normalize();
+
+    if(rollAngle>=0){
+        this.player!.roll_angle = XMath2d
+            .getAngleInc(this.player!.roll_angle,rollAngle);
+    }
+    else {
+        this.player!.roll_angle = XMath2d
+            .getAngleDec(this.player!.roll_angle,Math.abs(rollAngle));
+    }
+    this.player!.pivotRotate(PlMachineConfig.ROLL_AXIS,rollAngle);
+};//end
+
+
+public execPlayerPitchOld = (pitchDown: boolean) => {
+    let pitchAngle = this.player!.pitch_velocity;
+    if (pitchDown) pitchAngle *= -1;
+    this.tmpQ.setFromAxisAngle(this.AXIS_X, pitchAngle);
+    this.player!.glmachine!.quaternion.multiply(this.tmpQ);
+    this.player!.glmachine!.quaternion.normalize(); 
+    if(pitchAngle>=0){
+        this.player!.pitch_angle = XMath2d
+            .getAngleInc(this.player!.pitch_angle,pitchAngle);
+    }
+    else {
+        this.player!.pitch_angle = XMath2d
+            .getAngleDec(this.player!.pitch_angle,Math.abs(pitchAngle));
+    }
+    this.player!.pivotRotate(PlMachineConfig.PITCH_AXIS,pitchAngle);
+};//end
+
+
+
+//this.animateMainCamera(); 
+public animateMainCamera = () => {
+
+    const cameraPosBase:number[] = this.playerPivot!.pivot.getDirecctionInverseVertex(2,GameConfig.PLCAMERA_DIST);
+
+    const pivotCamPos: Pivot3d = new Pivot3d();
+    pivotCamPos.move(cameraPosBase);
+    const cameraPosFinal:number[] = pivotCamPos.getDirecctionVertex(1,GameConfig.PLCAMERA_INCY);
+    const camTarget:number[] =this.playerPivot!.pivot.getDirecctionVertex(1,GameConfig.PLCAMERA_INCY);
+        
+    //this.plCamera!.attach(ThreeUtil.getSceneRoot());
+    this.plCamera!.rotation.set(0,0,0);
+    this.plCamera!.position.set(cameraPosFinal[0],cameraPosFinal[1],cameraPosFinal[2]);
+    this.plCamera!.rotation.set(0,0,this.playerPivot!.pivot.rotation[2]);
+    this.plCamera!.lookAt(camTarget[0],camTarget[1],camTarget[2]);
+    //this.plCamera!.rotateX(this.player!.pivot.rotation[0]);
+    
+};//end

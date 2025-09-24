@@ -1,0 +1,62 @@
+// === CAMARAS ===
+const cameraMain = new THREE.PerspectiveCamera(75, monAspect, 0.1, 1000);
+cameraMain.position.set(0, 0, 5);
+
+// Esta cámara solo para sprites
+const cameraSprite = new THREE.OrthographicCamera(
+  -canvasdim.width / 2,
+  canvasdim.width / 2,
+  canvasdim.height / 2,
+  -canvasdim.height / 2,
+  0.1,
+  1000
+);
+cameraSprite.position.set(0, 0, 10);
+
+// === SPRITE DE EJEMPLO ===
+const map = new THREE.TextureLoader().load("sprite.png");
+const spriteMaterial = new THREE.SpriteMaterial({ map, color: 0xffffff });
+const sprite = new THREE.Sprite(spriteMaterial);
+sprite.position.set(0, 0, 0);
+
+sprite.position.set(canvasdim.width/2 - 50, canvasdim.height/2 - 50, 0);
+
+// el sprite solo en layer 1
+sprite.layers.set(1);
+sprite.layers.set(1);
+universoScene!.scene!.add(sprite);
+
+// la cámara de sprites ve solo layer 1
+cameraSprite.layers.enable(1);
+
+// la cámara principal ve solo layer 0 (por defecto)
+cameraMain.layers.enable(0);
+
+const animate = () => {
+  requestAnimationFrame(animate);
+
+  // --- render escena normal ---
+  renderer!.autoClear = true; 
+  renderer!.render(universoScene!.scene!, cameraMain);
+
+  // --- render sprites ---
+  renderer!.autoClear = false; // no limpiar el buffer de color
+  renderer!.render(universoScene!.scene!, cameraSprite);
+
+  renderer!.autoClear = true; // restaurar
+};
+
+
+const animate = () => {
+  requestAnimationFrame(animate);
+
+  // --- render escena principal (objetos 3D) ---
+  renderer!.autoClear = true;
+  renderer!.render(universoScene!.scene!, universoScene!.camera!);
+
+  // --- render HUD/UI ---
+  renderer!.autoClear = false; // no limpiar color/depth del render anterior
+  renderer!.render(universoScene!.scene!, hudCamera);
+
+  renderer!.autoClear = true; // restaurar
+};

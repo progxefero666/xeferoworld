@@ -1,0 +1,162 @@
+// src/zone3d/loaders/threefbxloader.ts
+
+import * as THREE from 'three';
+
+
+export class MaterialUtil {
+    
+    public static getSpriteMaterial(texturePath:string): THREE.SpriteMaterial {
+        const textureMap = new THREE.TextureLoader().load(texturePath);
+        return new THREE.SpriteMaterial({ map: textureMap });
+    }
+     
+}//end
+
+
+
+
+/*this.speedometerback = new THREE.Sprite( speedometerMaterial );	
+    const map = new THREE.TextureLoader().load( 'sprite.png' );
+    const material = new THREE.SpriteMaterial( { map: map } );
+// Manipular MeshStandardMaterial
+setStandardMaterialProperties(objeto, {
+    metalness: 0.8,
+    roughness: 0.2,
+    color: 0xff0000,
+    opacity: 0.5,
+    transparent: true
+});
+
+// Manipular MeshPhysicalMaterial (para modelos PBR avanzados)
+setPhysicalMaterialProperties(objeto, {
+    transmission: 0.9,
+    thickness: 1.0,
+    clearcoat: 1.0
+});
+
+// Acceso directo a materiales
+const standardMats = getStandardMaterials(objeto);
+standardMats[0].envMapIntensity = 2.0;
+standardMats[0].needsUpdate = true;
+
+// Reemplazar con nuevo material
+replaceWithStandardMaterial(objeto, {
+    color: 0x00ff00,
+    metalness: 1.0,
+    roughness: 0.1
+});
+*/
+
+export function setStandardMaterialProperties(
+    object: THREE.Object3D,
+    properties: {
+        color?: THREE.Color | number;
+        metalness?: number;
+        roughness?: number;
+        opacity?: number;
+        transparent?: boolean;
+        envMapIntensity?: number;
+    }): void {
+
+    const materials = getStandardMaterials(object);
+
+    materials.forEach(material => {
+        if (properties.color !== undefined) {
+            material.color = properties.color instanceof THREE.Color ?
+                properties.color : new THREE.Color(properties.color);
+        }
+        if (properties.metalness !== undefined) material.metalness = properties.metalness;
+        if (properties.roughness !== undefined) material.roughness = properties.roughness;
+        if (properties.opacity !== undefined) material.opacity = properties.opacity;
+        if (properties.transparent !== undefined) material.transparent = properties.transparent;
+        if (properties.envMapIntensity !== undefined) material.envMapIntensity = properties.envMapIntensity;
+
+        material.needsUpdate = true;
+    });
+};//end
+
+export function getStandardMaterials(object: THREE.Object3D): THREE.MeshStandardMaterial[] {
+    const materials: THREE.MeshStandardMaterial[] = [];
+
+    object.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            if (Array.isArray(child.material)) {
+                child.material.forEach(mat => {
+                    if (mat instanceof THREE.MeshStandardMaterial) {
+                        materials.push(mat);
+                    }
+                });
+            } else if (child.material instanceof THREE.MeshStandardMaterial) {
+                materials.push(child.material);
+            }
+        }
+    });
+
+    return materials;
+};//end
+
+export function getPhysicalMaterials(object: THREE.Object3D): THREE.MeshPhysicalMaterial[] {
+    const materials: THREE.MeshPhysicalMaterial[] = [];
+
+    object.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            if (Array.isArray(child.material)) {
+                child.material.forEach(mat => {
+                    if (mat instanceof THREE.MeshPhysicalMaterial) {
+                        materials.push(mat);
+                    }
+                });
+            } else if (child.material instanceof THREE.MeshPhysicalMaterial) {
+                materials.push(child.material);
+            }
+        }
+    });
+
+    return materials;
+};//end
+
+
+export function replaceWithStandardMaterial(
+    object: THREE.Object3D,
+    materialProperties: ConstructorParameters<typeof THREE.MeshStandardMaterial>[0] = {}): void {
+    const newMaterial = new THREE.MeshStandardMaterial(materialProperties);
+
+    object.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+            child.material = newMaterial;
+        }
+    });
+};//end
+
+export function setPhysicalMaterialProperties(
+    object: THREE.Object3D,
+    properties: {
+        color?: THREE.Color | number;
+        metalness?: number;
+        roughness?: number;
+        opacity?: number;
+        transparent?: boolean;
+        clearcoat?: number;
+        clearcoatRoughness?: number;
+        transmission?: number;
+        thickness?: number;
+    }): void {
+    const materials = getPhysicalMaterials(object);
+
+    materials.forEach(material => {
+        if (properties.color !== undefined) {
+            material.color = properties.color instanceof THREE.Color ?
+                properties.color : new THREE.Color(properties.color);
+        }
+        if (properties.metalness !== undefined) material.metalness = properties.metalness;
+        if (properties.roughness !== undefined) material.roughness = properties.roughness;
+        if (properties.opacity !== undefined) material.opacity = properties.opacity;
+        if (properties.transparent !== undefined) material.transparent = properties.transparent;
+        if (properties.clearcoat !== undefined) material.clearcoat = properties.clearcoat;
+        if (properties.clearcoatRoughness !== undefined) material.clearcoatRoughness = properties.clearcoatRoughness;
+        if (properties.transmission !== undefined) material.transmission = properties.transmission;
+        if (properties.thickness !== undefined) material.thickness = properties.thickness;
+
+        material.needsUpdate = true;
+    });
+};
