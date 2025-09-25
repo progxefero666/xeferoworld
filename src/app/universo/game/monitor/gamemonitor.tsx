@@ -82,52 +82,56 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
     const handleResize = () => {
         renderer!.setSize(canvasdim.width, canvasdim.height);
     };//end
-
-    const test = () => { };
-    useImperativeHandle(ref, () => ({ test }), []);
-
-
-    /*.......................................................................................    
-    Three app Main animation loop    
-    //......................................................................................*/
-    const execSleep = async(ms: number): Promise<void> =>{
-        return new Promise(resolve => setTimeout(resolve, ms));
-    };    
-    let lastTelemetry = 0;
-    let lastTime = 0;
-    const clock = new THREE.Clock();  
-    const animate = async () => {
-        requestAnimationFrame(animate);
-        const delta = clock.getDelta(); 
-        const now = performance.now();
-        
-        //animate scene
-        //game.animate(delta); 
-        renderer!.render(gamesc.scene, game.cameraPlayer!);
-        //renderer!.render(gamesc.scene, monCamera!);
-
-        const timeDiff = performance.now() - lastTime;
-        if(timeDiff < GameConfig.FRAME_TIME) { 
-            await execSleep(GameConfig.FRAME_TIME - timeDiff); 
-        }        
-        lastTime = now;
-    };//end
-        
-    /*
-    //debug telemetry
-    if (now - lastTelemetry >= 500 && game.player) {
-        const telemetry = FlySystemUtil.getTelemetry(game.player);
-        telemetry.toConsole();
-        lastTelemetry = now;
-    }
-    */  
-    //.......................................................................................
-
-
+    
     const onExpand = () => {
         console.log("onclick expand");
     };//end
 
+    const test = () => {};
+    useImperativeHandle(ref,()=>({test}),[]);
+
+    const execSleep = async(ms: number): Promise<void> =>{
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };    
+    
+    //......................................................................................    
+    //Three app Main animation loop    
+    //......................................................................................
+
+    //init time properties
+    let lastTime = 0;
+    
+    const clock = new THREE.Clock();
+
+    const animate = async () => {
+        requestAnimationFrame(animate);
+
+        //new time parameters
+        const delta = clock.getDelta(); 
+        const now = performance.now();
+        
+        //animate scene
+        if(GameAircraft.EXEC_ANIMATION){game.animate(delta);}
+
+        //render main scene
+        renderer!.render(gamesc.scene, game.cameraPlayer!);
+    
+        //sleep to correct frame duration
+        const timeDiff = performance.now() - lastTime;
+        if(timeDiff < GameConfig.FRAME_TIME) { 
+            await execSleep(GameConfig.FRAME_TIME - timeDiff); 
+        }        
+
+        //update time properties
+        lastTime = now;
+    };//end
+    //.......................................................................................
+
+
+
+
+    //jsx
+    //.......................................................................................    
     return (
         <Flex width="100%" direction="column" >
 
@@ -144,14 +148,9 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
 
             <Box width="100%" style={{ position: 'relative', width: monCsswidth, height: monCssheight }}>
                 <canvas ref={threeContainerRef}
-                    style={{
-                        zIndex: 1,
-                        position: 'absolute', left: 0, top: 0,
-                        width: monCsswidth,
-                        height: monCssheight,
-                        backgroundColor: GameConfig.SCENE_BACKCOLOR
-                    }} />
-
+                        style={{zIndex:1, position:'absolute',left:0,top:0,
+                                width:monCsswidth, height:monCssheight,
+                                backgroundColor: GameConfig.SCENE_BACKCOLOR}} />
             </Box>
         </Flex>
     );
@@ -159,12 +158,15 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
 });//end GameMonitor
 
 /*
-let monCamera: THREE.PerspectiveCamera | null = null;
-monCamera = new THREE.PerspectiveCamera(
-    GameConfig.PLCAMERA_FOV,1, 
-    GameConfig.PLCAMERA_NEAR,
-    GameConfig.PLCAMERA_FAR);
-monCamera.position.set(0,0,20);*/
+//before animate
+let lastTelemetry = 0;
+//debug telemetry
+if (now - lastTelemetry >= 500 && game.player) {
+    const telemetry = FlySystemUtil.getTelemetry(game.player);
+    telemetry.toConsole();
+    lastTelemetry = now;
+}
+*/  
 
 /*
 <div ref={divOverCanvasRef}    

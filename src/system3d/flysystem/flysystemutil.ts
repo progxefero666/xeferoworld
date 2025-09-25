@@ -47,8 +47,9 @@ export class FlySystemUtil {
         return (ln_per_tick * GameConfig.FRAME_RATE) / GameConfig.SPEED_SCALE;
     }//end
 
-    public static tickToKmH(ln_per_tick: number): number {
-        return DinamicUtil.toKmHour(FlySystemUtil.tickToMs(ln_per_tick));
+    public static tickToKmH(ln_per_tick: number): number {//
+        const velKmh= DinamicUtil.toKmHour(FlySystemUtil.tickToMs(ln_per_tick))
+        return Math.floor(velKmh);
     }//end    
 
     public static computeTurnRadius(velocity: number, rollAngle: number): number {

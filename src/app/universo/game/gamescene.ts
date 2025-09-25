@@ -75,9 +75,14 @@ export class GameScene {
         //this.scene.add(this.plane); 
     }//end 
 
+    public loadPlayer(glObject:THREE.Object3D){
+        this.scene.add(glObject);
+    };//end
+
+    /*
     public loadPlayer(glObject:THREE.Object3D,glTarget:THREE.Sprite){
         this.scene.add(glObject);
         this.scene.add(glTarget);
-    };//end
-
+    };//end    
+    */
 }//end

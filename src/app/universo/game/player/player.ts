@@ -13,7 +13,7 @@ import { ThreeUtil } from '@/zone3d/three/util/threeutil';
 import { PlayerSystemAttack } from './playersysattack';
 import { Math3dUtil } from '@/math3d/functions/math3dutil';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
-import { PlayerCfg } from '@/app/universo/game/player/playerconfig';
+import { PlayerArmyCfg, PlayerShipCfg } from '@/app/universo/game/player/playerconfig';
 import { System3d } from '@/system3d/system3d';
 
 /**
@@ -33,8 +33,8 @@ export class Player {
 
     //15 × 3.6 = 54 km/h
     public ln_velocity: number = 0.0;
-    public roll_velocity: number = PlayerCfg.ROLL_VEL_UNIT;
-    public pitch_velocity: number = PlayerCfg.PITCH_VEL_UNIT;
+    public roll_velocity: number = PlayerShipCfg.ROLL_VEL_UNIT;
+    public pitch_velocity: number = PlayerShipCfg.PITCH_VEL_UNIT;
 
     public roll_angle: number = 0.0;
     public pitch_angle: number = 0.0;
@@ -77,7 +77,7 @@ export class Player {
 
     public async init(): Promise<boolean> {
         this.ln_velocity = FlySystemUtil.msToTick(GameConfig.INIT_LVELOCITY); 
-        this.glmachine = await GlbUtil.loadGLB_object(PlayerCfg.SOURCE_URL);
+        this.glmachine = await GlbUtil.loadGLB_object(PlayerShipCfg.SOURCE_URL);
         await this.loadCrosshair();        
         this.initGuns();
         //this.glmachine.add(new THREE.AxesHelper(2)); 
@@ -87,7 +87,7 @@ export class Player {
     };//end
 
     public initGuns = () => {
-        this.glCannonsObjs = PlayerCfg.getGlCannons();
+        this.glCannonsObjs = PlayerArmyCfg.getGlCannons();
         for(let idx:number=0;idx<this.glCannonsObjs.length;idx++){
             this.glmachine!.add(this.glCannonsObjs[idx]); 
         }      
@@ -95,24 +95,24 @@ export class Player {
 
     public loadCrosshair = async () => {        
         //crosshair object
-        this.glCrosshair = await PlayerCfg.getGlCrosshair();
+        this.glCrosshair = await PlayerShipCfg.getGlCrosshair();
         this.glCrosshair.position.set(
-            PlayerCfg.CRH_POSITION[0],
-            PlayerCfg.CRH_POSITION[1],
-            PlayerCfg.CRH_POSITION[2]);
+            PlayerShipCfg.CRH_POSITION[0],
+            PlayerShipCfg.CRH_POSITION[1],
+            PlayerShipCfg.CRH_POSITION[2]);
         this.glmachine!.add(this.glCrosshair);
 
         //crosshair hidden sphere ref object
-        this.glCannonsTarget = PlayerCfg.getGlTarget();            
+        this.glCannonsTarget = PlayerShipCfg.getGlTarget();            
         this.glCannonsTarget.position.set(
-            PlayerCfg.CRH_POSITION[0],
-            PlayerCfg.CRH_POSITION[1],
-            PlayerCfg.CRH_POSITION[2]);
+            PlayerShipCfg.CRH_POSITION[0],
+            PlayerShipCfg.CRH_POSITION[1],
+            PlayerShipCfg.CRH_POSITION[2]);
         this.glmachine!.add(this.glCannonsTarget);
     };//end 
 
     public initEngines = () => {
-        this.glEngines = PlayerCfg.getGlEngines();
+        this.glEngines = PlayerShipCfg.getGlEngines();
         for(let idx:number=0;idx<this.glEngines.length;idx++){
             this.glmachine!.add(this.glEngines[idx]); 
         }        
@@ -141,11 +141,11 @@ export class Player {
 
 
     public changeVelocity = (increment: boolean) => {
-        const dv = FlySystemUtil.accToTickDelta(PlayerCfg.PHY_ACELERATION_MAX);
+        const dv = FlySystemUtil.accToTickDelta(PlayerShipCfg.PHY_ACELERATION_MAX);
         if (increment) {
-            this.ln_velocity = Math.min(this.ln_velocity + dv, PlayerCfg.LN_VEL_MAX);
+            this.ln_velocity = Math.min(this.ln_velocity + dv, PlayerShipCfg.LN_VEL_MAX);
         } else {
-            this.ln_velocity = Math.max(this.ln_velocity - dv, PlayerCfg.LN_VEL_MIN);
+            this.ln_velocity = Math.max(this.ln_velocity - dv, PlayerShipCfg.LN_VEL_MIN);
         }
     };
     
@@ -229,7 +229,7 @@ export class Player {
     };//end  
 
     public getNewTargetPosition = (): number[] => {
-        const targetDistance = PlayerCfg.ATT_DIST_TO_CONVERG; 
+        const targetDistance = PlayerShipCfg.ATT_DIST_TO_CONVERG; 
         const [px, py, pz] = this.targetPivot.position;
         return [px + this.targetDirection.elements[0] * targetDistance,
                 py + this.targetDirection.elements[1] * targetDistance,

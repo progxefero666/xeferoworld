@@ -26,9 +26,58 @@ relation factor: 1/290 = 0,003448
 */
 
 /**
- * class PlayerConfig.getGlCrosshair
+ * class PlayerCfg
  */
-export class PlayerCfg {
+export class PlayerArmyCfg {
+
+    //military cannons
+    public static CANNON_RU_COORDS:Vector3d = {x: 5.6, y: 1.4, z:-6.3};
+    public static CANNON_RD_COORDS:Vector3d = {x: 5.6, y:-1.4, z:-6.3};
+    public static CANNON_LU_COORDS:Vector3d = {x:-5.6, y: 1.4, z:-6.3};
+    public static CANNON_LD_COORDS:Vector3d = {x:-5.6, y:-1.4, z:-6.3};    
+        
+    public static getGlCannons():Mesh[] {
+        const material:MeshBasicMaterial
+                    = new MeshBasicMaterial( { color: 0xFF00FF } ); 
+
+        const gunRefObj_RU = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_LU = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+
+        const gunRefObj_RD = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_LD = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+
+        gunRefObj_RU.position.set(PlayerArmyCfg.CANNON_RU_COORDS.x,
+                                  PlayerArmyCfg.CANNON_RU_COORDS.y,
+                                  PlayerArmyCfg.CANNON_RU_COORDS.z);
+       gunRefObj_LU.position.set(PlayerArmyCfg.CANNON_LU_COORDS.x,
+                                  PlayerArmyCfg.CANNON_LU_COORDS.y,
+                                  PlayerArmyCfg.CANNON_LU_COORDS.z);
+
+        gunRefObj_RD.position.set(PlayerArmyCfg.CANNON_RD_COORDS.x,
+                                  PlayerArmyCfg.CANNON_RD_COORDS.y,
+                                  PlayerArmyCfg.CANNON_RD_COORDS.z); 
+        gunRefObj_LD.position.set(PlayerArmyCfg.CANNON_LD_COORDS.x,
+                                  PlayerArmyCfg.CANNON_LD_COORDS.y,
+                                  PlayerArmyCfg.CANNON_LD_COORDS.z); 
+
+        const glGuns:Mesh[] = [];
+        glGuns.push(gunRefObj_RU);
+        glGuns.push(gunRefObj_LU);
+        glGuns.push(gunRefObj_RD);        
+        glGuns.push(gunRefObj_LD); 
+        return glGuns;
+    }//end
+
+};//end
+
+/**
+ * class PlayerCfg
+ */
+export class PlayerShipCfg {
 
     public static SOURCE_URL: string = '/spacegame/player/xwingfinal.glb';
 
@@ -77,21 +126,21 @@ export class PlayerCfg {
         const engineObj_LD = new Mesh(
                 new SphereGeometry(0.25,32,32),material);  
 
-        engineObj_RU.position.set(PlayerCfg.ENGINE_RU_COORDS.x,
-                                  PlayerCfg.ENGINE_RU_COORDS.y,
-                                  PlayerCfg.ENGINE_RU_COORDS.z); 
+        engineObj_RU.position.set(PlayerShipCfg.ENGINE_RU_COORDS.x,
+                                  PlayerShipCfg.ENGINE_RU_COORDS.y,
+                                  PlayerShipCfg.ENGINE_RU_COORDS.z); 
 
-        engineObj_RD.position.set(PlayerCfg.ENGINE_RD_COORDS.x,
-                                  PlayerCfg.ENGINE_RD_COORDS.y,
-                                  PlayerCfg.ENGINE_RD_COORDS.z);
+        engineObj_RD.position.set(PlayerShipCfg.ENGINE_RD_COORDS.x,
+                                  PlayerShipCfg.ENGINE_RD_COORDS.y,
+                                  PlayerShipCfg.ENGINE_RD_COORDS.z);
 
-        engineObj_LU.position.set(PlayerCfg.ENGINE_LU_COORDS.x,
-                                  PlayerCfg.ENGINE_LU_COORDS.y,
-                                  PlayerCfg.ENGINE_LU_COORDS.z);
+        engineObj_LU.position.set(PlayerShipCfg.ENGINE_LU_COORDS.x,
+                                  PlayerShipCfg.ENGINE_LU_COORDS.y,
+                                  PlayerShipCfg.ENGINE_LU_COORDS.z);
 
-        engineObj_LD.position.set(PlayerCfg.ENGINE_LD_COORDS.x,
-                                  PlayerCfg.ENGINE_LD_COORDS.y,
-                                  PlayerCfg.ENGINE_LD_COORDS.z);  
+        engineObj_LD.position.set(PlayerShipCfg.ENGINE_LD_COORDS.x,
+                                  PlayerShipCfg.ENGINE_LD_COORDS.y,
+                                  PlayerShipCfg.ENGINE_LD_COORDS.z);  
 
         const glEngines:Mesh[] = [];
         glEngines.push(engineObj_RU);
@@ -103,83 +152,47 @@ export class PlayerCfg {
        
     public static GL_CRHAIR_SCALE:number= 0.15;
 
-    //military cannons
-    public static CANNON_RU_COORDS:Vector3d = {x: 5.6, y: 1.4, z:-6.3};
-    public static CANNON_RD_COORDS:Vector3d = {x: 5.6, y:-1.4, z:-6.3};
-    public static CANNON_LU_COORDS:Vector3d = {x:-5.6, y: 1.4, z:-6.3};
-    public static CANNON_LD_COORDS:Vector3d = {x:-5.6, y:-1.4, z:-6.3};    
+
 
     //military arsenal     
     public static ATT_BULL_A_PHYVEL:number = 400;//m/s
     public static ATT_TIME_TO_CONVERG:number = 0.75;
 
     public static ATT_DIST_TO_CONVERG:number 
-        = this.ATT_TIME_TO_CONVERG * PlayerCfg.ATT_BULL_A_PHYVEL;   
+        = this.ATT_TIME_TO_CONVERG * PlayerShipCfg.ATT_BULL_A_PHYVEL;   
 
     public static CRH_POSITION:number[] 
-        = [0,GameConfig.M_CAMERA_PLINCY,PlayerCfg.ATT_DIST_TO_CONVERG*(-1)];  
+        = [0,GameConfig.M_CAMERA_PLINCY,PlayerShipCfg.ATT_DIST_TO_CONVERG*(-1)];//  
     
+        
+    public static CRH_GLREFOBJ_RADIUS:number = 3.0;
+    public static CRH_GLREFOBJ_COLOR:any = '#FFFF00';    
+
     public static BULLETS_A_TICKVEL:number 
-        = FlySystemUtil.msToTick(PlayerCfg.ATT_BULL_A_PHYVEL);
+        = FlySystemUtil.msToTick(PlayerShipCfg.ATT_BULL_A_PHYVEL);
         
     public static BULLETS_A_CFG:TCylinderConfig 
         = {radius:0.15,len:1.0,radialseg:16,lenseg:1,color: 0xFFD700};
 
     public static getGlCrosshair = async () => {    
-        const scale = PlayerCfg.GL_CRHAIR_SCALE;        
+        const scale = PlayerShipCfg.GL_CRHAIR_SCALE;        
         const material:THREE.SpriteMaterial = await GenSpriteMaterials
-                .getMaterial(PlayerCfg.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
+                .getMaterial(PlayerShipCfg.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
         const glCrosshair = new THREE.Sprite(material);
         glCrosshair.scale.set(scale,scale,scale);
         return glCrosshair;
     };//end 
 
-    public static getGlCannons():Mesh[] {
-        const material:MeshBasicMaterial
-                    = new MeshBasicMaterial( { color: 0xFF00FF } ); 
-
-        const gunRefObj_RU = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LU = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-
-        const gunRefObj_RD = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LD = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-
-        gunRefObj_RU.position.set(PlayerCfg.CANNON_RU_COORDS.x,
-                                  PlayerCfg.CANNON_RU_COORDS.y,
-                                  PlayerCfg.CANNON_RU_COORDS.z);
-       gunRefObj_LU.position.set(PlayerCfg.CANNON_LU_COORDS.x,
-                                  PlayerCfg.CANNON_LU_COORDS.y,
-                                  PlayerCfg.CANNON_LU_COORDS.z);
-
-        gunRefObj_RD.position.set(PlayerCfg.CANNON_RD_COORDS.x,
-                                  PlayerCfg.CANNON_RD_COORDS.y,
-                                  PlayerCfg.CANNON_RD_COORDS.z); 
-        gunRefObj_LD.position.set(PlayerCfg.CANNON_LD_COORDS.x,
-                                  PlayerCfg.CANNON_LD_COORDS.y,
-                                  PlayerCfg.CANNON_LD_COORDS.z); 
-
-        const glGuns:Mesh[] = [];
-        glGuns.push(gunRefObj_RU);
-        glGuns.push(gunRefObj_LU);
-        glGuns.push(gunRefObj_RD);        
-        glGuns.push(gunRefObj_LD); 
-        return glGuns;
-    }//end
 
     public static getGlTarget():Mesh {
-        const material:MeshBasicMaterial
-                    = new MeshBasicMaterial({color:'#FFFF00'}); 
-        return new Mesh(new SphereGeometry(3.0,16,16),material);
+        return new Mesh(
+            new SphereGeometry(PlayerShipCfg.CRH_GLREFOBJ_RADIUS,16,16),
+            new MeshBasicMaterial({color:PlayerShipCfg.CRH_GLREFOBJ_COLOR}));
     }//end
 
     //util
     public static getMaxVelocityKmH = ():number => {
-        const physicMaxVelkmH:number= FlySystemUtil.tickToKmH(PlayerCfg.LN_VEL_MAX);
-        return Math.floor(physicMaxVelkmH);
+        return FlySystemUtil.tickToKmH(PlayerShipCfg.LN_VEL_MAX);
     };//end
         
 };//end

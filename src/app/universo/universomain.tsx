@@ -27,7 +27,7 @@ import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
 import { GameScene } from "./game/gamescene";
 
 import { OrthoMonitor } from "./game/monitor/orthomonitor";
-import { PlayerCfg } from "./game/player/playerconfig";
+import { PlayerShipCfg } from "./game/player/playerconfig";
 
 
 const glLayoutGridStyle = {
@@ -204,8 +204,8 @@ export default function UniversoMain() {
         const result = await game.createPlayer(layoutDimRef.current);
         if (!result) { alert("Error loading game"); return; }
 
-        const game_scene: GameScene = new GameScene(false);
-        game_scene.loadPlayer(game.player!.glmachine!,game.player!.glCrosshair!);
+        const game_scene: GameScene = new GameScene(true);
+        game_scene.loadPlayer(game.player!.glmachine!);
         //game.chargeRapierWorld(game_scene);
 
         setGameScene(game_scene);
@@ -261,7 +261,7 @@ export default function UniversoMain() {
 
             <Flex width="40%" direction="column" py="1" mb="2">
                 {wglready ? <PlFlyControls phyvelocity={game.player!.getCurrVelocityKmH()}
-                                   maxphyvelocity={PlayerCfg.getMaxVelocityKmH()}
+                                   maxphyvelocity={PlayerShipCfg.getMaxVelocityKmH()}
                                    changevelocity={game.changePlayerVelocity}
                                    execroll={game.execPlayerRoll}
                                    execpitch={game.execPlayerPitch} /> : null}

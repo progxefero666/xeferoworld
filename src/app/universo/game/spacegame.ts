@@ -8,7 +8,7 @@ import { GameConfig } from '@/app/universo/game/gameconfig';
 import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
 import { Player } from '@/app/universo/game/player/player';
-import { PlayerCfg } from './player/playerconfig';
+import { PlayerShipCfg } from './player/playerconfig';
 
 /*
 export const initRapier = async () => {
@@ -21,11 +21,12 @@ export const initRapier = async () => {
 */
 
 /**
- * SkyBoxGenerator
-    public playerPivot: GamePlayerPivot | null = null;
- * class Universe Space Game
+ * class GameAircraft
+ *    Universe Space Game      
  */
 export class GameAircraft {
+ 
+    public static EXEC_ANIMATION:boolean = false;
 
     public world: RAPIER.World|null = null;
     public player:Player|null = null;
@@ -82,8 +83,8 @@ export class GameAircraft {
         const sign      = rollRight ? -1 : 1;
         const old       = this.player!.roll_angle;
         const valueCurr = old + sign * this.player!.roll_velocity;
-        const valueMin  = -PlayerCfg.ROLL_ANGLE_MAX;
-        const valueMax  = PlayerCfg.ROLL_ANGLE_MAX;        
+        const valueMin  = -PlayerShipCfg.ROLL_ANGLE_MAX;
+        const valueMax  = PlayerShipCfg.ROLL_ANGLE_MAX;        
         const target    = THREE.MathUtils.clamp(valueCurr,valueMin,valueMax);
         const delta     = target - old;
 
@@ -94,7 +95,7 @@ export class GameAircraft {
         this.player!.roll_angle = target;
 
         //update player pivot manually
-        this.player!.rotatePivots(PlayerCfg.ROLL_AXIS, delta);
+        this.player!.rotatePivots(PlayerShipCfg.ROLL_AXIS, delta);
         
     };//end
 
@@ -104,8 +105,8 @@ export class GameAircraft {
         const sign      = pitchDown ? -1 : 1;
         const old       = this.player!.pitch_angle;
         const valueCurr = old + sign * this.player!.pitch_velocity;
-        const valueMin  = -PlayerCfg.PITCH_ANGLE_MAX;
-        const valueMax  = PlayerCfg.PITCH_ANGLE_MAX;
+        const valueMin  = -PlayerShipCfg.PITCH_ANGLE_MAX;
+        const valueMax  = PlayerShipCfg.PITCH_ANGLE_MAX;
         const target    = THREE.MathUtils.clamp(valueCurr,valueMin,valueMax);
         const delta     = target - old;
 
@@ -116,7 +117,7 @@ export class GameAircraft {
         this.player!.pitch_angle = target;
 
         //update player pivot manually
-        this.player!.rotatePivots(PlayerCfg.PITCH_AXIS, delta);
+        this.player!.rotatePivots(PlayerShipCfg.PITCH_AXIS, delta);
     };//end
 
     public changePlayerVelocity = (increment:boolean) => {
