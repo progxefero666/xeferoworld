@@ -1,7 +1,7 @@
 //src\app\universo\game\player\playerconfig.ts
 
 
-//import * as THREE from 'three';
+import * as THREE from 'three';
 
 import { 
     MeshBasicMaterial, 
@@ -13,6 +13,7 @@ import { TCylinderConfig, TDimension3d, Vector3d } from "@/common/types";
 import { System3d } from "@/system3d/system3d";
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { GameConfig } from '@/app/universo/game/gameconfig';
+import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
 
 /*
 cm_y: number = 1.2;
@@ -25,9 +26,9 @@ relation factor: 1/290 = 0,003448
 */
 
 /**
- * class PlayerConfig.ATT_DIST_TO_CONVERG
+ * class PlayerConfig.getGlCrosshair
  */
-export class PlayerConfig {
+export class PlayerCfg {
 
     public static SOURCE_URL: string = '/spacegame/player/xwingfinal.glb';
 
@@ -76,21 +77,21 @@ export class PlayerConfig {
         const engineObj_LD = new Mesh(
                 new SphereGeometry(0.25,32,32),material);  
 
-        engineObj_RU.position.set(PlayerConfig.ENGINE_RU_COORDS.x,
-                                  PlayerConfig.ENGINE_RU_COORDS.y,
-                                  PlayerConfig.ENGINE_RU_COORDS.z); 
+        engineObj_RU.position.set(PlayerCfg.ENGINE_RU_COORDS.x,
+                                  PlayerCfg.ENGINE_RU_COORDS.y,
+                                  PlayerCfg.ENGINE_RU_COORDS.z); 
 
-        engineObj_RD.position.set(PlayerConfig.ENGINE_RD_COORDS.x,
-                                  PlayerConfig.ENGINE_RD_COORDS.y,
-                                  PlayerConfig.ENGINE_RD_COORDS.z);
+        engineObj_RD.position.set(PlayerCfg.ENGINE_RD_COORDS.x,
+                                  PlayerCfg.ENGINE_RD_COORDS.y,
+                                  PlayerCfg.ENGINE_RD_COORDS.z);
 
-        engineObj_LU.position.set(PlayerConfig.ENGINE_LU_COORDS.x,
-                                  PlayerConfig.ENGINE_LU_COORDS.y,
-                                  PlayerConfig.ENGINE_LU_COORDS.z);
+        engineObj_LU.position.set(PlayerCfg.ENGINE_LU_COORDS.x,
+                                  PlayerCfg.ENGINE_LU_COORDS.y,
+                                  PlayerCfg.ENGINE_LU_COORDS.z);
 
-        engineObj_LD.position.set(PlayerConfig.ENGINE_LD_COORDS.x,
-                                  PlayerConfig.ENGINE_LD_COORDS.y,
-                                  PlayerConfig.ENGINE_LD_COORDS.z);  
+        engineObj_LD.position.set(PlayerCfg.ENGINE_LD_COORDS.x,
+                                  PlayerCfg.ENGINE_LD_COORDS.y,
+                                  PlayerCfg.ENGINE_LD_COORDS.z);  
 
         const glEngines:Mesh[] = [];
         glEngines.push(engineObj_RU);
@@ -113,16 +114,25 @@ export class PlayerConfig {
     public static ATT_TIME_TO_CONVERG:number = 0.75;
 
     public static ATT_DIST_TO_CONVERG:number 
-        = this.ATT_TIME_TO_CONVERG * PlayerConfig.ATT_BULL_A_PHYVEL;   
+        = this.ATT_TIME_TO_CONVERG * PlayerCfg.ATT_BULL_A_PHYVEL;   
 
-    public static CROSSHAIR_POSITION:number[] 
-        = [0,GameConfig.M_CAMERA_PLINCY,PlayerConfig.ATT_DIST_TO_CONVERG*(-1)];  
+    public static CRH_POSITION:number[] 
+        = [0,GameConfig.M_CAMERA_PLINCY,PlayerCfg.ATT_DIST_TO_CONVERG*(-1)];  
     
     public static BULLETS_A_TICKVEL:number 
-        = FlySystemUtil.msToTick(PlayerConfig.ATT_BULL_A_PHYVEL);
+        = FlySystemUtil.msToTick(PlayerCfg.ATT_BULL_A_PHYVEL);
         
     public static BULLETS_A_CFG:TCylinderConfig 
         = {radius:0.15,len:1.0,radialseg:16,lenseg:1,color: 0xFFD700};
+
+    public static getGlCrosshair = async () => {    
+        const scale = PlayerCfg.GL_CRHAIR_SCALE;        
+        const material:THREE.SpriteMaterial = await GenSpriteMaterials
+                .getMaterial(PlayerCfg.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
+        const glCrosshair = new THREE.Sprite(material);
+        glCrosshair.scale.set(scale,scale,scale);
+        return glCrosshair;
+    };//end 
 
     public static getGlCannons():Mesh[] {
         const material:MeshBasicMaterial
@@ -138,19 +148,19 @@ export class PlayerConfig {
         const gunRefObj_LD = new Mesh
                 (new SphereGeometry(0.5,16,16),material);
 
-        gunRefObj_RU.position.set(PlayerConfig.CANNON_RU_COORDS.x,
-                                  PlayerConfig.CANNON_RU_COORDS.y,
-                                  PlayerConfig.CANNON_RU_COORDS.z);
-       gunRefObj_LU.position.set(PlayerConfig.CANNON_LU_COORDS.x,
-                                  PlayerConfig.CANNON_LU_COORDS.y,
-                                  PlayerConfig.CANNON_LU_COORDS.z);
+        gunRefObj_RU.position.set(PlayerCfg.CANNON_RU_COORDS.x,
+                                  PlayerCfg.CANNON_RU_COORDS.y,
+                                  PlayerCfg.CANNON_RU_COORDS.z);
+       gunRefObj_LU.position.set(PlayerCfg.CANNON_LU_COORDS.x,
+                                  PlayerCfg.CANNON_LU_COORDS.y,
+                                  PlayerCfg.CANNON_LU_COORDS.z);
 
-        gunRefObj_RD.position.set(PlayerConfig.CANNON_RD_COORDS.x,
-                                  PlayerConfig.CANNON_RD_COORDS.y,
-                                  PlayerConfig.CANNON_RD_COORDS.z); 
-        gunRefObj_LD.position.set(PlayerConfig.CANNON_LD_COORDS.x,
-                                  PlayerConfig.CANNON_LD_COORDS.y,
-                                  PlayerConfig.CANNON_LD_COORDS.z); 
+        gunRefObj_RD.position.set(PlayerCfg.CANNON_RD_COORDS.x,
+                                  PlayerCfg.CANNON_RD_COORDS.y,
+                                  PlayerCfg.CANNON_RD_COORDS.z); 
+        gunRefObj_LD.position.set(PlayerCfg.CANNON_LD_COORDS.x,
+                                  PlayerCfg.CANNON_LD_COORDS.y,
+                                  PlayerCfg.CANNON_LD_COORDS.z); 
 
         const glGuns:Mesh[] = [];
         glGuns.push(gunRefObj_RU);
@@ -168,7 +178,7 @@ export class PlayerConfig {
 
     //util
     public static getMaxVelocityKmH = ():number => {
-        const physicMaxVelkmH:number= FlySystemUtil.tickToKmH(PlayerConfig.LN_VEL_MAX);
+        const physicMaxVelkmH:number= FlySystemUtil.tickToKmH(PlayerCfg.LN_VEL_MAX);
         return Math.floor(physicMaxVelkmH);
     };//end
         

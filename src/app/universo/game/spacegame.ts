@@ -8,7 +8,7 @@ import { GameConfig } from '@/app/universo/game/gameconfig';
 import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
 import { Player } from '@/app/universo/game/player/player';
-import { PlayerConfig } from './player/playerconfig';
+import { PlayerCfg } from './player/playerconfig';
 
 /*
 export const initRapier = async () => {
@@ -74,60 +74,61 @@ export class GameAircraft {
     };//end  
     
     //......................................................................
-    //player actions
+    // player ship dinamic actions
     //......................................................................
     public execPlayerRoll = (rollRight: boolean) => {
-        //calculate roll values
+
+        //calculate parameters
         const sign      = rollRight ? -1 : 1;
         const old       = this.player!.roll_angle;
         const valueCurr = old + sign * this.player!.roll_velocity;
-        const valueMin  = -PlayerConfig.ROLL_ANGLE_MAX;
-        const valueMax  = PlayerConfig.ROLL_ANGLE_MAX;        
+        const valueMin  = -PlayerCfg.ROLL_ANGLE_MAX;
+        const valueMax  = PlayerCfg.ROLL_ANGLE_MAX;        
         const target    = THREE.MathUtils.clamp(valueCurr,valueMin,valueMax);
         const delta     = target - old;
 
-        if (Math.abs(delta) < 1e-9) return;
-
         //execute roll
+        if (Math.abs(delta) < 1e-9) return;
         this.tmpQ.setFromAxisAngle(this.ROLL_AXIS_VECTOR, delta);
         this.player!.glmachine!.quaternion.multiply(this.tmpQ).normalize();
         this.player!.roll_angle = target;
-        
-        this.player!.updateCrosshairPosition();
 
         //update player pivot manually
-        this.player!.rotatePivots(PlayerConfig.ROLL_AXIS, delta);
+        this.player!.rotatePivots(PlayerCfg.ROLL_AXIS, delta);
         
     };//end
 
     public execPlayerPitch = (pitchDown: boolean) => {
+
+        //calculate parameters
         const sign      = pitchDown ? -1 : 1;
         const old       = this.player!.pitch_angle;
         const valueCurr = old + sign * this.player!.pitch_velocity;
-        const valueMin  = -PlayerConfig.PITCH_ANGLE_MAX;
-        const valueMax  = PlayerConfig.PITCH_ANGLE_MAX;
+        const valueMin  = -PlayerCfg.PITCH_ANGLE_MAX;
+        const valueMax  = PlayerCfg.PITCH_ANGLE_MAX;
         const target    = THREE.MathUtils.clamp(valueCurr,valueMin,valueMax);
         const delta     = target - old;
 
-        if (Math.abs(delta) < 1e-9) return;
-
         //execute pitch
+        if (Math.abs(delta) < 1e-9) return;
         this.tmpQ.setFromAxisAngle(this.PITCH_AXIS_VECTOR, delta);
         this.player!.glmachine!.quaternion.multiply(this.tmpQ).normalize();
         this.player!.pitch_angle = target;
-        this.player!.updateCrosshairPosition();
 
         //update player pivot manually
-        this.player!.rotatePivots(PlayerConfig.PITCH_AXIS, delta);
+        this.player!.rotatePivots(PlayerCfg.PITCH_AXIS, delta);
     };//end
 
     public changePlayerVelocity = (increment:boolean) => {
         this.player!.changeVelocity(increment);
     };//end
 
+
+    //......................................................................
+    // attack actions
+    //......................................................................
     public execPlayerFire = () => {
         this.player!.systemAttack.fireBulletsA();
     };//end
-    //......................................................................
-  
+
 }//end

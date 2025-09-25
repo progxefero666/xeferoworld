@@ -6,7 +6,6 @@ import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { Pivot3d } from '@/math3d/pivot/pivot3d';
 import { Plane3dPoint,Vector3d } from "@/common/types";
-
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { GameConfig } from '@/app/universo/game/gameconfig';
 import { Sys3dThreeUtil } from '@/system3d/util/sys3dthreeutil';
@@ -14,10 +13,8 @@ import { ThreeUtil } from '@/zone3d/three/util/threeutil';
 import { PlayerSystemAttack } from './playersysattack';
 import { Math3dUtil } from '@/math3d/functions/math3dutil';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
-import { PlayerConfig } from '@/app/universo/game/player/playerconfig';
+import { PlayerCfg } from '@/app/universo/game/player/playerconfig';
 import { System3d } from '@/system3d/system3d';
-
-
 
 /**
  * class GamePlayer
@@ -36,8 +33,8 @@ export class Player {
 
     //15 × 3.6 = 54 km/h
     public ln_velocity: number = 0.0;
-    public roll_velocity: number = PlayerConfig.ROLL_VEL_UNIT;
-    public pitch_velocity: number = PlayerConfig.PITCH_VEL_UNIT;
+    public roll_velocity: number = PlayerCfg.ROLL_VEL_UNIT;
+    public pitch_velocity: number = PlayerCfg.PITCH_VEL_UNIT;
 
     public roll_angle: number = 0.0;
     public pitch_angle: number = 0.0;
@@ -80,7 +77,7 @@ export class Player {
 
     public async init(): Promise<boolean> {
         this.ln_velocity = FlySystemUtil.msToTick(GameConfig.INIT_LVELOCITY); 
-        this.glmachine = await GlbUtil.loadGLB_object(PlayerConfig.SOURCE_URL);
+        this.glmachine = await GlbUtil.loadGLB_object(PlayerCfg.SOURCE_URL);
         await this.loadCrosshair();        
         this.initGuns();
         //this.glmachine.add(new THREE.AxesHelper(2)); 
@@ -90,34 +87,32 @@ export class Player {
     };//end
 
     public initGuns = () => {
-        this.glCannonsObjs = PlayerConfig.getGlCannons();
+        this.glCannonsObjs = PlayerCfg.getGlCannons();
         for(let idx:number=0;idx<this.glCannonsObjs.length;idx++){
             this.glmachine!.add(this.glCannonsObjs[idx]); 
         }      
     };//end
 
-    public loadCrosshair = async () => {    
-    
-        const material:THREE.SpriteMaterial = await GenSpriteMaterials
-                .getMaterial(PlayerConfig.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
-        this.glCrosshair = new THREE.Sprite(material);
-
-        const scale = PlayerConfig.GL_CRHAIR_SCALE;
-        const pos = PlayerConfig.CROSSHAIR_POSITION; 
-
-        this.glCrosshair.scale.set(scale,scale,scale);
-        this.glCrosshair.position.set(pos[0],pos[1],pos[2]);
-
-        this.glCannonsTarget = PlayerConfig.getGlTarget();
-        this.glCannonsTarget.position.set(pos[0],pos[1],pos[2]);
-
-        this.updateCrosshairPosition();
+    public loadCrosshair = async () => {        
+        //crosshair object
+        this.glCrosshair = await PlayerCfg.getGlCrosshair();
+        this.glCrosshair.position.set(
+            PlayerCfg.CRH_POSITION[0],
+            PlayerCfg.CRH_POSITION[1],
+            PlayerCfg.CRH_POSITION[2]);
         this.glmachine!.add(this.glCrosshair);
+
+        //crosshair hidden sphere ref object
+        this.glCannonsTarget = PlayerCfg.getGlTarget();            
+        this.glCannonsTarget.position.set(
+            PlayerCfg.CRH_POSITION[0],
+            PlayerCfg.CRH_POSITION[1],
+            PlayerCfg.CRH_POSITION[2]);
         this.glmachine!.add(this.glCannonsTarget);
     };//end 
 
     public initEngines = () => {
-        this.glEngines = PlayerConfig.getGlEngines();
+        this.glEngines = PlayerCfg.getGlEngines();
         for(let idx:number=0;idx<this.glEngines.length;idx++){
             this.glmachine!.add(this.glEngines[idx]); 
         }        
@@ -146,11 +141,11 @@ export class Player {
 
 
     public changeVelocity = (increment: boolean) => {
-        const dv = FlySystemUtil.accToTickDelta(PlayerConfig.PHY_ACELERATION_MAX);
+        const dv = FlySystemUtil.accToTickDelta(PlayerCfg.PHY_ACELERATION_MAX);
         if (increment) {
-            this.ln_velocity = Math.min(this.ln_velocity + dv, PlayerConfig.LN_VEL_MAX);
+            this.ln_velocity = Math.min(this.ln_velocity + dv, PlayerCfg.LN_VEL_MAX);
         } else {
-            this.ln_velocity = Math.max(this.ln_velocity - dv, PlayerConfig.LN_VEL_MIN);
+            this.ln_velocity = Math.max(this.ln_velocity - dv, PlayerCfg.LN_VEL_MIN);
         }
     };
     
@@ -199,25 +194,22 @@ export class Player {
             this.targetWorldforward.x,
             this.targetWorldforward.y,
             this.targetWorldforward.z]);  
-        const targetPosition:number[] = this.getNewTargetPivotPosition();
+        const targetPivotPosition:number[] = this.getNewTargetPivotPosition();
 
         //update ship
         this.shipPivot.move(shipPosition);
         
-        //update target    
-        this.targetPivot.move(targetPosition);
-        const [px, py, pz] = this.targetPivot.position;        
-        const targetDistance = PlayerConfig.ATT_DIST_TO_CONVERG; 
-        const target_x = px + (this.targetDirection.elements[0] * targetDistance);
-        const target_y = py + (this.targetDirection.elements[1] * targetDistance);
-        const target_z = pz + (this.targetDirection.elements[2] * targetDistance); 
+        //update target pivot and position   
+        this.targetPivot.move(targetPivotPosition);
+        const targetPos:number[] = this.getNewTargetPosition();
 
         //update player all gl objects
-        this.glmachine!.position.set
-            (this.shipPivot.position[0],this.shipPivot.position[1],this.shipPivot.position[2]);        
-        this.glCrosshair!.position.set(target_x,target_y,target_z);
-        this.glCannonsTarget!.position.set(target_x,target_y,target_z);
-
+        this.glmachine!.position.set(
+            this.shipPivot.position[0],
+            this.shipPivot.position[1],
+            this.shipPivot.position[2]);
+        this.glCrosshair!.position.set(targetPos[0],targetPos[1],targetPos[2]);
+        this.glCannonsTarget!.position.set(targetPos[0],targetPos[1],targetPos[2]);
 
         return shipPosition;
     };//end
@@ -237,16 +229,14 @@ export class Player {
     };//end  
 
     public getNewTargetPosition = (): number[] => {
-        const targetDistance = PlayerConfig.ATT_DIST_TO_CONVERG; 
+        const targetDistance = PlayerCfg.ATT_DIST_TO_CONVERG; 
         const [px, py, pz] = this.targetPivot.position;
         return [px + this.targetDirection.elements[0] * targetDistance,
                 py + this.targetDirection.elements[1] * targetDistance,
                 pz + this.targetDirection.elements[2] * targetDistance];
     };//end  
 
-    public updateCrosshairPosition() {                                          
-
-    }//end
+    //public updateCrosshairPosition() {}//end
 
     public getHeadingXZ(): number {
         // Forward in world; 0 = +Z, positive to +X
