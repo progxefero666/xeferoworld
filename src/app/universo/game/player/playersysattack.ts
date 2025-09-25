@@ -8,7 +8,7 @@ import { System3d } from '@/system3d/system3d';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { BulletSimple } from '@/app/universo/game/armament/bulletsimple';
 import { Player } from '@/app/universo/game/player/player';
-import { PlayerShipCfg } from './playerconfig';
+import { PlayerArmyCfg, PlayerShipCfg } from './playerconfig';
 
 
 /*
@@ -36,7 +36,7 @@ export class PlayerSystemAttack {
         this.player = player;
 
         this.bulletsA_mat = new THREE.MeshBasicMaterial
-                ({color:PlayerShipCfg.BULLETS_A_CFG.color});
+                ({color:PlayerArmyCfg.BULLETS_A_CFG.color});
         this.bulletsA = [];
     }//end
 
@@ -44,9 +44,9 @@ export class PlayerSystemAttack {
         console.log('bullet fired');
         const bullet = new BulletSimple(
             this.bulletsA_mat,
-            PlayerShipCfg.BULLETS_A_CFG,            
-            PlayerShipCfg.ATT_TIME_TO_CONVERG,
-            PlayerShipCfg.ATT_BULL_A_PHYVEL,
+            PlayerArmyCfg.BULLETS_A_CFG,            
+            PlayerArmyCfg.ATT_TIME_TO_CONVERG,
+            PlayerArmyCfg.ATT_BULL_A_PHYVEL,
             coordsInit,direction);
         return bullet;    
     }//end

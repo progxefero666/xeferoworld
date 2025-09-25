@@ -13,7 +13,7 @@ import { ThreeUtil } from '@/zone3d/three/util/threeutil';
 import { PlayerSystemAttack } from './playersysattack';
 import { Math3dUtil } from '@/math3d/functions/math3dutil';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
-import { PlayerArmyCfg, PlayerShipCfg } from '@/app/universo/game/player/playerconfig';
+import { PlayerArmyCfg, PlayerEngineCfg, PlayerShipCfg } from '@/app/universo/game/player/playerconfig';
 import { System3d } from '@/system3d/system3d';
 
 /**
@@ -103,7 +103,7 @@ export class Player {
         this.glmachine!.add(this.glCrosshair);
 
         //crosshair hidden sphere ref object
-        this.glCannonsTarget = PlayerShipCfg.getGlTarget();            
+        this.glCannonsTarget = PlayerArmyCfg.getGlTarget();            
         this.glCannonsTarget.position.set(
             PlayerShipCfg.CRH_POSITION[0],
             PlayerShipCfg.CRH_POSITION[1],
@@ -112,7 +112,7 @@ export class Player {
     };//end 
 
     public initEngines = () => {
-        this.glEngines = PlayerShipCfg.getGlEngines();
+        this.glEngines = PlayerEngineCfg.getGlEngines();
         for(let idx:number=0;idx<this.glEngines.length;idx++){
             this.glmachine!.add(this.glEngines[idx]); 
         }        
@@ -229,7 +229,7 @@ export class Player {
     };//end  
 
     public getNewTargetPosition = (): number[] => {
-        const targetDistance = PlayerShipCfg.ATT_DIST_TO_CONVERG; 
+        const targetDistance = PlayerArmyCfg.ATT_DIST_TO_CONVERG; 
         const [px, py, pz] = this.targetPivot.position;
         return [px + this.targetDirection.elements[0] * targetDistance,
                 py + this.targetDirection.elements[1] * targetDistance,
