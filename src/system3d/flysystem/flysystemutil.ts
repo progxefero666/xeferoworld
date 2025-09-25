@@ -5,8 +5,9 @@
 import { GameConfig } from "@/app/universo/game/gameconfig";
 import { Physic3D } from "src/system3d/physic";
 import { FlyTelemetry } from "./flytelemetry";
-import { GamePlayer } from "@/universo3d/game/player/gameplayer";
+
 import { DinamicUtil } from "@/math2d/functions/dinamicutil";
+import { Player } from "@/app/universo/game/player/player";
 
 /*
 heading: azimut de la dirección de avance proyectada en el plano XZ. 
@@ -72,7 +73,7 @@ export class FlySystemUtil {
         return FlySystemUtil.msToTick(dv);    
     }//end
 
-    public static getTelemetry(machine:GamePlayer):FlyTelemetry {
+    public static getTelemetry(machine:Player):FlyTelemetry {
         const physicVelocity = machine.getSpeedMs();
         const climbRate = physicVelocity * Math.sin(machine.pitch_angle);
         const turnRadius =FlySystemUtil.computeTurnRadius(machine.getSpeedMs(), machine.roll_angle);

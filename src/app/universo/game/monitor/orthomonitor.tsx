@@ -12,7 +12,7 @@ import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { LIB_ICON } from "@/radix/rdxthicons";
-import { SpaceGame } from "@/app/universo/game/spacegame";
+import { GameAircraft } from "@/app/universo/game/spacegame";
 
 
 
@@ -21,7 +21,7 @@ let camera: THREE.OrthographicCamera | null = null;
 
 interface OrthoMonitorProps {
     canvasdim: TDimension;
-    game: SpaceGame;
+    game: GameAircraft;
     gamesc: GameScene;
 };
 

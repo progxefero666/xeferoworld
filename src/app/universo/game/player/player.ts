@@ -21,7 +21,7 @@ import { PlayerConfig } from '@/app/universo/game/player/playerconfig';
 /**
  * class GamePlayer
  */
-export class SpacePlayer {
+export class Player {
 
     public direction: MVector3d;
     public pivot: Pivot3d;    

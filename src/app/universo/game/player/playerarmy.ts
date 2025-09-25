@@ -7,7 +7,7 @@ import { TCylinderConfig, Vector3d } from '@/common/types';
 import { System3d } from '@/system3d/system3d';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { BulletSimple } from '@/app/universo/game/armament/bulletsimple';
-import { SpacePlayer } from '@/app/universo/game/player/player';
+import { Player } from '@/app/universo/game/player/player';
 import { PlayerConfig } from './playerconfig';
 
 
@@ -26,13 +26,13 @@ Típico: 1.5–2.5 s.
 export class PlayerArmy {
 
     //force attack
-    public player:SpacePlayer;
+    public player:Player;
     //public cannonsCoord:Vector3d[] = [];
     public bulletsA_mat:THREE.MeshBasicMaterial;  
     public bulletsA: BulletSimple[];
 
     //constructor
-    constructor(player:SpacePlayer){
+    constructor(player:Player){
         this.player = player;
 
         this.bulletsA_mat = new THREE.MeshBasicMaterial

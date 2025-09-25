@@ -7,7 +7,7 @@ import { GameConfig } from '@/app/universo/game/gameconfig';
 
 import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
-import { SpacePlayer } from '@/app/universo/game/player/player';
+import { Player } from '@/app/universo/game/player/player';
 import { PlayerConfig } from './player/playerconfig';
 
 /*
@@ -25,10 +25,10 @@ export const initRapier = async () => {
     public playerPivot: GamePlayerPivot | null = null;
  * class Universe Space Game
  */
-export class SpaceGame {
+export class GameAircraft {
 
     public world: RAPIER.World|null = null;
-    public player:SpacePlayer|null = null;
+    public player:Player|null = null;
    
     //config 
     public readonly PITCH_AXIS_VECTOR = new THREE.Vector3(1, 0, 0);
@@ -41,8 +41,8 @@ export class SpaceGame {
     //constructor
     constructor() {};
 
-    public init = async (canvasDim:TDimension):Promise<boolean> => {
-        this.player = new SpacePlayer();
+    public createPlayer = async (canvasDim:TDimension):Promise<boolean> => {
+        this.player = new Player();
         const result = await this.player.init();
         if(!result){alert('load player error');
             return false;
@@ -98,8 +98,6 @@ export class SpaceGame {
     };//end
 
     public execPlayerPitch = (pitchDown: boolean) => {
-
-        //calculate pitch values
         const sign      = pitchDown ? -1 : 1;
         const old       = this.player!.pitch_angle;
         const valueCurr = old + sign * this.player!.pitch_velocity;

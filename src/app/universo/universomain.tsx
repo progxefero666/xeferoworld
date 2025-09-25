@@ -22,7 +22,7 @@ import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { PlayerOrbitMonitor, PlayerOrbitMonitorRef }
     from "@/app/universo/game/monitor/playerorbitmonitor";
 import { GameMonitor, GameMonitorRef } from "@/app/universo/game/monitor/gamemonitor";
-import { SpaceGame } from "@/app/universo/game/spacegame";
+import { GameAircraft } from "@/app/universo/game/spacegame";
 import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
 import { GameScene } from "./game/gamescene";
 
@@ -37,7 +37,7 @@ const glLayoutGridStyle = {
 
 const ORBIT_MONITOR_ID: string = "orbitmonitor";
 const GAME_MONITOR_ID: string = "gamemonitor";
-const game: SpaceGame = new SpaceGame();
+const game: GameAircraft = new GameAircraft();
 
 export default function UniversoMain() {
 
@@ -201,7 +201,7 @@ export default function UniversoMain() {
     const [gameScene, setGameScene] = useState<GameScene | null>(null);
     
     const loadGame = async () => {
-        const result = await game.init(layoutDimRef.current);
+        const result = await game.createPlayer(layoutDimRef.current);
         if (!result) { alert("Error loading game"); return; }
 
         const game_scene: GameScene = new GameScene(true);
