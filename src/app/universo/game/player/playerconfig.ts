@@ -25,11 +25,7 @@ relation factor: 1/290 = 0,003448
 */
 
 /**
- * class PlShipCfg.GL_CRHAIR_SCALE
- * ext box:
- *   width:6.2
- *   height:1.9
- *   deepth:7.2
+ * class PlayerConfig.CROSSHAIR_POSITION
  */
 export class PlayerConfig {
 
@@ -37,6 +33,7 @@ export class PlayerConfig {
 
     public static CROSSHAIR_MAP_PATH: string = '/spacegame/spritemaps/crosshairwhite.png'
 
+    //ext box: width:6.2 height:1.9 deepth:7.2
     public static GLOBJECT_DIM: TDimension3d = {width:11.76,height:2.4,depth:13.4};
     public static COLLIDER_DIM: TDimension3d = {width:11.96,height:2.6,depth:13.6};
     
@@ -112,14 +109,18 @@ export class PlayerConfig {
     public static CANNON_LD_COORDS:Vector3d = {x:-5.6, y:-1.4, z:-6.3};    
 
     //military arsenal     
-    public static ATT_TIME_TO_CONVERG:number = 0.75;        
-    public static BULLETS_A_PHYVEL:number = 400;//m/s
-    public static BULLETS_A_TICKVEL:number 
-        = FlySystemUtil.msToTick(PlayerConfig.BULLETS_A_PHYVEL);
-        
+    public static ATT_BULL_A_PHYVEL:number = 400;//m/s
+    public static ATT_TIME_TO_CONVERG:number = 0.75;
+
     public static ATT_DIST_TO_CONVERG:number 
-        = this.ATT_TIME_TO_CONVERG * PlayerConfig.BULLETS_A_PHYVEL;   
- 
+        = this.ATT_TIME_TO_CONVERG * PlayerConfig.ATT_BULL_A_PHYVEL;   
+
+    public static CROSSHAIR_POSITION:number[] 
+        = [0,GameConfig.M_CAMERA_PLINCY,PlayerConfig.ATT_DIST_TO_CONVERG*(-1)];  
+    
+    public static BULLETS_A_TICKVEL:number 
+        = FlySystemUtil.msToTick(PlayerConfig.ATT_BULL_A_PHYVEL);
+        
     public static BULLETS_A_CFG:TCylinderConfig 
         = {radius:0.15,len:1.0,radialseg:16,lenseg:1,color: 0xFFD700};
 
@@ -159,6 +160,27 @@ export class PlayerConfig {
         return glGuns;
     }//end
 
+    public static getGlTarget():Mesh {
+        //with player center at position [0,0,0]
+        const material:MeshBasicMaterial
+                    = new MeshBasicMaterial({color:'#FFFF00'}); 
+        const glTarget = new Mesh(new SphereGeometry(0.5,16,16),material);
+        glTarget.position.set(
+                PlayerConfig.CROSSHAIR_POSITION[0],
+                PlayerConfig.CROSSHAIR_POSITION[1],
+                PlayerConfig.CROSSHAIR_POSITION[2]);
+        return glTarget;
+    }//end
+
+    //util
+    public static getMaxVelocityKmH = ():number => {
+        const physicMaxVelkmH:number= FlySystemUtil.tickToKmH(PlayerConfig.LN_VEL_MAX);
+        return Math.floor(physicMaxVelkmH);
+    };//end
+        
+};//end
+
+/*
     public static getGlTargets():Mesh[] {
         const material:MeshBasicMaterial
                     = new MeshBasicMaterial( { color: 0xFFFF00 } ); 
@@ -195,10 +217,4 @@ export class PlayerConfig {
         return glTargets;
     }//end
 
-    //util
-    public static getMaxVelocityKmH = ():number => {
-        const physicMaxVelkmH:number= FlySystemUtil.tickToKmH(PlayerConfig.LN_VEL_MAX);
-        return Math.floor(physicMaxVelkmH);
-    };//end
-        
-};//end
+*/

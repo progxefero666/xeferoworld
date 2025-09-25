@@ -12,7 +12,7 @@ export class GenSpriteMaterials {
     public static textureLoader = new THREE.TextureLoader();
 
     
-    public static async getSpriteMaterial(path:string,sizeAtt:boolean,color:any,alpha?:number): Promise<THREE.SpriteMaterial> {
+    public static async getMaterial(path:string,sizeAtt:boolean,color:any,alpha?:number): Promise<THREE.SpriteMaterial> {
         const colorMap = await MaterialMapLoader.loadTextureMap(path);
         const material = new THREE.SpriteMaterial( {
             color: color,

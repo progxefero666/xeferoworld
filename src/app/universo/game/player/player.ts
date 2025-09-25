@@ -46,11 +46,11 @@ export class Player {
     public tmpQ = new THREE.Quaternion();
 
     // gl objects
-    public glmachine: THREE.Object3D | null = null;    
-    public glCrosshair: THREE.Sprite | null = null;
+    public glmachine: THREE.Object3D|null = null;    
+    public glCrosshair: THREE.Sprite|null = null;
     public glEngines:THREE.Mesh[] = [];
     public glCannonsObjs:THREE.Mesh[] = [];
-    public glCannonTargets:THREE.Mesh[] = [];
+    public glCannonsTarget:THREE.Mesh|null = null;
     
     //constructor
     constructor() {
@@ -66,6 +66,7 @@ export class Player {
         this.glmachine = await GlbUtil.loadGLB_object(PlayerConfig.SOURCE_URL);
         await this.loadCrosshair();        
         this.initGuns();
+     
         //this.glmachine.add(new THREE.AxesHelper(2)); 
         //this.initGlPivot();
         //this.initEngines();        
@@ -80,34 +81,36 @@ export class Player {
     };//end 
 
     public loadCrosshair = async () => {    
+    
         const material:THREE.SpriteMaterial = await GenSpriteMaterials
-                .getSpriteMaterial(PlayerConfig.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
-        this.glCrosshair = new THREE.Sprite(material);     
-        this.glCrosshair.scale.set(
-            PlayerConfig.GL_CRHAIR_SCALE,
-            PlayerConfig.GL_CRHAIR_SCALE,
-            PlayerConfig.GL_CRHAIR_SCALE); 
-        this.glCrosshair.position.set
-            (0,GameConfig.M_CAMERA_PLINCY,PlayerConfig.ATT_DIST_TO_CONVERG);   
-        this.glmachine!.add(this.glCrosshair);     
+                .getMaterial(PlayerConfig.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
+        this.glCrosshair = new THREE.Sprite(material);
+        
+        const scale = PlayerConfig.GL_CRHAIR_SCALE;
+        this.glCrosshair.scale.set(scale,scale,scale);
+        this.glCrosshair.position.set(
+            PlayerConfig.CROSSHAIR_POSITION[0],
+            PlayerConfig.CROSSHAIR_POSITION[1],
+            PlayerConfig.CROSSHAIR_POSITION[2]);   
+
+        this.glmachine!.add(this.glCrosshair);    
+        
+        this.glCannonsTarget = PlayerConfig.getGlTarget();
+        this.glmachine!.add(this.glCannonsTarget);    
     };//end 
+
+    public initGuns = () => {
+        this.glCannonsObjs = PlayerConfig.getGlCannons();
+        for(let idx:number=0;idx<this.glCannonsObjs.length;idx++){
+            this.glmachine!.add(this.glCannonsObjs[idx]); 
+        }      
+    };//end
 
     public initEngines = () => {
         this.glEngines = PlayerConfig.getGlEngines();
         for(let idx:number=0;idx<this.glEngines.length;idx++){
             this.glmachine!.add(this.glEngines[idx]); 
         }        
-    };//end
-
-    public initGuns = () => {
-        this.glCannonsObjs = PlayerConfig.getGlCannons();
-        for(let idx:number=0;idx<this.glCannonsObjs.length;idx++){
-            this.glmachine!.add(this.glCannonsObjs[idx]); 
-        }     
-        this.glCannonTargets = PlayerConfig.getGlTargets();
-        for(let idx:number=0;idx<this.glCannonTargets.length;idx++){
-            this.glmachine!.add(this.glCannonTargets[idx]); 
-        }              
     };//end
 
     public getCurrVelocityKmH = ():number => {
@@ -145,20 +148,8 @@ export class Player {
         const dPsi = yawRate * GameConfig.DT_SEC;
         this.tmpQ.setFromAxisAngle(this.upWorld, dPsi);
         this.glmachine!.quaternion.premultiply(this.tmpQ).normalize();
+
         this.pivot.rotateAroundWorldY(dPsi);
-    }//end
-
-    public applyRollAutolevel(): void {
-        const k = GameConfig.ROLL_AUTOLEVEL_PER_TICK;
-        if (k <= 0) return;
-        const a = this.roll_angle;
-        if (Math.abs(a) < 1e-9) return;
-        const delta = Math.abs(a) <= k ? -a : -Math.sign(a) * k;
-
-        this.tmpQ.setFromAxisAngle(this.axisLocalZ, delta); // local Z
-        this.glmachine!.quaternion.multiply(this.tmpQ).normalize();
-        this.roll_angle += delta;
-        this.pivot.rotate(PlayerConfig.ROLL_AXIS, delta);
     }//end
 
     // loop animate
@@ -171,6 +162,7 @@ export class Player {
         this.direction = new MVector3d
             ([this.forwardWorld.x,this.forwardWorld.y,this.forwardWorld.z]);
         const newPos: number[] = this.getNewPosition();
+        this.updateCrosshairPosition();
 
         //check collisions
         //this.army.dinamic(delta);
@@ -181,6 +173,15 @@ export class Player {
             (this.pivot.position[0],this.pivot.position[1],this.pivot.position[2]);
         return newPos;
     };//end
+
+    public updateCrosshairPosition() {
+        this.forwardWorld.copy(this.forwardLocal)
+            .applyQuaternion(this.glmachine!.quaternion).normalize(); 
+        this.direction = new MVector3d
+            ([this.forwardWorld.x,this.forwardWorld.y,this.forwardWorld.z]);        
+        const crossHairPos = this.getDirectionPoint(PlayerConfig.ATT_DIST_TO_CONVERG);
+        this.glCrosshair!.position.set(crossHairPos[0],crossHairPos[1],crossHairPos[2]);
+    }//end
 
     public getNewPosition = (): number[] => {
         const [px, py, pz] = this.pivot.position;
@@ -251,6 +252,18 @@ export class Player {
         return directions;
     };//end
 
+    public applyRollAutolevel(): void {
+        const k = GameConfig.ROLL_AUTOLEVEL_PER_TICK;
+        if (k <= 0) return;
+        const a = this.roll_angle;
+        if (Math.abs(a) < 1e-9) return;
+        const delta = Math.abs(a) <= k ? -a : -Math.sign(a) * k;
+
+        this.tmpQ.setFromAxisAngle(this.axisLocalZ, delta); // local Z
+        this.glmachine!.quaternion.multiply(this.tmpQ).normalize();
+        this.roll_angle += delta;
+        this.pivot.rotate(PlayerConfig.ROLL_AXIS, delta);
+    }//end    
 
 };//end
 

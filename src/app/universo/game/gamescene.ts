@@ -30,7 +30,7 @@ export class GameScene {
         this.scene = new THREE.Scene();
         if(showGrid){this.scene.add(new THREE.GridHelper(1000,1000));}
         this.loadLights();
-        this.loadInitObjects();
+        //this.loadInitObjects();
     }//end
 
     public loadLights = () => {   

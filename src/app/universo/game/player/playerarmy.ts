@@ -46,7 +46,7 @@ export class PlayerArmy {
             this.bulletsA_mat,
             PlayerConfig.BULLETS_A_CFG,            
             PlayerConfig.ATT_TIME_TO_CONVERG,
-            PlayerConfig.BULLETS_A_PHYVEL,
+            PlayerConfig.ATT_BULL_A_PHYVEL,
             coordsInit,direction);
         return bullet;    
     }//end

@@ -92,6 +92,8 @@ export class GameAircraft {
         this.tmpQ.setFromAxisAngle(this.ROLL_AXIS_VECTOR, delta);
         this.player!.glmachine!.quaternion.multiply(this.tmpQ).normalize();
         this.player!.roll_angle = target;
+        
+        this.player!.updateCrosshairPosition();
 
         //update player pivot manually
         this.player!.pivotRotate(PlayerConfig.ROLL_AXIS, delta);
@@ -112,6 +114,7 @@ export class GameAircraft {
         this.tmpQ.setFromAxisAngle(this.PITCH_AXIS_VECTOR, delta);
         this.player!.glmachine!.quaternion.multiply(this.tmpQ).normalize();
         this.player!.pitch_angle = target;
+        this.player!.updateCrosshairPosition();
 
         //update player pivot manually
         this.player!.pivotRotate(PlayerConfig.PITCH_AXIS, delta);
