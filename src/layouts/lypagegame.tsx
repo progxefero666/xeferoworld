@@ -12,25 +12,16 @@ const LAYOUT_DEF = {
 };
 
 
-interface LayoutPageProps {
+interface LayoutPageGameProps {
     options: Option[];
-    actoption?: string;
-    headertitle: string;
-    headercontent?: React.ReactNode;      
+    actoption?: string;  
     main: React.ReactNode;
     onselection?: (section: string) => void;
 };
-export function LayoutPageOneColumn({ options, actoption, onselection, 
-                             headertitle, headercontent,
-                             main }: LayoutPageProps) {
+export function LayoutPageGame({options,actoption,onselection,main}:LayoutPageGameProps) {
 
     return (
-        <Grid height="100vh" rows="auto 1fr" columns="12% 84% 4%" style={LAYOUT_DEF}>
-
-            <Flex gridColumn="1/4" gridRow="1" >                
-                <LayoutHeader title={headertitle??null}
-                              childrencenter={headercontent??null} />
-            </Flex>
+        <Grid height="100vh" rows="1fr" columns="12% 84% 4%" style={LAYOUT_DEF}>
 
             <Flex gridColumn="1" gridRow="2" >
                 {onselection ?                

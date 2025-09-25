@@ -130,26 +130,13 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
     //jsx
     //.......................................................................................    
     return (
-        <Flex width="100%" direction="column" >
-
-            <Flex width="100%" direction="row" justify="between">
-                <Box width="100%">
-                    Player View
-                </Box>
-                <Box width="auto">
-                    <XIconButton icon={LIB_ICON.EXPAND}
-                        color={ButtonsStyle.COLOR_EXPAND}
-                        onclick={onExpand} />
-                </Box>
-            </Flex>
-
-            <Box width="100%" style={{ position: 'relative', width: monCsswidth, height: monCssheight }}>
-                <canvas ref={threeContainerRef}
-                        style={{zIndex:1, position:'absolute',left:0,top:0,
-                                width:monCsswidth, height:monCssheight,
-                                backgroundColor: GameConfig.SCENE_BACKCOLOR}} />
-            </Box>
-        </Flex>
+        <Box width="100%" style={{position:'relative',width:monCsswidth,height:monCssheight}}>
+            
+            <canvas ref={threeContainerRef}
+                    style={{zIndex:1, position:'absolute',left:0,top:0,
+                            width:monCsswidth, height:monCssheight,
+                            backgroundColor: GameConfig.SCENE_BACKCOLOR}} />
+        </Box>
     );
 
 });//end GameMonitor

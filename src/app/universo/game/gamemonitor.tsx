@@ -166,6 +166,7 @@ export function SpaceGameMonitor() {
             if (typeof window === "undefined" || typeof document === "undefined") return;
 
             const dim_width  = layoutRef.current?.clientWidth ?? Universo3dConfig.GL_LAYOUT_W_DEF;
+            alert(dim_width);
             canvasDim.current.width = Math.floor(dim_width);
             canvasDim.current.height = Universo3dConfig.GL_LAYOUT_H;
             const result = await loadPlayer();
@@ -201,10 +202,13 @@ export function SpaceGameMonitor() {
                     changevelocity={game.changePlayerVelocity}
                     execroll={game.execPlayerRoll}
                     execpitch={game.execPlayerPitch} /> : null}
-            </Flex>
+            </Flex> 
 
-            <Flex width="82%" direction="column" px="2" py="1" gapY="2" mb="2">
+            <Flex ref={layoutRef} width="82%" direction="column" 
+                  px="2" py="1" gapY="2" mb="2">
+
                 {/*<Box width="100%">{renderLayoutHeader()}</Box> */}
+
                 {wglready ? 
                 <GameWebGlApplication 
                     ref={gameMonitorRef}

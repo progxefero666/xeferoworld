@@ -39,14 +39,13 @@ export function LayoutHeader({ title, childrencenter, childrenright }: LayoutHea
         )
     };//end
 
+    //minHeight="4em"
     return (
-        <Grid width="100%" py="2" minHeight="4em" rows="auto" columns="12% 84% 4%" 
-        style={RdxThContainers.HEADER_MAIN} >
+        <Grid width="100%" py="2" height="auto"  rows="auto" columns="12% 84% 4%" 
+              style={RdxThContainers.HEADER_MAIN} >
 
             <Flex gridColumn="1" gridRow="1" direction="row" justify="between"
-                  px="3" gap="2" 
-                  style={RdxThContainers.HEADER_LEFT} >
-
+                  px="3" gap="2" style={RdxThContainers.HEADER_LEFT} >
                 <Text size="5" >{title}</Text>
                 <Box>{!isIndexPage ? renderHomeButton() : null}</Box>                
             </Flex>
