@@ -6,10 +6,13 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { ThreeModel3d } from '@/zone3d/three/threetypes';
 import { ThreeUtil } from '@/zone3d/three/util/threeutil';
+import { GlObject } from '../objects/gldinobject';
+import { System3d } from '@/system3d/system3d';
+import { Pivot3d } from '@/math3d/pivot/pivot3d';
 
 
 /**
- * class GlbUtil.loadGLB_object
+ * class GlbUtil.getGlbMeshRotatedVertex
  */
 export class GlbUtil {
 
@@ -36,12 +39,19 @@ export class GlbUtil {
     }//end
 
     public static getGlbObjectVertex(object3d: THREE.Object3D): THREE.BufferAttribute |
-        THREE.InterleavedBufferAttribute {
+                                                                THREE.InterleavedBufferAttribute {
         const objMesh = object3d as THREE.Mesh;
         const geometry: THREE.BufferGeometry = objMesh.geometry;
         const positionAttribute: THREE.BufferAttribute |
             THREE.InterleavedBufferAttribute = geometry.getAttribute('position');
         return positionAttribute;
+    }//end
+
+    public static getGlMeshVertexArray(objMesh:THREE.Mesh): Float32Array{
+        const geometry: THREE.BufferGeometry = objMesh.geometry;
+        const positionAttribute: THREE.BufferAttribute |
+            THREE.InterleavedBufferAttribute = geometry.getAttribute('position');
+        return positionAttribute.array as Float32Array;
     }//end
 
     public static async getGlbUniqueModel(url: string): Promise<ThreeModel3d> {
@@ -50,7 +60,25 @@ export class GlbUtil {
         return { object3d, vertex };
     }//end
     
+    public static async getGlbMeshRotatedVertex(url:string,axis:number,angle:number): Promise<THREE.Mesh|null> {
+        const object3d: THREE.Object3D = await GlbUtil.loadGLB_object(url);
+        if(!(object3d instanceof THREE.Mesh)) {return null;}
+
+        const objMesh = object3d as THREE.Mesh;
+        const vertex = GlbUtil.getGlMeshVertexArray(objMesh);
+       
+        const pivot:Pivot3d = new Pivot3d();
+        let rotatedVertex:Float32Array = pivot.rotateArrayPointsInAxis(axis,vertex,angle);
+
+        objMesh.geometry.setAttribute('position', new THREE.BufferAttribute(rotatedVertex,3));
+        objMesh.geometry.attributes.position.needsUpdate = true;
+        objMesh.geometry.computeBoundingBox();
+        objMesh.geometry.computeBoundingSphere();
+        return objMesh;
+    }//end
+
     public static async downloadGlbMerge(fname: string, glb1: THREE.Object3D, glb2: THREE.Object3D) {
+        let as:GlObject;
         const scene = new THREE.Scene();
         scene.add(glb1); //o? .scene
         scene.add(glb2);
@@ -60,6 +88,24 @@ export class GlbUtil {
         ThreeUtil.downloadObject3dFile(result, fname);
     }//end
 
+    /*
+    if(object3d instanceof THREE.Mesh) {       
+        const geometry:THREE.BufferGeometry = object3d.geometry;
+        const positionAttribute:THREE.BufferAttribute |
+                                THREE.InterleavedBufferAttribute 
+                                = geometry.getAttribute('position');
+
+        const vertex: Float32Array = positionAttribute.array as Float32Array;
+        
+        
+        const rotatedArray = glObject.rotate(1, Math.PI/4);
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(rotatedArray, 3));
+        geometry.attributes.position.needsUpdate = true;
+        geometry.computeBoundingBox();
+        geometry.computeBoundingSphere();
+    }    
+    */
 
 }//end
 
