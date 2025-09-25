@@ -1,36 +1,23 @@
-//src\app\universe3d\universomain.tsx
+//src\app\universo\game\gamemonitor.tsx
+//import * as THREE from 'three'
+
 
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Flex, Text, Tabs, Grid } from "@radix-ui/themes";
-
-import * as THREE from 'three'
-
+import { Flex} from "@radix-ui/themes";
 import { RdxThContainers } from "@/radix/rdxthcontainers";
-
 import { TDimension } from "@/common/types";
-import { GAMEPAD_BUTTONS, GAMEPAD_DEADZONE } from '@/lib/gamepad';
-
-import { GamepadsContext } from '@/lib/gamepad/GamepadContext';
-import { useGamepads } from '@/lib/gamepad/useGamepads';
-import { XText } from "@/radix/data/xtext";
-import { XButton } from "@/radix/buttons/xbutton";
-import { OpConstants } from "@/common/constants";
-import { ButtonsStyle, TextStyle } from "@/radix/rdxtheme";
-import { LIB_ICON } from "@/radix/rdxthicons";
-
 import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameapplication";
 import { GameAircraft } from "@/app/universo/game/spacegame";
-import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
 import { PlayerShipCfg } from "@/app/universo/game/player/playerconfig";
 import { GameScene } from "@/app/universo/game/gamescene";
+import { PlFlyBasicControls } from "./player/controls/flybasiccontrols";
 
-const glLayoutGridStyle = {
-    backgroundColor: 'rgba(34, 34, 36, 1)',
-    border: '1px solid rgba(0, 0, 0, 1)',
-};
+//import { GAMEPAD_BUTTONS, GAMEPAD_DEADZONE } from '@/lib/gamepad';
+//import { GamepadsContext } from '@/lib/gamepad/GamepadContext';
+//import { useGamepads } from '@/lib/gamepad/useGamepads';
 
-const GAME_MONITOR_ID: string = "gamemonitor";
+
 const game: GameAircraft = new GameAircraft();
 
 export function SpaceGameMonitor() {
@@ -169,8 +156,7 @@ export function SpaceGameMonitor() {
 
     const [wglready, setWglReady] = useState<boolean>(false);
     const layoutRef = useRef<HTMLDivElement>(null);
-    const layoutDimRef = useRef<TDimension>({ width: 0, height: 640 });
-    const layoutCellDimRef = useRef<TDimension>({ width: 0, height: 320 });
+    const canvasDim = useRef<TDimension>({ width: 0, height: 640 });
 
     const gameMonitorRef = useRef<GameMonitorRef>(null);
     const [gameScene, setGameScene] = useState<GameScene | null>(null);
@@ -178,9 +164,10 @@ export function SpaceGameMonitor() {
     useEffect(() => {
         const init = async () => {
             if (typeof window === "undefined" || typeof document === "undefined") return;
-            layoutDimRef.current.width = layoutRef.current?.clientWidth ?? Universo3dConfig.GL_LAYOUT_W_DEF;
-            layoutCellDimRef.current.width = Math.floor(layoutDimRef.current.width);
-            layoutCellDimRef.current.height = Universo3dConfig.GL_LAYOUT_H;
+
+            const dim_width  = layoutRef.current?.clientWidth ?? Universo3dConfig.GL_LAYOUT_W_DEF;
+            canvasDim.current.width = Math.floor(dim_width);
+            canvasDim.current.height = Universo3dConfig.GL_LAYOUT_H;
             const result = await loadPlayer();
             if(result){loadMainScene();}            
         };
@@ -188,7 +175,7 @@ export function SpaceGameMonitor() {
     }, []);
 
     const loadPlayer = async ():Promise<boolean> => {
-        const result = await game.createPlayer(layoutDimRef.current);
+        const result = await game.createPlayer(canvasDim.current);
         if (!result) { alert("Error loading game"); return false; }
         return true;
     };//end
@@ -206,20 +193,22 @@ export function SpaceGameMonitor() {
     return (
         <Flex width="100%" direction="row" style={RdxThContainers.PRIMARY_CONTENT} >
 
-            <Flex width="40%" direction="column" py="1" mb="2">
-                {wglready ? <PlFlyControls phyvelocity={game.player!.getCurrVelocityKmH()}
-                                   maxphyvelocity={PlayerShipCfg.getMaxVelocityKmH()}
-                                   changevelocity={game.changePlayerVelocity}
-                                   execroll={game.execPlayerRoll}
-                                   execpitch={game.execPlayerPitch} /> : null}
+            <Flex width="18%" direction="column" py="1" mb="2">
+                {wglready ? 
+                <PlFlyBasicControls 
+                    phyvelocity={game.player!.getCurrVelocityKmH()}
+                    maxphyvelocity={PlayerShipCfg.getMaxVelocityKmH()}
+                    changevelocity={game.changePlayerVelocity}
+                    execroll={game.execPlayerRoll}
+                    execpitch={game.execPlayerPitch} /> : null}
             </Flex>
 
-            <Flex width="60%" direction="column" px="2" py="1" gapY="2" mb="2">
+            <Flex width="82%" direction="column" px="2" py="1" gapY="2" mb="2">
                 {/*<Box width="100%">{renderLayoutHeader()}</Box> */}
                 {wglready ? 
                 <GameWebGlApplication 
                     ref={gameMonitorRef}
-                    canvasdim={layoutCellDimRef.current}
+                    canvasdim={canvasDim.current}
                     gamesc={gameScene!}
                     game={game} />:null}
             </Flex>
@@ -232,7 +221,6 @@ export function SpaceGameMonitor() {
 /*
     const onLayoutReset = () => {
     };//end
-
     const renderLayoutHeader = () => {
         return (
             <Flex width="100%" direction="row" justify="between" pt="1" px="2" pb="2" align="center" >

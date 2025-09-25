@@ -5,6 +5,7 @@ import { Box } from "@radix-ui/themes";
 import { LayoutPageOneColumn } from "@/layouts/lypageonecolumn";
 import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { GameLayout } from "@/app/universo/gamelayout";
+import { SpaceGameMonitor } from "./universo/game/gamemonitor";
 
 
 /**
@@ -22,13 +23,15 @@ export default function PageUniverso3D() {
         return(
             <Box>Space Game</Box>
         );
-    };//end    
+    };//end SpaceGameMonitor   
+
+    //main = {<GameLayout />}
 
     return (
         <LayoutPageOneColumn 
             headertitle   = {"By Xefero"} 
             headercontent = {headerContent()}
-            main          = {<GameLayout />}
+            main          = {<SpaceGameMonitor />}
             options       = {[]} 
             onselection   = {loadSection} />
     );
