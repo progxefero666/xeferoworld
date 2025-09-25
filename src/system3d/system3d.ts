@@ -3,7 +3,7 @@
 import { Rotation3d, TDimension3d, Vector3d } from "@/common/types";
 
 /**
- * class System3d
+ * class System3d.AXIS_Y
  */
 export class System3d {
 

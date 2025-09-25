@@ -96,7 +96,8 @@ export class GameAircraft {
         this.player!.updateCrosshairPosition();
 
         //update player pivot manually
-        this.player!.pivotRotate(PlayerConfig.ROLL_AXIS, delta);
+        this.player!.rotatePivots(PlayerConfig.ROLL_AXIS, delta);
+        
     };//end
 
     public execPlayerPitch = (pitchDown: boolean) => {
@@ -117,7 +118,7 @@ export class GameAircraft {
         this.player!.updateCrosshairPosition();
 
         //update player pivot manually
-        this.player!.pivotRotate(PlayerConfig.PITCH_AXIS, delta);
+        this.player!.rotatePivots(PlayerConfig.PITCH_AXIS, delta);
     };//end
 
     public changePlayerVelocity = (increment:boolean) => {
@@ -125,7 +126,7 @@ export class GameAircraft {
     };//end
 
     public execPlayerFire = () => {
-        this.player!.army.fireBulletsA();
+        this.player!.systemAttack.fireBulletsA();
     };//end
     //......................................................................
   

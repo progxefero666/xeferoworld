@@ -84,7 +84,7 @@ export function OrthoMonitor({ canvasdim, gamesc, game }: OrthoMonitorProps) {
         requestAnimationFrame(animate);
         const now = performance.now();
 
-        const playerPos = game.player!.pivot.position;
+        const playerPos = game.player!.shipPivot.position;
         camera!.position.set(playerPos[0],playerPos[1]+200,playerPos[2]);        
         //camera!.lookAt(playerPos[0],playerPos[1],playerPos[2]) ;
 

@@ -11,10 +11,11 @@ import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { GameConfig } from '@/app/universo/game/gameconfig';
 import { Sys3dThreeUtil } from '@/system3d/util/sys3dthreeutil';
 import { ThreeUtil } from '@/zone3d/three/util/threeutil';
-import { PlayerArmy } from './playerarmy';
+import { PlayerSystemAttack } from './playersysattack';
 import { Math3dUtil } from '@/math3d/functions/math3dutil';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
 import { PlayerConfig } from '@/app/universo/game/player/playerconfig';
+import { System3d } from '@/system3d/system3d';
 
 
 
@@ -23,24 +24,34 @@ import { PlayerConfig } from '@/app/universo/game/player/playerconfig';
  */
 export class Player {
 
-    public direction: MVector3d;
-    public pivot: Pivot3d;    
-    public pivotLines: THREE.Line[]|null = null;
-    public army:PlayerArmy;
+    public readonly upWorld = new THREE.Vector3(0, 1, 0);
+
+    public shipPivot: Pivot3d;
+    public shipDirection: MVector3d;  
+    
+    public targetPivot: Pivot3d; 
+    public targetDirection: MVector3d;
+    
+    public systemAttack:PlayerSystemAttack;
 
     //15 × 3.6 = 54 km/h
-    public ln_velocity: number;
+    public ln_velocity: number = 0.0;
     public roll_velocity: number = PlayerConfig.ROLL_VEL_UNIT;
     public pitch_velocity: number = PlayerConfig.PITCH_VEL_UNIT;
 
     public roll_angle: number = 0.0;
     public pitch_angle: number = 0.0;
 
-    // parameters
-    public readonly axisLocalZ = new THREE.Vector3(0, 0, 1);
-    public readonly forwardLocal = new THREE.Vector3(0, 0, -1);
-    public readonly forwardWorld = new THREE.Vector3();    
-    public readonly upWorld = new THREE.Vector3(0, 1, 0);
+    //use in applyRollAutolevel
+    //public readonly axisLocalZ = new THREE.Vector3(0, 0, 1);
+
+    //ship direction parameters
+    public readonly shipLocalForward = new THREE.Vector3(0, 0, -1);
+    public readonly shipWorldforward = new THREE.Vector3();    
+
+    //att crosshair direction parameters 
+    public readonly targetLocalForward = new THREE.Vector3(0, 0, -1);
+    public readonly targetWorldforward = new THREE.Vector3();  
 
     // var for calcs
     public tmpQ = new THREE.Quaternion();
@@ -52,52 +63,31 @@ export class Player {
     public glCannonsObjs:THREE.Mesh[] = [];
     public glCannonsTarget:THREE.Mesh|null = null;
     
+    public pivotLines: THREE.Line[]|null = null;
+
     //constructor
     constructor() {
-        this.pivot = new Pivot3d();
-        this.direction = new MVector3d([0, 0, 1]);
-        this.ln_velocity = 0;
-        this.army = new PlayerArmy(this);
+
+        this.shipPivot = new Pivot3d();
+        this.shipDirection = new MVector3d([0, 0, 1]);
+
+        this.targetPivot = new Pivot3d();
+        this.targetPivot.moveInAxis(System3d.AXIS_Y,1,GameConfig.M_CAMERA_PLINCY);
+        this.targetDirection = new MVector3d([0,GameConfig.M_CAMERA_PLINCY,1]);
+        
+        this.systemAttack = new PlayerSystemAttack(this);
     }//end
 
-    //load gl scene objects
     public async init(): Promise<boolean> {
         this.ln_velocity = FlySystemUtil.msToTick(GameConfig.INIT_LVELOCITY); 
         this.glmachine = await GlbUtil.loadGLB_object(PlayerConfig.SOURCE_URL);
         await this.loadCrosshair();        
         this.initGuns();
-     
         //this.glmachine.add(new THREE.AxesHelper(2)); 
         //this.initGlPivot();
         //this.initEngines();        
         return true;
     };//end
-
-    public initGlPivot = () => {
-        this.pivotLines = Sys3dThreeUtil.getPivotAxLines(this.pivot,10);
-        for(let idx:number=0;idx<this.pivotLines.length;idx++){
-            this.glmachine!.add(this.pivotLines[idx]); 
-        }
-    };//end 
-
-    public loadCrosshair = async () => {    
-    
-        const material:THREE.SpriteMaterial = await GenSpriteMaterials
-                .getMaterial(PlayerConfig.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
-        this.glCrosshair = new THREE.Sprite(material);
-        
-        const scale = PlayerConfig.GL_CRHAIR_SCALE;
-        this.glCrosshair.scale.set(scale,scale,scale);
-        this.glCrosshair.position.set(
-            PlayerConfig.CROSSHAIR_POSITION[0],
-            PlayerConfig.CROSSHAIR_POSITION[1],
-            PlayerConfig.CROSSHAIR_POSITION[2]);   
-
-        this.glmachine!.add(this.glCrosshair);    
-        
-        this.glCannonsTarget = PlayerConfig.getGlTarget();
-        this.glmachine!.add(this.glCannonsTarget);    
-    };//end 
 
     public initGuns = () => {
         this.glCannonsObjs = PlayerConfig.getGlCannons();
@@ -106,12 +96,45 @@ export class Player {
         }      
     };//end
 
+    public loadCrosshair = async () => {    
+    
+        const material:THREE.SpriteMaterial = await GenSpriteMaterials
+                .getMaterial(PlayerConfig.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
+        this.glCrosshair = new THREE.Sprite(material);
+
+        const scale = PlayerConfig.GL_CRHAIR_SCALE;
+        const pos = PlayerConfig.CROSSHAIR_POSITION; 
+
+        this.glCrosshair.scale.set(scale,scale,scale);
+        this.glCrosshair.position.set(pos[0],pos[1],pos[2]);
+
+        this.glCannonsTarget = PlayerConfig.getGlTarget();
+        this.glCannonsTarget.position.set(pos[0],pos[1],pos[2]);
+
+        this.updateCrosshairPosition();
+        this.glmachine!.add(this.glCrosshair);
+        this.glmachine!.add(this.glCannonsTarget);
+    };//end 
+
     public initEngines = () => {
         this.glEngines = PlayerConfig.getGlEngines();
         for(let idx:number=0;idx<this.glEngines.length;idx++){
             this.glmachine!.add(this.glEngines[idx]); 
         }        
     };//end
+
+    public initGlPivot = () => {
+        this.pivotLines = Sys3dThreeUtil.getPivotAxLines(this.shipPivot,10);
+        for(let idx:number=0;idx<this.pivotLines.length;idx++){
+            this.glmachine!.add(this.pivotLines[idx]); 
+        }
+    };//end 
+
+    public getCrosshairPosition = (): Vector3d => {
+        const localPos = this.glCrosshair!.position.clone();
+        const worldPos = this.glmachine!.localToWorld(localPos);
+        return ThreeUtil.getVector3d(worldPos);
+    };
 
     public getCurrVelocityKmH = ():number => {
         const physicMaxVelkmH:number= FlySystemUtil.tickToKmH(this.ln_velocity);
@@ -120,9 +143,7 @@ export class Player {
 
     // actions
     //...............................................................................
-    public pivotRotate = (axis: number, angle: number) => {
-        this.pivot.rotate(axis, angle);
-    };//end
+
 
     public changeVelocity = (increment: boolean) => {
         const dv = FlySystemUtil.accToTickDelta(PlayerConfig.PHY_ACELERATION_MAX);
@@ -141,7 +162,6 @@ export class Player {
         const v = this.getSpeedMs();
         const vHoriz = v * Math.cos(this.pitch_angle);
         if (vHoriz <= 1e-9) return;
-
         const yawRate = FlySystemUtil.computeYawRate(vHoriz, this.roll_angle);
         if (yawRate === 0) return;
 
@@ -149,54 +169,90 @@ export class Player {
         this.tmpQ.setFromAxisAngle(this.upWorld, dPsi);
         this.glmachine!.quaternion.premultiply(this.tmpQ).normalize();
 
-        this.pivot.rotateAroundWorldY(dPsi);
+        //update pivots
+        this.shipPivot.rotateAroundWorldY(dPsi);
+        this.targetPivot.rotateAroundWorldY(dPsi);
     }//end
-
-    // loop animate
-    public dinamic = (delta:number): number[] => {
-
-        //calculate new position
-        this.applyBankedYaw();
-        this.forwardWorld.copy(this.forwardLocal)
-            .applyQuaternion(this.glmachine!.quaternion).normalize(); 
-        this.direction = new MVector3d
-            ([this.forwardWorld.x,this.forwardWorld.y,this.forwardWorld.z]);
-        const newPos: number[] = this.getNewPosition();
-        this.updateCrosshairPosition();
-
-        //check collisions
-        //this.army.dinamic(delta);
-
-        //update positions
-        this.pivot.move(newPos);
-        this.glmachine!.position.set
-            (this.pivot.position[0],this.pivot.position[1],this.pivot.position[2]);
-        return newPos;
+    
+    public rotatePivots = (axis:number,angle:number) => {
+        this.shipPivot.rotate(axis,angle);
+        this.targetPivot.rotate(axis,angle);
     };//end
 
-    public updateCrosshairPosition() {
-        this.forwardWorld.copy(this.forwardLocal)
+    // loop animate
+    //this.army.dinamic(delta);
+    public dinamic = (delta:number): number[] => {
+
+        this.applyBankedYaw();
+
+        //calculate new ship position and direction        
+        this.shipWorldforward.copy(this.shipLocalForward)
             .applyQuaternion(this.glmachine!.quaternion).normalize(); 
-        this.direction = new MVector3d
-            ([this.forwardWorld.x,this.forwardWorld.y,this.forwardWorld.z]);        
-        const crossHairPos = this.getDirectionPoint(PlayerConfig.ATT_DIST_TO_CONVERG);
-        this.glCrosshair!.position.set(crossHairPos[0],crossHairPos[1],crossHairPos[2]);
+        this.shipDirection = new MVector3d
+            ([this.shipWorldforward.x,this.shipWorldforward.y,this.shipWorldforward.z]);
+        const shipPosition:number[] = this.getNewShipPivotPosition();
+
+        //calculate new target position and direction
+        this.targetWorldforward.copy(this.targetLocalForward)
+            .applyQuaternion(this.glmachine!.quaternion).normalize(); 
+        this.targetDirection = new MVector3d([
+            this.targetWorldforward.x,
+            this.targetWorldforward.y,
+            this.targetWorldforward.z]);  
+        const targetPosition:number[] = this.getNewTargetPivotPosition();
+
+        //update ship
+        this.shipPivot.move(shipPosition);
+        
+        //update target    
+        this.targetPivot.move(targetPosition);
+        const [px, py, pz] = this.targetPivot.position;        
+        const targetDistance = PlayerConfig.ATT_DIST_TO_CONVERG; 
+        const target_x = px + (this.targetDirection.elements[0] * targetDistance);
+        const target_y = py + (this.targetDirection.elements[1] * targetDistance);
+        const target_z = pz + (this.targetDirection.elements[2] * targetDistance); 
+
+        //update player all gl objects
+        this.glmachine!.position.set
+            (this.shipPivot.position[0],this.shipPivot.position[1],this.shipPivot.position[2]);        
+        this.glCrosshair!.position.set(target_x,target_y,target_z);
+        this.glCannonsTarget!.position.set(target_x,target_y,target_z);
+
+
+        return shipPosition;
+    };//end
+        
+    public getNewShipPivotPosition = (): number[] => {
+        const [px, py, pz] = this.shipPivot.position;
+        return [px + this.shipDirection.elements[0] * this.ln_velocity,
+                py + this.shipDirection.elements[1] * this.ln_velocity,
+                pz + this.shipDirection.elements[2] * this.ln_velocity];
+    };//end   
+
+    public getNewTargetPivotPosition = (): number[] => {
+        const [px, py, pz] = this.targetPivot.position;
+        return [px + this.targetDirection.elements[0] * this.ln_velocity,
+                py + this.targetDirection.elements[1] * this.ln_velocity,
+                pz + this.targetDirection.elements[2] * this.ln_velocity];
+    };//end  
+
+    public getNewTargetPosition = (): number[] => {
+        const targetDistance = PlayerConfig.ATT_DIST_TO_CONVERG; 
+        const [px, py, pz] = this.targetPivot.position;
+        return [px + this.targetDirection.elements[0] * targetDistance,
+                py + this.targetDirection.elements[1] * targetDistance,
+                pz + this.targetDirection.elements[2] * targetDistance];
+    };//end  
+
+    public updateCrosshairPosition() {                                          
+
     }//end
 
-    public getNewPosition = (): number[] => {
-        const [px, py, pz] = this.pivot.position;
-        return [
-            px + this.direction.elements[0] * this.ln_velocity,
-            py + this.direction.elements[1] * this.ln_velocity,
-            pz + this.direction.elements[2] * this.ln_velocity,
-        ];
-    };//end   
-    
     public getHeadingXZ(): number {
         // Forward in world; 0 = +Z, positive to +X
-        this.forwardWorld.copy(this.forwardLocal).applyQuaternion(this.glmachine!.quaternion);
-        const x = this.forwardWorld.x;
-        const z = this.forwardWorld.z;
+        this.shipWorldforward.copy(this.shipLocalForward).applyQuaternion(this.glmachine!.quaternion);
+        const x = this.shipWorldforward.x;
+        const z = this.shipWorldforward.z;
         if (Math.abs(x) < 1e-9 && Math.abs(z) < 1e-9) return 0;
         return Math.atan2(x, z);
     };//end
@@ -217,14 +273,6 @@ export class Player {
         return FlySystemUtil.computeYawRate(vHoriz, this.roll_angle); 
     }//end
 
-    public getDirectionPoint = (distance: number): number[] => {
-        const [px, py, pz] = this.pivot.position;
-        return [px + this.direction.elements[0] * distance,
-                py + this.direction.elements[1] * distance,
-                pz + this.direction.elements[2] * distance
-        ];
-    };//end
-
     public getCannonsPosition = (): Vector3d[] => {
         const positions: Vector3d[] = [];
         for(let idx=0;idx<this.glCannonsObjs.length;idx++){            
@@ -235,12 +283,6 @@ export class Player {
         return positions;
     };//end 
 
-    public getCrosshairPosition = (): Vector3d => {
-        const localPos = this.glCrosshair!.position.clone();
-        const worldPos = this.glmachine!.localToWorld(localPos);
-        return ThreeUtil.getVector3d(worldPos);
-    };
-    
     public getCannonsDirections = (cannonsPos:Vector3d[]): MVector3d[] => {
         const targetPos:Vector3d = this.getCrosshairPosition();
         const directions:MVector3d[] = [];
@@ -250,6 +292,15 @@ export class Player {
             directions.push(new MVector3d(dirElems));    
         }
         return directions;
+    };//end
+
+    /*
+    public getShipDirectionPoint = (distance: number): number[] => {
+        const [px, py, pz] = this.shipPivot.position;
+        return [px + this.shipDirection.elements[0] * distance,
+                py + this.shipDirection.elements[1] * distance,
+                pz + this.shipDirection.elements[2] * distance
+        ];
     };//end
 
     public applyRollAutolevel(): void {
@@ -262,8 +313,9 @@ export class Player {
         this.tmpQ.setFromAxisAngle(this.axisLocalZ, delta); // local Z
         this.glmachine!.quaternion.multiply(this.tmpQ).normalize();
         this.roll_angle += delta;
-        this.pivot.rotate(PlayerConfig.ROLL_AXIS, delta);
+        this.shipPivot.rotate(PlayerConfig.ROLL_AXIS, delta);
     }//end    
+    */
 
 };//end
 

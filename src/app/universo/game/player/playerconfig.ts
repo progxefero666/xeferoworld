@@ -25,7 +25,7 @@ relation factor: 1/290 = 0,003448
 */
 
 /**
- * class PlayerConfig.CROSSHAIR_POSITION
+ * class PlayerConfig.ATT_DIST_TO_CONVERG
  */
 export class PlayerConfig {
 
@@ -161,15 +161,9 @@ export class PlayerConfig {
     }//end
 
     public static getGlTarget():Mesh {
-        //with player center at position [0,0,0]
         const material:MeshBasicMaterial
                     = new MeshBasicMaterial({color:'#FFFF00'}); 
-        const glTarget = new Mesh(new SphereGeometry(0.5,16,16),material);
-        glTarget.position.set(
-                PlayerConfig.CROSSHAIR_POSITION[0],
-                PlayerConfig.CROSSHAIR_POSITION[1],
-                PlayerConfig.CROSSHAIR_POSITION[2]);
-        return glTarget;
+        return new Mesh(new SphereGeometry(3.0,16,16),material);
     }//end
 
     //util

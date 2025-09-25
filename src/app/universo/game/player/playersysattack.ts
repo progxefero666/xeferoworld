@@ -23,11 +23,11 @@ Regla típica: 0.4–0.6 s.
 Elige vida útil de la bala 
 Típico: 1.5–2.5 s.
 */
-export class PlayerArmy {
+export class PlayerSystemAttack {
 
     //force attack
     public player:Player;
-    //public cannonsCoord:Vector3d[] = [];
+ 
     public bulletsA_mat:THREE.MeshBasicMaterial;  
     public bulletsA: BulletSimple[];
 

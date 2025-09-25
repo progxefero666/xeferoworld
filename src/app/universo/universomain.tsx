@@ -204,7 +204,7 @@ export default function UniversoMain() {
         const result = await game.createPlayer(layoutDimRef.current);
         if (!result) { alert("Error loading game"); return; }
 
-        const game_scene: GameScene = new GameScene(true);
+        const game_scene: GameScene = new GameScene(false);
         game_scene.loadPlayer(game.player!.glmachine!,game.player!.glCrosshair!);
         //game.chargeRapierWorld(game_scene);
 
