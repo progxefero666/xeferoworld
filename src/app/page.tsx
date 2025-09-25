@@ -1,18 +1,14 @@
-//src\app\page.tsx
 'use client';
 
-import { useState } from "react";
-import { Text,Flex, Box } from "@radix-ui/themes";
-import { LayoutPageOneColumn } from "@/layouts/lypageonecolumn";
-
 import { useRouter } from "next/navigation";
-
-import { Universo3dConfig } from "./universo/universo3dcfg";
-import UniversoMain from "./universo/universomain";
+import { Box } from "@radix-ui/themes";
+import { LayoutPageOneColumn } from "@/layouts/lypageonecolumn";
+import { Universo3dConfig } from "@/app/universo/universo3dcfg";
+import { GameLayout } from "@/app/universo/gamelayout";
 
 
 /**
- * Page Workflows
+ * Page Space Game
  */
 export default function PageUniverso3D() {
 
@@ -24,15 +20,15 @@ export default function PageUniverso3D() {
 
     const headerContent = () => {
         return(
-            <Box>Universo 3D</Box>
+            <Box>Space Game</Box>
         );
     };//end    
 
     return (
         <LayoutPageOneColumn 
-            headertitle   = {"Xefero AI"} 
+            headertitle   = {"By Xefero"} 
             headercontent = {headerContent()}
-            main          = {<UniversoMain />}
+            main          = {<GameLayout />}
             options       = {[]} 
             onselection   = {loadSection} />
     );

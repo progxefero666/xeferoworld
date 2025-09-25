@@ -5,7 +5,7 @@ import * as THREE from 'three'
 
 import { Box, Flex } from "@radix-ui/themes";
 import { TDimension } from "@/common/types";
-import { GameScene } from "../gamescene";
+import { GameScene } from "./gamescene";
 import { GameConfig } from "@/app/universo/game/gameconfig";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { LIB_ICON } from "@/radix/rdxthicons";
@@ -18,59 +18,35 @@ const divOverCanvasStyle = {
     border: '1px solid rgba(222, 255, 9, 1)',
 };
 
+
+export interface GameMonitorRef{test:()=>void;};
 interface GameMonitorProps {
     canvasdim: TDimension;
     gamesc:GameScene;
     game: GameAircraft;
 };
 
-export interface GameMonitorRef {
-    test: () => void;
-};
 
 let renderer: THREE.WebGLRenderer | null = null;
+let fixCamera: THREE.PerspectiveCamera | null = null;
 
-export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, ref) => {
-    const { canvasdim,gamesc, game } = props;
-
-    if(gamesc===null) { alert("GameScene is null"); }
-
-    const monCsswidth = canvasdim.width + "px";
-    const monCssheight = canvasdim.height + "px";
-    const threeContainerRef = useRef<HTMLCanvasElement>(null);
-
-    const divOverCanvasRef = useRef<HTMLDivElement>(null);
-
-    let monCamera: THREE.PerspectiveCamera | null = null;
-
+export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>((props, ref) => {
+    
+    const {canvasdim,gamesc,game} = props;
     const [wglready, setWglReady] = useState<boolean>(false);
-
+    const threeContainerRef       = useRef<HTMLCanvasElement>(null);
+    const monCsswidth:string      = canvasdim.width + "px";
+    const monCssheight:string     = canvasdim.height + "px";
+    
     useEffect(() => {
         if (typeof window === "undefined" || typeof document === "undefined") return;
         if (wglready) { return; }
 
-        renderer = new THREE.WebGLRenderer({ canvas: threeContainerRef.current! });
-        renderer.setSize(canvasdim.width, canvasdim.height);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setClearColor(GameConfig.SCENE_BACKCOLOR, 1.0);
-
-        const aspect  =canvasdim.width/ canvasdim.height;
-        monCamera = new THREE.PerspectiveCamera(
-            GameConfig.M_CAMERA_FOV,aspect, 
-            GameConfig.M_CAMERA_NEAR,
-            GameConfig.M_CAMERA_FAR);
-        monCamera.position.set(0,0,-6);
-        monCamera.lookAt(0,0,0);
-
-        if(gamesc!==null) {
-            lastTime = performance.now();
-            animate();
-        }
-        //else{alert("GameScene is null");}
+        createGlRendered();
+        loadFixDebugCamera();
         setWglReady(true);
+        if(gamesc!==null) {startApplication();}        
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
             if (renderer && renderer.domElement.parentNode) {
@@ -79,10 +55,28 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
         };
     }, []);
 
+    const createGlRendered = () => {
+        renderer = new THREE.WebGLRenderer({canvas:threeContainerRef.current!});
+        renderer.setSize(canvasdim.width,canvasdim.height);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.setClearColor(GameConfig.SCENE_BACKCOLOR, 1.0);        
+    };//end
+
     const handleResize = () => {
         renderer!.setSize(canvasdim.width, canvasdim.height);
     };//end
-    
+
+    const loadFixDebugCamera = () => {
+        fixCamera = new THREE.PerspectiveCamera(
+            GameConfig.M_CAMERA_FOV,
+            canvasdim.width/ canvasdim.height, 
+            GameConfig.M_CAMERA_NEAR,
+            GameConfig.M_CAMERA_FAR);
+        fixCamera.position.set(0,0,-6);
+        fixCamera.lookAt(0,0,0);
+    };//end
+
     const onExpand = () => {
         console.log("onclick expand");
     };//end
@@ -98,37 +92,40 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
     //Three app Main animation loop    
     //......................................................................................
 
-    //init time properties
-    let lastTime = 0;
-    
+    let lastTime = 0;  
+    const startApplication = () => {
+        lastTime = performance.now();
+        animate();        
+    };//end
+
+    //init frame params      
     const clock = new THREE.Clock();
 
+    //app render function
     const animate = async () => {
         requestAnimationFrame(animate);
 
-        //new time parameters
+        //1: new time parameters
         const delta = clock.getDelta(); 
         const now = performance.now();
         
-        //animate scene
+        //2: animate scene
         if(GameAircraft.EXEC_ANIMATION){game.animate(delta);}
 
-        //render main scene
+        //3: render main scene
         renderer!.render(gamesc.scene, game.cameraPlayer!);
     
-        //sleep to correct frame duration
+        //4: sleep to correct frame duration
         const timeDiff = performance.now() - lastTime;
         if(timeDiff < GameConfig.FRAME_TIME) { 
             await execSleep(GameConfig.FRAME_TIME - timeDiff); 
         }        
 
-        //update time properties
+        //5: update time properties
         lastTime = now;
+
     };//end
     //.......................................................................................
-
-
-
 
     //jsx
     //.......................................................................................    
@@ -169,6 +166,7 @@ if (now - lastTelemetry >= 500 && game.player) {
 */  
 
 /*
+const divOverCanvasRef = useRef<HTMLDivElement>(null);
 <div ref={divOverCanvasRef}    
     style={{zIndex: 2,
             position:'absolute',left:0,top: 0,

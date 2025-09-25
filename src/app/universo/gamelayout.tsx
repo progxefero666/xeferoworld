@@ -21,13 +21,14 @@ import { LIB_ICON } from "@/radix/rdxthicons";
 import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { PlayerOrbitMonitor, PlayerOrbitMonitorRef }
     from "@/app/universo/game/monitor/playerorbitmonitor";
-import { GameMonitor, GameMonitorRef } from "@/app/universo/game/monitor/gamemonitor";
+
+import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameapplication";
 import { GameAircraft } from "@/app/universo/game/spacegame";
 import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrols";
-import { GameScene } from "./game/gamescene";
 
-import { OrthoMonitor } from "./game/monitor/orthomonitor";
-import { PlayerShipCfg } from "./game/player/playerconfig";
+import { PlayerShipCfg } from "@/app/universo/game/player/playerconfig";
+import { GameScene } from "@/app/universo/game/gamescene";
+import { OrthoMonitor } from "@/app/universo/game/monitor/orthomonitor";
 
 
 const glLayoutGridStyle = {
@@ -35,15 +36,15 @@ const glLayoutGridStyle = {
     border: '1px solid rgba(0, 0, 0, 1)',
 };
 
-const ORBIT_MONITOR_ID: string = "orbitmonitor";
 const GAME_MONITOR_ID: string = "gamemonitor";
 const game: GameAircraft = new GameAircraft();
 
-export default function UniversoMain() {
+export function GameLayout() {
 
     //........................................................................................
     // game pad
-    //........................................................................................
+    //.......................................................................................
+     /*
     const gamepads = useGamepads();
 
     // Función principal que redirige eventos de gamepad
@@ -165,7 +166,7 @@ export default function UniversoMain() {
         });
     };
 
-    /*
+   
     useEffect(() => {
         handleGamepadEvents(Array.isArray(gamepads) ? gamepads : [gamepads]);
     }, [gamepads]);
@@ -276,7 +277,7 @@ export default function UniversoMain() {
                         style={glLayoutGridStyle}>GameMonitor
 
                         <Box gridRow="1" gridColumn="1" style={RdxThContainers.BORDER_SIMPLE}>
-                            {wglready ? <GameMonitor ref={gameMonitorRef}
+                            {wglready ? <GameWebGlApplication ref={gameMonitorRef}
                                 canvasdim={layoutCellDimRef.current}
                                 gamesc={gameScene!}
                                 game={game} /> : null}
@@ -297,7 +298,7 @@ export default function UniversoMain() {
                     </Grid>
                     :
                     <Box ref={singleRef} width="100%" height="auto" >
-                        {wglready ? <GameMonitor ref={gameMonitorRef}
+                        {wglready ? <GameWebGlApplication ref={gameMonitorRef}
                             canvasdim={layoutCellDimRef.current}
                             gamesc={gameScene!}
                             game={game} /> : null}
