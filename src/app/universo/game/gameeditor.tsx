@@ -174,7 +174,7 @@ export function GameLayout() {
     //........................................................................................
 
     const [wglready, setWglReady] = useState<boolean>(false);
-    const [showLayout4, setShowLayout4] = useState<boolean>(false);
+    const [showLayout4, setShowLayout4] = useState<boolean>(true);
 
     const singleRef = useRef<HTMLDivElement>(null);
     const layoutRef = useRef<HTMLDivElement>(null);
