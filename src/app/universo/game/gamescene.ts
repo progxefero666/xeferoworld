@@ -35,13 +35,18 @@ export class GameScene {
 
     public loadLights = () => {   
         const ambientLight = new THREE.AmbientLight('#ffffff', 1.0);                
-        const directionalLight = new THREE.DirectionalLight('#ffffff', 1.2);
-        directionalLight.position.set(10, 10, 10);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 1024;
-        directionalLight.shadow.mapSize.height = 1024;
         this.scene.add(ambientLight);  
-        this.scene.add(directionalLight);                      
+
+        const pointLightA = new THREE.PointLight( 0xff0000, 1, 100 );
+        pointLightA.position.set( 50, 50, 50 );
+        this.scene.add( pointLightA );
+
+        //const directionalLight = new THREE.DirectionalLight('#ffffff', 1.2);
+        //directionalLight.position.set(10, 10, 10);
+        //directionalLight.castShadow = true;
+        //directionalLight.shadow.mapSize.width = 1024;
+        //directionalLight.shadow.mapSize.height = 1024;        
+        //this.scene.add(directionalLight);                      
     };//end
 
     public  loadInitObjects = async () => {            

@@ -10,6 +10,7 @@ import { TDimension } from '@/common/types';
 import { SpacePlayer } from '@/app/universo/game/player/player';
 import { PlayerConfig } from './player/playerconfig';
 
+/*
 export const initRapier = async () => {
     // carga del .wasm (asíncrona, pero una sola vez)
     await RAPIER.init();   
@@ -17,6 +18,7 @@ export const initRapier = async () => {
     const world = new RAPIER.World(gravity);
     return world;
 };
+*/
 
 /**
  * SkyBoxGenerator
@@ -52,7 +54,7 @@ export class SpaceGame {
     };//end
 
     public chargeRapierWorld = async (gScene: GameScene) => {
-        this.world = await initRapier();
+        //this.world = await initRapier();
     }//end
 
     public chargeCameraPlayer = (canvasDim:TDimension) => {

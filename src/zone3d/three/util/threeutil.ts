@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { ThreeLine3d } from '../objects/thline3d';
 import { Pivot3d } from '@/math3d/pivot/pivot3d';
 import { GeoFunction } from '../functions/geofunction';
-import { GlSystem3d } from '../../glsystem3d';
+import { System3d } from '@/system3d/system3d';
 
 /**
  * class ThreeUtil.getVector3d
@@ -42,17 +42,17 @@ export class ThreeUtil {
         lines[0] = GeoFunction.generateThreeLine(
             pivot.pivotAxis[0].axis_vertex_0, 
             pivot.pivotAxis[0].axis_vertex_1,
-            GlSystem3d.AXIS_X_COLOR
+            System3d.AXIS_X_COLOR
         );
         lines[1] = GeoFunction.generateThreeLine(
             pivot.pivotAxis[1].axis_vertex_0, 
             pivot.pivotAxis[1].axis_vertex_1,
-            GlSystem3d.AXIS_Y_COLOR
+            System3d.AXIS_Y_COLOR
         ); 
         lines[2] = GeoFunction.generateThreeLine(
             pivot.pivotAxis[2].axis_vertex_0, 
             pivot.pivotAxis[2].axis_vertex_1,
-            GlSystem3d.AXIS_Z_COLOR
+            System3d.AXIS_Z_COLOR
         );
         return lines;
     };//end

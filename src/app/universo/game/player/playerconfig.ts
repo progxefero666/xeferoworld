@@ -1,19 +1,18 @@
 //src\app\universo\game\player\playerconfig.ts
 
-import * as THREE from 'three';
 
-import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
-import { MVector3d } from '@/math3d/pivot/mathpivot3d';
-import { Pivot3d } from '@/math3d/pivot/pivot3d';
-import { Plane3dPoint, TCylinderConfig, TDimension3d, Vector3d } from "@/common/types";
+//import * as THREE from 'three';
+
+import { 
+    MeshBasicMaterial, 
+    SphereGeometry, 
+    Mesh
+} from 'three';
+
+import { TCylinderConfig, TDimension3d, Vector3d } from "@/common/types";
 import { System3d } from "@/system3d/system3d";
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { GameConfig } from '@/app/universo/game/gameconfig';
-import { Sys3dThreeUtil } from '@/system3d/util/sys3dthreeutil';
-import { ThreeUtil } from '@/zone3d/three/util/threeutil';
-import { PlayerArmy } from './playerarmy';
-import { Math3dUtil } from '@/math3d/functions/math3dutil';
-import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
 
 /*
 cm_y: number = 1.2;
@@ -63,22 +62,22 @@ export class PlayerConfig {
     public static ENGINE_LU_COORDS:Vector3d = {x:-1.4, y: 0.94,  z:3.6};
     public static ENGINE_LD_COORDS:Vector3d = {x:-1.5,y:-1.28, z:3.6};
 
-    public static getGlEngines():THREE.Mesh[] {
+    public static getGlEngines():Mesh[] {
         
-        const material:THREE.MeshBasicMaterial
-                    = new THREE.MeshBasicMaterial( { color: 0xff0000 } ); 
+        const material:MeshBasicMaterial
+                    = new MeshBasicMaterial( { color: 0xff0000 } ); 
 
-        const engineObj_RU = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25,32,32),material);
+        const engineObj_RU = new Mesh(
+                new SphereGeometry(0.25,32,32),material);
 
-        const engineObj_RD = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25,32,32),material);
+        const engineObj_RD = new Mesh(
+                new SphereGeometry(0.25,32,32),material);
 
-        const engineObj_LU = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25,32,32),material);
+        const engineObj_LU = new Mesh(
+                new SphereGeometry(0.25,32,32),material);
 
-        const engineObj_LD = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25,32,32),material);  
+        const engineObj_LD = new Mesh(
+                new SphereGeometry(0.25,32,32),material);  
 
         engineObj_RU.position.set(PlayerConfig.ENGINE_RU_COORDS.x,
                                   PlayerConfig.ENGINE_RU_COORDS.y,
@@ -96,7 +95,7 @@ export class PlayerConfig {
                                   PlayerConfig.ENGINE_LD_COORDS.y,
                                   PlayerConfig.ENGINE_LD_COORDS.z);  
 
-        const glEngines:THREE.Mesh[] = [];
+        const glEngines:Mesh[] = [];
         glEngines.push(engineObj_RU);
         glEngines.push(engineObj_RD);
         glEngines.push(engineObj_LU);
@@ -124,19 +123,19 @@ export class PlayerConfig {
     public static BULLETS_A_CFG:TCylinderConfig 
         = {radius:0.15,len:1.0,radialseg:16,lenseg:1,color: 0xFFD700};
 
-    public static getGlCannons():THREE.Mesh[] {
-        const material:THREE.MeshBasicMaterial
-                    = new THREE.MeshBasicMaterial( { color: 0xFF00FF } ); 
+    public static getGlCannons():Mesh[] {
+        const material:MeshBasicMaterial
+                    = new MeshBasicMaterial( { color: 0xFF00FF } ); 
 
-        const gunRefObj_RU = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LU = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
+        const gunRefObj_RU = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_LU = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
 
-        const gunRefObj_RD = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LD = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
+        const gunRefObj_RD = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_LD = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
 
         gunRefObj_RU.position.set(PlayerConfig.CANNON_RU_COORDS.x,
                                   PlayerConfig.CANNON_RU_COORDS.y,
@@ -152,7 +151,7 @@ export class PlayerConfig {
                                   PlayerConfig.CANNON_LD_COORDS.y,
                                   PlayerConfig.CANNON_LD_COORDS.z); 
 
-        const glGuns:THREE.Mesh[] = [];
+        const glGuns:Mesh[] = [];
         glGuns.push(gunRefObj_RU);
         glGuns.push(gunRefObj_LU);
         glGuns.push(gunRefObj_RD);        
@@ -160,18 +159,18 @@ export class PlayerConfig {
         return glGuns;
     }//end
 
-    public static getGlTargets():THREE.Mesh[] {
-        const material:THREE.MeshBasicMaterial
-                    = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } ); 
+    public static getGlTargets():Mesh[] {
+        const material:MeshBasicMaterial
+                    = new MeshBasicMaterial( { color: 0xFFFF00 } ); 
 
-        const gunRefObj_RU = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
-        const gunRefObj_RD = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LU = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LD = new THREE.Mesh
-                (new THREE.SphereGeometry(0.5,16,16),material);
+        const gunRefObj_RU = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_RD = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_LU = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
+        const gunRefObj_LD = new Mesh
+                (new SphereGeometry(0.5,16,16),material);
 
         const coordZ = PlayerConfig.ATT_DIST_TO_CONVERG * (-1);
         gunRefObj_RU.position.set(PlayerConfig.CANNON_RU_COORDS.x,
@@ -188,7 +187,7 @@ export class PlayerConfig {
                                   GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_LD_COORDS.y,
                                   coordZ); 
 
-        const glTargets:THREE.Mesh[] = [];
+        const glTargets:Mesh[] = [];
         glTargets.push(gunRefObj_RU);
         glTargets.push(gunRefObj_RD);
         glTargets.push(gunRefObj_LU);

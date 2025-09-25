@@ -102,7 +102,7 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
         const now = performance.now();
         
         //animate scene
-        game.animate(delta); 
+        //game.animate(delta); 
         renderer!.render(gamesc.scene, game.cameraPlayer!);
         //renderer!.render(gamesc.scene, monCamera!);
 
