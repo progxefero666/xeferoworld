@@ -15,7 +15,7 @@ import { WorldPlaneMain } from "../world/worldplane/worldplanemain";
  */
 export default function PageTerrains3d() {
 
-    const [sectionId,setSectionId] = useState<string>(Terrains3dConfig.SECTIONS[0].id);
+    const [sectionId,setSectionId] = useState<string>(Terrains3dConfig.SECTIONS[2].id);
     const loadSection= (section: string) => {
         setSectionId(section);
     };//end

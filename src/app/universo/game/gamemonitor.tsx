@@ -166,7 +166,6 @@ export function SpaceGameMonitor() {
             if (typeof window === "undefined" || typeof document === "undefined") return;
 
             const dim_width  = layoutRef.current?.clientWidth ?? Universo3dConfig.GL_LAYOUT_W_DEF;
-            alert(dim_width);
             canvasDim.current.width = Math.floor(dim_width);
             canvasDim.current.height = Universo3dConfig.GL_LAYOUT_H;
             const result = await loadPlayer();

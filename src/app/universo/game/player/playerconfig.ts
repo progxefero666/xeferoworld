@@ -39,10 +39,10 @@ export class PlayerArmyCfg {
         = {radius:0.15,len:1.0,radialseg:16,lenseg:1,color: 0xFFD700};
 
     //military cannons
-    public static CANNON_RU_COORDS:Vector3d = {x: 5.6, y: 1.4, z:-6.3};
-    public static CANNON_RD_COORDS:Vector3d = {x: 5.6, y:-1.4, z:-6.3};
-    public static CANNON_LU_COORDS:Vector3d = {x:-5.6, y: 1.4, z:-6.3};
-    public static CANNON_LD_COORDS:Vector3d = {x:-5.6, y:-1.4, z:-6.3};    
+    public static CANNON_RU_COORDS:Vector3d = {x: 5.4, y: 1.6, z:-6.4};
+    public static CANNON_RD_COORDS:Vector3d = {x: 5.4, y:-1.6, z:-6.4};
+    public static CANNON_LU_COORDS:Vector3d = {x:-5.4, y: 1.6, z:-6.4};
+    public static CANNON_LD_COORDS:Vector3d = {x:-5.4, y:-1.6, z:-6.4};    
         
     public static getGlCannons():Mesh[] {
 
@@ -156,7 +156,9 @@ relation factor: 1/290 = 0,003448
  */
 export class PlayerShipCfg {
 
-    public static SOURCE_URL: string = '/spacegame/player/xwingfinal.glb';
+    //public static SOURCE_URL: string = '/spacegame/player/xwingfinal.glb';
+    public static SOURCE_URL: string = '/spacegame/player/xwingfewpolys.glb';
+    
     public static CROSSHAIR_MAP_PATH: string = '/spacegame/spritemaps/crosshairwhite.png'
 
     public static ROLL_AXIS: number = System3d.AXIS_Z;
@@ -164,7 +166,7 @@ export class PlayerShipCfg {
     public static YAW_AXIS: number = System3d.AXIS_Y;
 
     //ext box: width:6.2 height:1.9 deepth:7.2
-    //cm_y: 1.2  mass: 10000 kg;
+    //cm_y: 1.2  mass: 10000 kg; 11.76/2=5.88
     public static GLOBJECT_DIM: TDimension3d = {width:11.76,height:2.4,depth:13.4};
     public static COLLIDER_DIM: TDimension3d = {width:11.96,height:2.6,depth:13.6};
     

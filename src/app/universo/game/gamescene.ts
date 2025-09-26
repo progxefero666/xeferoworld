@@ -28,17 +28,17 @@ export class GameScene {
     //,onSceneCharged:() => void
     constructor(showGrid:boolean) {
         this.scene = new THREE.Scene();
-        if(showGrid){this.scene.add(new THREE.GridHelper(1000,1000));}
+        //if(showGrid){this.scene.add(new THREE.GridHelper(1000,1000));}
         this.loadLights();
         //this.loadInitObjects();
     }//end
 
     public loadLights = () => {   
-        const ambientLight = new THREE.AmbientLight('#ffffff', 1.0);                
-        this.scene.add(ambientLight);  
+        const ambientLight = new THREE.AmbientLight('#ffffff', 4.0);                
+        //this.scene.add(ambientLight);  
 
-        const pointLightA = new THREE.PointLight( 0xff0000, 1, 100 );
-        pointLightA.position.set( 50, 50, 50 );
+        const pointLightA = new THREE.PointLight('#ffffff',20.0,40.0,2.0);
+        pointLightA.position.set( 1, 10, 1 );
         this.scene.add( pointLightA );
 
         //const directionalLight = new THREE.DirectionalLight('#ffffff', 1.2);

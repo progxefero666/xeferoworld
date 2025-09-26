@@ -1,36 +1,37 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { Box } from "@radix-ui/themes";
-import { GameLayout } from "@/app/universo/game/gameeditor";
+import { useEffect } from "react";
+import { AppConfig } from "@/app/index/appconfig";
 import { LayoutPageOneColumn } from "@/layouts/lypageonecolumn";
-import { Universo3dConfig } from "@/app/universo/universo3dcfg";
+import { PageMain } from "@/app/index/main";
+import { PageHeader } from "@/app/index/header";
 
 
 /**
- * Page Space Game
+ * Web App Home Page Client Component (Main View)
  */
-export default function PageSpaceGameEditor() {
+export default function PageHome() {
 
     const router = useRouter();
-    const loadSection = (sectionId: string) => {        
-        const route:string = Universo3dConfig.APP_FOLDER + sectionId;
-        router.push(route);
+    useEffect(() => {
+        //loadSection(AppConfig.MOD_CHARACTERS.id);
+        //loadSection(AppConfig.MOD_UNIVERSO.id);
+        //loadSection(AppConfig.IMAGE_TOOLS.id);
+        //loadSection(AppConfig.MOD_TERRAINS.id);
+    }, []);
+        
+    const loadSection = (sectionId: string) => {
+        router.push(`/${sectionId}`);
     };
-
-    const headerContent = () => {
-        return(
-            <Box>Space Game</Box>
-        );
-    };//end
 
     return (
         <LayoutPageOneColumn 
-            headertitle   = {"By Xefero"} 
-            headercontent = {headerContent()}        
-            main = {<GameLayout />}
-            options     = {[]} 
-            onselection = {loadSection} />
+            headertitle   = {"Xefero AI"} 
+            headercontent = {<PageHeader />}
+            main          = {<PageMain />}
+            options       = {AppConfig.MODULES} 
+            onselection   = {loadSection} />
     );
 
 }//end page
