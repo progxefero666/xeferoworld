@@ -84,16 +84,15 @@ export function ThreeApp({ }: ThreeAppProps) {
  
     const loadCamera = () => {
         const aspect = canvasDimRef.current.width / canvasDimRef.current.height;
-        camera = new THREE.PerspectiveCamera(60,aspect,1.0,2000);
-        
-        camera!.updateProjectionMatrix();
-        camera.position.z = 5;
-        camera.position.y = 2;
+        camera = new THREE.PerspectiveCamera(60,aspect,1.0,2000);        
+        camera.position.set(-15, 1.0, -15);
+        camera.lookAt(0, 0, 0);
+
     };//end
     
     const loadSceneLights = () => {   
         const sunLight = new THREE.DirectionalLight(0xffffff, 2.0);
-        sunLight.position.set(10, 20, 10);  // dirección de la luz
+        sunLight.position.set(10, 20, 10); 
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.set(2048, 2048);
         sunLight.shadow.bias = -0.0001;
