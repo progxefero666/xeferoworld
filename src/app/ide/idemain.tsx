@@ -2,14 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { Flex} from "@radix-ui/themes";
-
-
 import { IdeConfig } from "@/app/ide/xethreeidecfg";
 import { ThreeApp } from "@/app/ide/application/threeapp";
 
 interface CompProps {
     value?:string;
-}
+};
 export function XfThreeIdeMain({}: CompProps) {
 
     const [ready, setReady] = useState<boolean>(false);
@@ -19,8 +17,7 @@ export function XfThreeIdeMain({}: CompProps) {
         setReady(true);
     }, []);
 
-    const loadAssetGltfObject = (srcpath:string) => {
-    
+    const loadAssetGltfObject = (srcpath:string) => {        
     };//end
 
     return (

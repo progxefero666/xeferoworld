@@ -136,3 +136,9 @@ export type TNumeric = {
     cntint: number;
     cntdec: number;
 };
+
+export type TCameraConfig = {
+    fov:number;
+    near:number;
+    far:number;
+}

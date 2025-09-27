@@ -4,12 +4,18 @@ import { Pivot3d, Axis3d } from "@/math3d/pivot/pivot3d";
 import * as THREE from "three";
 import { ThreeUtil } from "../util/threeutil";
 import { TState3d } from "../threetypes";
+import { TCameraConfig, TDimension } from "@/common/types";
 
 
 /**
- * class CameraUtil.getPlCameraTarget(pivot:Pivot3d,incY:number)
+ * class CameraUtil.createPerspCamera(canvasDim:TDimension,config:TCameraConfig)
  */
 export class CameraUtil {
+
+    public static createPerspCamera(canvasDim:TDimension,config:TCameraConfig):THREE.PerspectiveCamera {
+        const aspect = canvasDim.width / canvasDim.height;
+        return  new THREE.PerspectiveCamera(config.fov,aspect,config.near,config.far);
+    }//end
 
     public static setPivotState = (camera: THREE.PerspectiveCamera,
                                    pivot:Pivot3d,dist:number,incY:number): void => {

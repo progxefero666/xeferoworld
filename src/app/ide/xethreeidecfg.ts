@@ -1,6 +1,6 @@
 //src\ide\xethreeidecfg.ts
 
-import { TDimension } from "@/common/types";
+import { TCameraConfig, TDimension } from "@/common/types";
 
 /**
  * class IdeConfig.LIGHT_OBJ_RADIUS
@@ -17,5 +17,7 @@ export class IdeConfig {
     public static LIGHT_OBJ_RADIUS:number = 1.0;
     public static LIGHT_OBJ_COLOR:any = '#FFFF00';
     
+    public static CAM_MAIN_CFG:TCameraConfig = {fov:60.0,near:1.0,far:1000};
+
 
 }//end
