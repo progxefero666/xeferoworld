@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { Grid, Flex } from "@radix-ui/themes";
 import { RdxThContainers } from "@/radix/rdxthcontainers";
+import { XfThreeIdeMain } from "./ide/idemain";
 
 
 const LAYOUT_DEF = {
@@ -47,7 +48,7 @@ export default function PageXeThreeIde()  {
             </Flex>
 
             <Flex gridColumn="2" gridRow="2" >
-                Main Content
+                <XfThreeIdeMain />
             </Flex>
 
             <Flex gridColumn="3" gridRow="2" >

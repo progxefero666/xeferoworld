@@ -7,24 +7,27 @@ import { MaterialMapLoader } from '@/zone3d/three/materials/matmaploader';
 
 
 /**
- * class SkyBoxGenerator
+ * class SkyBoxGenerator.getCubeTexture
  */
 export class SkyBoxGenerator {
 
-    public static SIDES:string[]=["ft", "bk", "up", "dn", "rt", "lf"];
+    //[+X, −X, +Y, −Y, +Z, −Z]
+    public static CUBE_SIDES:string[]=['rt.jpg','lf.jpg','up.jpg','dn.jpg','ft.jpg','bk.jpg'];
 
-	public static getAllPaths(folder:string,fname:string,typeExtension:string) {		
-		const baseFilename = folder + '/' + fname;
-		const fileType = '.'+ typeExtension;
-		const allpaths = SkyBoxGenerator.SIDES.map(side => {
-		    return baseFilename + "_" + side + fileType;
-		});		
-		return allpaths;
-	}//end
+    public static async getCubeTexture(path:string): Promise<THREE.CubeTexture> {
+         const loader = new THREE.CubeTextureLoader().setPath(path);
+         const texture: THREE.CubeTexture = loader.load(SkyBoxGenerator.CUBE_SIDES);
+         texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+    }//end 
 
     /*
-                depthWrite: false,
-            depthTest: false,   
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const hdr = await new RGBELoader().setPath('/tex/hdr/').loadAsync('space_1k.hdr');
+    const envRT = pmrem.fromEquirectangular(hdr).texture;
+    scene.background = envRT;     // cielo
+    // scene.environment = envRT; // cuando quieras IBL
+    hdr.dispose(); pmrem.dispose();    
     */
     public static async getMaterial(path:string,colorBase:any,alpha?:number): Promise<THREE.MeshBasicMaterial> {
         const colorMap = await MaterialMapLoader.loadTextureMap(path);
@@ -38,6 +41,16 @@ export class SkyBoxGenerator {
         return material;
     }//end 
 
+    public static SIDES:string[]=["ft", "bk", "up", "dn", "rt", "lf"];
+
+	public static getAllPaths(folder:string,fname:string,typeExtension:string) {		
+		const baseFilename = folder + '/' + fname;
+		const fileType = '.'+ typeExtension;
+		const allpaths = SkyBoxGenerator.SIDES.map(side => {
+		    return baseFilename + "_" + side + fileType;
+		});		
+		return allpaths;
+	}//end    
     public static async genSkyBoxBlack(folder:string,fname:string,typeExtension:string,
                                        dimension:TDimension3d,
                                        alpha?:number ):Promise<THREE.Mesh> {

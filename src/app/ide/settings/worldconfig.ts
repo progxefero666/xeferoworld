@@ -11,4 +11,5 @@ export class WorldCfg {
     public static GRID_COLOR:any  = '#838282ff';
 
     
+    
 }//end
