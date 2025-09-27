@@ -3,17 +3,21 @@
 
 import { useState, useEffect, useRef } from "react";
 import * as THREE from 'three';
-import { Box } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { RdxThContainers } from "@/radix/rdxthcontainers";
 import { IdeConfig } from "@/app/ide/xethreeidecfg";
 import { IdeAppWorld } from "./ideappworld";
 import { TDimension } from "@/common/types";
+import { SliderSimple } from "@/radix/sliders/slidersimple";
+import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
 
 
 //main three webgl elements
 //..................................................................
 let renderer: THREE.WebGLRenderer;
 let world:IdeAppWorld;
+
+let orbitCamera: OrbitCamera | null = null;
 
 interface ThreeAppProps {
     value?:string;
@@ -30,6 +34,7 @@ export function ThreeApp({}: ThreeAppProps) {
 
         createMainRenderer();
         createAppWorld();
+        orbitCamera = new OrbitCamera(canvasDimRef.current,56,0);
         animate();
         setWglReady(true);
 
@@ -63,7 +68,7 @@ export function ThreeApp({}: ThreeAppProps) {
         world = new IdeAppWorld(canvasDimRef.current);
         await world.loadInitObjects(renderer);
     }//end
-    
+
     /**
      * Main animation loop
      */
@@ -78,12 +83,40 @@ export function ThreeApp({}: ThreeAppProps) {
         renderer!.setSize(window.innerWidth, window.innerHeight);
     };//end    
 
+    const renderOrbitCamControls = () => {
+        return(
+            <Flex width="100%" height="30px" direction="row" align="center" gapX="2" >
+                <Box width="33%" >
+                    <SliderSimple config={OrbitCamera.sliderViewRotCfg} 
+                                index={0} 
+                                value={OrbitCamera.ORBCAMERA_ROTY_DEF} 
+                                onchange={orbitCamera!.updateParam}  />
+                </Box>              
+                <Box width="33%" >
+                    <SliderSimple config={OrbitCamera.sliderViewDistCfg} 
+                                index={1} 
+                                value={OrbitCamera.ORBCAMERA_DIST_DEF} 
+                                onchange={orbitCamera!.updateParam}  />
+                </Box>      
+                <Box width="33%" >
+                    <SliderSimple config={OrbitCamera.sliderViewElevCfg} 
+                                index={2} 
+                                value={OrbitCamera.ORBCAMERA_ELEV_DEF} 
+                                onchange={orbitCamera!.updateParam}  />
+                </Box>                               
+            </Flex>
+        )
+    };//end 
+        
     return (
-        <Box width="100%" style={RdxThContainers.MONITOR_CONTENT}>
+        <Flex width="100%" direction="column" 
+              style={IdeConfig.DESKTOP_CONTENT}>
+                
+            {renderOrbitCamControls()}    
             <canvas ref={canvasRef}
                 width={canvasDimRef.current.width}
                 height={canvasDimRef.current.height} />
-        </Box>
+        </Flex>
     )
 
 };//end component

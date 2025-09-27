@@ -61,7 +61,7 @@ export class OrbitCamera {
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(center,this.distance,this.rotationY);
         this.cam.position.set(coord2d.x,this.elevation,coord2d.y);
-        this.cam.lookAt(0,0,0);
+        this.cam.lookAt(0,this.elevation,0);
     }//end    
 
     //this.aspect = this.aspect;

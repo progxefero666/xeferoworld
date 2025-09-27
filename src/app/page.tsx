@@ -1,36 +1,23 @@
 'use client';
 
-
 import { useEffect } from "react";
 import { Grid, Flex } from "@radix-ui/themes";
-import { RdxThContainers } from "@/radix/rdxthcontainers";
-import { XfThreeIdeMain } from "./ide/idemain";
-
+import { ThreeApp } from "./ide/application/threeapp";
 
 const LAYOUT_DEF = {
     background: 'rgba(0, 0, 0, 1)'
 };
-
 const PRIMBAR_STYLE = {
     background: 'rgba(198, 17, 17, 1)'
 };
-
 const header_CONTENT = {
     backgroundColor: 'rgba(0, 0, 0, 1)'
 };
-
 
 /**
  * PageXeThreeIde
  */
 export default function PageXeThreeIde()  {
-
-
-    useEffect(() => {
-
-    }, []);
-        
-    //const loadSection = (sectionId: string) => {};
 
     return (
         
@@ -48,7 +35,7 @@ export default function PageXeThreeIde()  {
             </Flex>
 
             <Flex gridColumn="2" gridRow="2" >
-                <XfThreeIdeMain />
+                <ThreeApp />
             </Flex>
 
             <Flex gridColumn="3" gridRow="2" >

@@ -32,6 +32,9 @@ export class IdeAppWorld {
     public cameraDist: number = 15;
     public cameraElev: number = 1.0;
 
+    //public\spacegame\player\xwing8k.glb
+    public glmachine: THREE.Object3D|null = null;    
+
     //onSceneCharged:() => void
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
@@ -118,5 +121,8 @@ export class IdeAppWorld {
         this.scene.add(directLightObj);       
     };//end
 
+    public loadInitObject = () => {   
+
+    };//end
 
 };//end
