@@ -1,19 +1,18 @@
-//src\app\ide\application\mainscene.ts
+//src\app\ide\application\ideappworld.ts
 
 import * as THREE from 'three';
-
 
 import { Point2d, TCameraConfig, TDimension } from '@/common/types';
 import { CircunfUtil } from '@/math2d/functions/circunfutil';
 import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
 import { System3d } from '@/system3d/system3d';
-import { ThreeUtil } from '@/zone3d/three/util/threeutil';
-import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { CameraUtil } from '@/zone3d/three/cameras/thcamerautil';
 import { LightsUtil } from '@/zone3d/three/threelights';
 import { IdeThreeUtil } from '../util/idethreeutil';
 import { SkyBoxGenerator } from '@/system3d/util/genskybox';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
+
 
 let lightDirA_int:number =2;
 let lightDirA_color:any  = '#FFFFFF';
@@ -21,7 +20,7 @@ let lightDirA_pos:THREE.Vector3 = new THREE.Vector3(10,20,10);
 let lightDirA:THREE.DirectionalLight;
 
 /**
- * class Characters Scene
+ * class IdeAppWorld
     public terrain:THREE.Object3D|null=null;
  */
 export class IdeAppWorld {
@@ -37,22 +36,22 @@ export class IdeAppWorld {
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
         this.scene = new THREE.Scene();
-        this.scene.add(new THREE.GridHelper(200,200));
+        this.scene.add(new THREE.GridHelper(500,500));
         this.loadLights();
         this.loadCamera();
     };//end
    
     public loadCamera = () => {  
-        //camera.position.set(-15, 1.0, -15);
+        
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
         const camConfig:TCameraConfig = {fov:60,near:1.0,far:1500};
         this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
         this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
+        //this.camera.position.set(-15, 1.0, -15);
         this.camera.lookAt(0,this.cameraElev,0);                 
     };//end
     
-    //async (onSceneCharged:() => void)
     public loadInitObjects = async (renderer:THREE.WebGLRenderer) => {
         this.scene.add(new THREE.GridHelper(1000, 1000));
         //........................................................................

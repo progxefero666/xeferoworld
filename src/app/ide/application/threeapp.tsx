@@ -63,12 +63,13 @@ export function ThreeApp({}: ThreeAppProps) {
         world = new IdeAppWorld(canvasDimRef.current);
         await world.loadInitObjects(renderer);
     }//end
+    
     /**
      * Main animation loop
      */
     const animate = () => {
         requestAnimationFrame(animate);
-        //renderer!.render(scene!, camera!);
+        renderer!.render(world.scene,world.camera!);
     };//end
 
     const handleResize = () => {

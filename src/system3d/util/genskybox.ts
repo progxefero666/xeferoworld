@@ -12,7 +12,9 @@ import { MaterialMapLoader } from '@/zone3d/three/materials/matmaploader';
 export class SkyBoxGenerator {
 
     //[+X, −X, +Y, −Y, +Z, −Z]
-    public static CUBE_SIDES:string[]=['rt.jpg','lf.jpg','up.jpg','dn.jpg','ft.jpg','bk.jpg'];
+    public static CUBE_SIDES:string[]=['skybox_rt.jpg','skybox_lf.jpg',
+                                       'skybox_up.jpg','skybox_dn.jpg',
+                                       'skybox_ft.jpg','skybox_bk.jpg'];
 
     public static async getCubeTexture(path:string): Promise<THREE.CubeTexture> {
          const loader = new THREE.CubeTextureLoader().setPath(path);
