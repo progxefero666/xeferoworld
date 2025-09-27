@@ -6,8 +6,6 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import { ThreeModel3d } from '@/zone3d/three/threetypes';
 import { ThreeUtil } from '@/zone3d/three/util/threeutil';
-import { GlObject } from '../objects/gldinobject';
-import { System3d } from '@/system3d/system3d';
 import { Pivot3d } from '@/math3d/pivot/pivot3d';
 
 
@@ -19,17 +17,13 @@ export class GlbUtil {
     public static async loadGLB_object(url: string): Promise<THREE.Object3D> {
         const loader = new GLTFLoader();
         return new Promise((resolve, reject) => {
-            loader.load(
-                url,
-                (gltf: GLTF) => {
-                    
+            loader.load(url,
+                (gltf:GLTF) => {                    
                     let mesh: THREE.Object3D | null = null;
                     gltf.scene.traverse((child) => {
                         if (child instanceof THREE.Mesh && !mesh) {mesh = child;}
                     });
-                    if (mesh) {
-                        resolve(mesh);
-                    }
+                    if (mesh) {resolve(mesh);}
                     else { reject(new Error('No mesh in file.')); }
                 },
                 undefined,
@@ -66,10 +60,8 @@ export class GlbUtil {
 
         const objMesh = object3d as THREE.Mesh;
         const vertex = GlbUtil.getGlMeshVertexArray(objMesh);
-       
         const pivot:Pivot3d = new Pivot3d();
         let rotatedVertex:Float32Array = pivot.rotateArrayPointsInAxis(axis,vertex,angle);
-
         objMesh.geometry.setAttribute('position', new THREE.BufferAttribute(rotatedVertex,3));
         objMesh.geometry.attributes.position.needsUpdate = true;
         objMesh.geometry.computeBoundingBox();
@@ -78,7 +70,6 @@ export class GlbUtil {
     }//end
 
     public static async downloadGlbMerge(fname: string, glb1: THREE.Object3D, glb2: THREE.Object3D) {
-        let as:GlObject;
         const scene = new THREE.Scene();
         scene.add(glb1); //o? .scene
         scene.add(glb2);
@@ -89,22 +80,21 @@ export class GlbUtil {
     }//end
 
     /*
-    if(object3d instanceof THREE.Mesh) {       
-        const geometry:THREE.BufferGeometry = object3d.geometry;
-        const positionAttribute:THREE.BufferAttribute |
-                                THREE.InterleavedBufferAttribute 
-                                = geometry.getAttribute('position');
-
-        const vertex: Float32Array = positionAttribute.array as Float32Array;
-        
-        
-        const rotatedArray = glObject.rotate(1, Math.PI/4);
-
-        geometry.setAttribute('position', new THREE.BufferAttribute(rotatedArray, 3));
-        geometry.attributes.position.needsUpdate = true;
-        geometry.computeBoundingBox();
-        geometry.computeBoundingSphere();
-    }    
+    const loader = new GLTFLoader();
+        loader.load('/models/asset.glb', (gltf) => {
+        gltf.scene.traverse((o) => {
+            const mesh = o as THREE.Mesh;
+            if (mesh.isMesh) {
+            const m = mesh.material as THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
+            if (m.envMapIntensity !== undefined) m.envMapIntensity = 1.2;
+            if (m.normalMap && m.normalScale) m.normalScale.set(0.6, 0.6);
+            // Ajusta roughness/metalness solo si necesitas retocar
+            // m.roughness = 0.2; m.metalness = 1.0;
+            m.needsUpdate = true;
+            }
+        });
+        scene!.add(gltf.scene);
+    });   
     */
 
 }//end

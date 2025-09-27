@@ -1,0 +1,24 @@
+
+lights teory
+...................................................................................
+2. Sombra bloqueando luz hacia otro objeto
+
+Caso: un objeto se interpone entre la luz y otro objeto.
+
+Aquí la sombra no cae en un “plano receptor”, sino que lo que ocurre es que el objeto bloqueado recibe menos luz directamente.
+
+Esto se calcula igual con el shadow map de la luz:
+
+Objeto que bloquea → castShadow = true.
+Objeto que queda detrás → receiveShadow = true.
+
+mesh.castShadow = true;     // este objeto proyecta sombras
+mesh.receiveShadow = true;  // este objeto puede recibir sombras
+Renderer + Luz + Objetos (cast/receive) → si uno falla, no hay sombra.
+
+HDR significa High Dynamic Range (alto rango dinámico).
+
+En gráficos 3D:
+Una imagen HDR guarda valores de luz más allá del 0–1 normal (por ejemplo 0.1 hasta 50 o 1000).
+Esto permite representar zonas muy brillantes (como el sol, focos) y zonas oscuras al mismo tiempo, sin perder detalle.
+Se suele guardar en formatos como .hdr o .exr.

@@ -4,7 +4,7 @@ import { LineBasicMaterial, MeshStandardMaterial } from 'three'
 
 
 /**
- * class GenColorMaterial.getSpriteMaterial
+ * class THREE.MeshStandardMaterial GenColorMaterial.getGridMaterial
  */
 export class GenColorMaterial {
 
