@@ -53,9 +53,10 @@ export class SkyBoxGenerator {
 		});		
 		return allpaths;
 	}//end    
-    public static async genSkyBoxBlack(folder:string,fname:string,typeExtension:string,
-                                       dimension:TDimension3d,
-                                       alpha?:number ):Promise<THREE.Mesh> {
+    
+    public static async genSkyBox(folder:string,fname:string,typeExtension:string,
+                                  radius:number,alpha?:number ):Promise<THREE.Mesh> {
+
         const colorBase:any ="#FFFFFF";                               
         const listPaths:string[]= SkyBoxGenerator.getAllPaths(folder,fname,typeExtension);
         console.log(listPaths);
@@ -64,8 +65,11 @@ export class SkyBoxGenerator {
                 SkyBoxGenerator.getMaterial(path,colorBase,alpha)
             )
         );
-        const skyboxGeo = new THREE.BoxGeometry(dimension.width,dimension.height,dimension.depth);        
-        return new THREE.Mesh(skyboxGeo, skyboxMaterials);     
+        const sideLen = radius * 2;
+        const skyboxGeo = new THREE.BoxGeometry(sideLen,sideLen,sideLen); 
+        const object = new THREE.Mesh(skyboxGeo, skyboxMaterials);
+        object.position.set(0,0,0);     
+        return object;     
     }//end function
 
 }//end

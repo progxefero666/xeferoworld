@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import * as THREE from 'three';
 import { Box, Flex } from "@radix-ui/themes";
 import { RdxThContainers } from "@/radix/rdxthcontainers";
-import { IdeConfig } from "@/app/ide/xethreeidecfg";
+import { IdeConfig, IdeWorldCfg } from "@/app/ide/xethreeidecfg";
 import { IdeAppWorld } from "./ideappworld";
 import { TDimension } from "@/common/types";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
@@ -53,8 +53,8 @@ export function ThreeApp({}: ThreeAppProps) {
             antialias:true,alpha:false,powerPreference:'high-performance'
         });
         //renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setPixelRatio(700/700);
-        renderer.setSize(700,700);
+        //renderer.setPixelRatio(700/700);
+        renderer.setSize(IdeConfig.MCANVAS_DIM.width,IdeConfig.MCANVAS_DIM.height);
         renderer.autoClear = true;
         renderer.setClearColor('#000000');
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -70,8 +70,8 @@ export function ThreeApp({}: ThreeAppProps) {
         const configRes = await world.confHdrEnvironment(renderer);
         if(!configRes){console.log('env hdr config failed.');return;}
 
-        await world.loadSkyBox();
-        const loadRes = await world.loadSceneObjects();        
+        const loadRes = await world
+            .loadSceneObjects(IdeWorldCfg.SKYBOX_DAY_FOLDER);        
     }//end
 
     /**
@@ -79,8 +79,8 @@ export function ThreeApp({}: ThreeAppProps) {
      */
     const animate = () => {
         requestAnimationFrame(animate);
-        //renderer!.render(world.scene,world.camera!);
-        renderer!.render(world.scene,orbitControl!.cam);
+        renderer!.render(world.scene,world.camera!);
+        //renderer!.render(world.scene,orbitControl!.cam);
         
     };//end
 

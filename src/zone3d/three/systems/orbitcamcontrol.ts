@@ -34,7 +34,7 @@ export class OrbitCamControl {
     public distance: number = 0;
     public rotationY: number = 0;
     
-    public config:TCameraConfig = {fov:60,near:1,far:5000}
+    public config:TCameraConfig = {fov:60,near:0.1,far:5000}
 
     constructor(cvDim:TDimension,rotDegreesY:number,elevation?:number,distance?:number) {
 

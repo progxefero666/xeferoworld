@@ -22,8 +22,16 @@ export class IdeConfig {
 
 }//end
 
-export class IdeWorldConfig {
+/**
+ * class IdeWorldCfg.SKYBOX_TYPE
+ */
+export class IdeWorldCfg {
 
-    public static SKYBOX_SIZE:number = 1.0;
+    public static SKYBOX_SIZE:number = 2500;
+    public static SKYBOX_NAME:string = 'skybox';
+    public static SKYBOX_TYPE:string = 'jpg';
+
+    public static SKYBOX_DAY_FOLDER = "/ide/skybox/skybox_day";
+    public static SKYBOX_NIGHT_FOLDER = "/ide/skybox/skybox_night";
 
 }//end

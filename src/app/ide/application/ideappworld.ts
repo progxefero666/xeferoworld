@@ -12,6 +12,7 @@ import { IdeThreeUtil } from '../util/idethreeutil';
 import { SkyBoxGenerator } from '@/system3d/util/genskybox';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
+import { IdeWorldCfg } from '../xethreeidecfg';
 
 
 let lightDirA_int:number =1.0;
@@ -29,7 +30,7 @@ export class IdeAppWorld {
     public scene: THREE.Scene;
     public camera: THREE.PerspectiveCamera | null = null;
     public cameraRotY: number = 0;
-    public cameraDist: number = 16;
+    public cameraDist: number = 10;
     public cameraElev: number = 1.0;
 
     public skyboxInit:THREE.Mesh|null=null;
@@ -49,7 +50,7 @@ export class IdeAppWorld {
     public loadCamera = () => {          
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
-        const camConfig:TCameraConfig = {fov:60,near:1.0,far:4000};
+        const camConfig:TCameraConfig = {fov:60,near:1.0,far:5000};
         console.log(this.canvasDim);
         this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
         this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
@@ -57,13 +58,7 @@ export class IdeAppWorld {
         this.camera.lookAt(0,this.cameraElev,0);                 
     };//end
     
-    public  loadSkyBox = async () => {            
-        const skyboxFolder = "/spacegame/skybox/skybox_blue";
-        const skyboxDim:TDimension3d = {width:5000,height:5000,depth:5000};
-        this.skyboxInit = await SkyBoxGenerator
-            .genSkyBoxBlack(skyboxFolder,'skybox','jpg',skyboxDim,1); 
-        this.scene.add(this.skyboxInit);           
-    };//end
+
 
     //........................................................................
     //configure Cube HDR pbr environment
@@ -135,15 +130,27 @@ export class IdeAppWorld {
         this.scene.add(ptLight);   
     };//end
 
-
-
     //más espejo,clearcoatRoughness baja a 0.04
     //El contraste viene sobre todo de 
     // roughness (nitidez del brillo) y 
     // envMapIntensity (potencia del reflejo).
-    public loadSceneObjects = async ():Promise<boolean> => {
-        //const src: string = '/spacegame/player/xwing8k.glb';
+    public loadSceneObjects = async (model:string):Promise<boolean> => {
 
+        //SkyBox
+        this.skyboxInit = await SkyBoxGenerator.genSkyBox(
+            model,
+            IdeWorldCfg.SKYBOX_NAME,
+            IdeWorldCfg.SKYBOX_TYPE,
+            IdeWorldCfg.SKYBOX_SIZE,1); 
+        this.scene.add(this.skyboxInit);  
+
+        const loadRes = await this.loadTestObjects();
+        return true;
+    };//end
+
+    public loadTestObjects = async ():Promise<boolean> => {
+
+        //const src: string = '/spacegame/player/xwing8k.glb';
         //Longitud: 19'10 m. ; Altura: 4'88 m
         const src: string = '/spacegame/player/aircraftblackhigh.glb';
         this.glmachine = await GlbUtil.loadGLB_object(src);
@@ -161,7 +168,7 @@ export class IdeAppWorld {
         
         this.scene.add(this.glmachine);
         return true;
-    };//end
+    }
 
 };//end
 
