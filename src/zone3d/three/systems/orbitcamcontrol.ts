@@ -2,10 +2,11 @@
 
 import * as THREE from 'three';
 
-import { TDimension, Point2d } from '@/common/types';
+import { TDimension, Point2d, TCameraConfig } from '@/common/types';
 import { CircunfUtil } from '@/math2d/functions/circunfutil';
 import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
 import { SliderConfig } from '@/radix/sliders/sliderconfig';
+import { XMath2d } from '@/math2d/xmath2d';
 
 
 /**
@@ -28,22 +29,27 @@ export class OrbitCamControl {
 
     public cam: THREE.PerspectiveCamera;
     public cvDim:TDimension;
-    public perspective:number = 0;
+
     public elevation: number = 0;
     public distance: number = 0;
     public rotationY: number = 0;
+    
+    public config:TCameraConfig = {fov:60,near:1,far:5000}
 
-    constructor(cvDim:TDimension,perspective:number,
-                rotDegreesY:number,
-                elevation?:number,distance?:number) {
+    constructor(cvDim:TDimension,rotDegreesY:number,elevation?:number,distance?:number) {
+
         this.cvDim      = cvDim;
-        this.perspective = perspective;
+        console.log(this.cvDim);
         this.elevation   = elevation ?? OrbitCamControl.ORBCAMERA_ELEV_DEF;
         this.distance    = distance?? OrbitCamControl.ORBCAMERA_DIST_DEF;
         if(rotDegreesY){
             this.rotationY = XMath2dUtil.toRadians(rotDegreesY);
         }
-        this.cam = new THREE.PerspectiveCamera(this.perspective,1.0,0.1,1000);
+        this.cam = new THREE.PerspectiveCamera(
+            this.config.fov,
+            XMath2d.getAspect(this.cvDim),
+            this.config.near,this.config.far);
+
         this.update();    
     }//end
 

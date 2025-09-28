@@ -29,6 +29,11 @@ export class XMath2d {
         return false;
     };//end
 
+    public static getAspect(dimension:TDimension):number {
+        return dimension.width/dimension.height;
+    };//end
+
+    
     public static getAngleInc(pAng_Init: number, pAng_Inc: number): number {
         let angRes = pAng_Init + pAng_Inc;
         if (angRes >= (Math.PI * 2)) {

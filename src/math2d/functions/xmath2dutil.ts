@@ -6,7 +6,7 @@ import { TDimension } from "@/common/types";
 
 
 /**
- * class XMath2dUtil.toDegrees
+ * class XMath2dUtil.getAspect
  */
 export class XMath2dUtil {
 
@@ -26,6 +26,7 @@ export class XMath2dUtil {
         if(valueRad < 0) {valueDegress *= (-1);}
         return valueDegress;
     };//end
+
 
     public static getAleatBoolean(): boolean {
         return Math.random() * 1.0 > 0.5;

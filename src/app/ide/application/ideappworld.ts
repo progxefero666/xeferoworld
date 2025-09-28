@@ -41,8 +41,7 @@ export class IdeAppWorld {
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
         this.scene = new THREE.Scene();
-        //this.scene.add(new THREE.GridHelper(500,500));
-        this.loadSkyBox();
+        //this.scene.add(new THREE.GridHelper(500,500));        
         this.loadLights();
         this.loadCamera();
     };//end
@@ -51,6 +50,7 @@ export class IdeAppWorld {
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
         const camConfig:TCameraConfig = {fov:60,near:1.0,far:4000};
+        console.log(this.canvasDim);
         this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
         this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
         //this.camera.position.set(-15, 1.0, -15);
@@ -58,7 +58,7 @@ export class IdeAppWorld {
     };//end
     
     public  loadSkyBox = async () => {            
-        const skyboxFolder = "/spacegame/skybox/skyboxspace_blue";
+        const skyboxFolder = "/spacegame/skybox/skybox_blue";
         const skyboxDim:TDimension3d = {width:5000,height:5000,depth:5000};
         this.skyboxInit = await SkyBoxGenerator
             .genSkyBoxBlack(skyboxFolder,'skybox','jpg',skyboxDim,1); 

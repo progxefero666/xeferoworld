@@ -70,6 +70,7 @@ export function ThreeApp({}: ThreeAppProps) {
         const configRes = await world.confHdrEnvironment(renderer);
         if(!configRes){console.log('env hdr config failed.');return;}
 
+        await world.loadSkyBox();
         const loadRes = await world.loadSceneObjects();        
     }//end
 
@@ -122,7 +123,7 @@ export function ThreeApp({}: ThreeAppProps) {
 
             <canvas ref={canvasRef}
                 width={700}
-                height={700} />
+                height={500} />
         </Flex>
     )
 
