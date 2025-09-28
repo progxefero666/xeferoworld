@@ -16,12 +16,21 @@ export class LightsCfg {
 }//end
 
 /**
- * class three LightsUtil.createDirectLight
+ * class three LightsUtil.createPointLight
  */
 export class LightsUtil {
 
     public static createDirectLight(color:any,intensity:number): THREE.DirectionalLight {
         const light = new THREE.DirectionalLight(color,intensity);        
+        light.castShadow = true;
+        light.shadow.mapSize.set(2048, 2048);
+        light.shadow.bias = -0.0001;
+        light.shadow.normalBias = 0.02
+        return light;
+    }//end 
+
+    public static createPointLight(color:any,intensity:number,radiusMax:number,decay?:number): THREE.PointLight {
+        const light = new THREE.PointLight(color,intensity,radiusMax,decay??2);        
         light.castShadow = true;
         light.shadow.mapSize.set(2048, 2048);
         light.shadow.bias = -0.0001;

@@ -13,16 +13,20 @@ import { SliderConfig } from '@/radix/sliders/sliderconfig';
  */
 export class OrbitCamControl {
     
-    public static ORBCAMERA_ROTY_DEF: number = 0;
-    public static ORBCAMERA_DIST_DEF: number = 30;
-    public static ORBCAMERA_ELEV_DEF: number = 6;
-    public static sliderViewRotCfg: SliderConfig = new SliderConfig("camera_rotY","Rot.",{min:0,max:360});
-    public static sliderViewDistCfg: SliderConfig = new SliderConfig("camera_distCC","Dist.",{min:1,max:100});
-    public static sliderViewElevCfg: SliderConfig = new SliderConfig("camera_elev","Dist.",{min:0,max:50});
+    public static sliderViewRotCfg: SliderConfig 
+        = new SliderConfig("camera_rotY","Rot.",{min:0,max:360});
 
+    public static sliderViewDistCfg: SliderConfig 
+        = new SliderConfig("camera_distCC","Dist.",{min:1,max:100});
+
+    public static sliderViewElevCfg: SliderConfig 
+        = new SliderConfig("camera_elev","Dist.",{min:0,max:50});
+
+    public static ORBCAMERA_ROTY_DEF: number = 0;
+    public static ORBCAMERA_DIST_DEF: number = 15;
+    public static ORBCAMERA_ELEV_DEF: number = 1;
 
     public cam: THREE.PerspectiveCamera;
-
     public cvDim:TDimension;
     public perspective:number = 0;
     public elevation: number = 0;

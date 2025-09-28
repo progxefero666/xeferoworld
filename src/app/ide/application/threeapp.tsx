@@ -34,11 +34,11 @@ export function ThreeApp({}: ThreeAppProps) {
 
         createMainRenderer();
         createAppWorld();
-        orbitControl = new OrbitCamControl(canvasDimRef.current,56,0);
+        orbitControl = new OrbitCamControl(canvasDimRef.current,56,45);
         animate();
         setWglReady(true);
 
-        window.addEventListener('resize', handleResize);
+        //window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
             if (renderer && renderer.domElement.parentNode) {
@@ -52,8 +52,9 @@ export function ThreeApp({}: ThreeAppProps) {
             canvas:canvasRef.current!,
             antialias:true,alpha:false,powerPreference:'high-performance'
         });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(canvasDimRef.current.width, canvasDimRef.current.height);
+        //renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(700/700);
+        renderer.setSize(700,700);
         renderer.autoClear = true;
         renderer.setClearColor('#000000');
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -120,9 +121,16 @@ export function ThreeApp({}: ThreeAppProps) {
             {wglready ? renderOrbitCamControls():null}   
 
             <canvas ref={canvasRef}
-                width={canvasDimRef.current.width}
-                height={canvasDimRef.current.height} />
+                width={700}
+                height={700} />
         </Flex>
     )
 
 };//end component
+
+/*
+
+            <canvas ref={canvasRef}
+                width={canvasDimRef.current.width}
+                height={canvasDimRef.current.height} />
+*/

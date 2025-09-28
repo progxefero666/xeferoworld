@@ -2,7 +2,7 @@
 
 import * as THREE from 'three';
 
-import { Point2d, TCameraConfig, TDimension } from '@/common/types';
+import { Point2d, TCameraConfig, TDimension, TDimension3d } from '@/common/types';
 import { CircunfUtil } from '@/math2d/functions/circunfutil';
 import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
 import { System3d } from '@/system3d/system3d';
@@ -14,7 +14,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 
 
-let lightDirA_int:number =2;
+let lightDirA_int:number =1.0;
 let lightDirA_color:any  = '#FFFFFF';
 let lightDirA_pos:THREE.Vector3 = new THREE.Vector3(10,20,10);
 let lightDirA:THREE.DirectionalLight;
@@ -29,9 +29,11 @@ export class IdeAppWorld {
     public scene: THREE.Scene;
     public camera: THREE.PerspectiveCamera | null = null;
     public cameraRotY: number = 0;
-    public cameraDist: number = 20;
+    public cameraDist: number = 16;
     public cameraElev: number = 1.0;
 
+    public skyboxInit:THREE.Mesh|null=null;
+    
     //public\spacegame\player\xwing8k.glb
     public glmachine: THREE.Object3D|null = null;    
 
@@ -39,35 +41,46 @@ export class IdeAppWorld {
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
         this.scene = new THREE.Scene();
-        this.scene.add(new THREE.GridHelper(500,500));
+        //this.scene.add(new THREE.GridHelper(500,500));
+        this.loadSkyBox();
         this.loadLights();
         this.loadCamera();
     };//end
    
-    public loadCamera = () => {  
-        
+    public loadCamera = () => {          
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
-        const camConfig:TCameraConfig = {fov:60,near:1.0,far:1500};
+        const camConfig:TCameraConfig = {fov:60,near:1.0,far:4000};
         this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
         this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
         //this.camera.position.set(-15, 1.0, -15);
         this.camera.lookAt(0,this.cameraElev,0);                 
     };//end
     
+    public  loadSkyBox = async () => {            
+        const skyboxFolder = "/spacegame/skybox/skyboxspace_blue";
+        const skyboxDim:TDimension3d = {width:5000,height:5000,depth:5000};
+        this.skyboxInit = await SkyBoxGenerator
+            .genSkyBoxBlack(skyboxFolder,'skybox','jpg',skyboxDim,1); 
+        this.scene.add(this.skyboxInit);           
+    };//end
+
     //........................................................................
     //configure Cube HDR pbr environment
     //........................................................................
     public confHdrEnvironment = async (renderer:THREE.WebGLRenderer):Promise<boolean> => {
         const pmrem = new THREE.PMREMGenerator(renderer!);
         pmrem.compileEquirectangularShader();
-        const cubeT = await SkyBoxGenerator
-            .getCubeTexture('/spacegame/skybox/skyboxspace_a/');
+        
+        //const cubeT = await SkyBoxGenerator
+        //    .getCubeTexture('/spacegame/skybox/skyboxspace_a/');
+        //this.scene.background = cubeT;
+
         const hdrTex = await new RGBELoader()
                 .loadAsync('/ide/hdr/studio_small_09_2k.hdr');
         const envHDR = pmrem.fromEquirectangular(hdrTex).texture;
         this.scene.environment = envHDR;
-        this.scene.background = cubeT;
+
         hdrTex.dispose();
         pmrem.dispose();
         // test environment
@@ -116,50 +129,36 @@ export class IdeAppWorld {
         const directLightObj:THREE.Mesh = IdeThreeUtil.getLightMesh();        
         directLightObj.position.copy(lightDirA_pos);        
         this.scene.add(directLightObj);       
+
+        const ptLight:THREE.PointLight = LightsUtil.createPointLight('#FFFFFF',1,40,2);
+        ptLight.position.set(0.5,3,0.5);
+        this.scene.add(ptLight);   
     };//end
 
-    /*
-    public static async loadGLB_object(url: string): Promise<THREE.Object3D> {
-        const loader = new GLTFLoader();
-        return new Promise((resolve, reject) => {
-            loader.load(url,
-                (gltf:GLTF) => {                    
-                    let mesh: THREE.Object3D | null = null;
-                    gltf.scene.traverse((child) => {
-                        if (child instanceof THREE.Mesh && !mesh) {mesh = child;}
-                    });
-                    if (mesh) {resolve(mesh);}
-                    else { reject(new Error('No mesh in file.')); }
-                },
-                undefined,
-                (error) => { reject(error); }
-            );
-        });
-    }//end    
-    */
+
 
     //más espejo,clearcoatRoughness baja a 0.04
+    //El contraste viene sobre todo de 
+    // roughness (nitidez del brillo) y 
+    // envMapIntensity (potencia del reflejo).
     public loadSceneObjects = async ():Promise<boolean> => {
-        const src: string = '/spacegame/player/xwing8k.glb';
-        this.glmachine = await GlbUtil.loadGLB_object(src);
+        //const src: string = '/spacegame/player/xwing8k.glb';
 
+        //Longitud: 19'10 m. ; Altura: 4'88 m
+        const src: string = '/spacegame/player/aircraftblackhigh.glb';
+        this.glmachine = await GlbUtil.loadGLB_object(src);
+        
         const material = (this.glmachine as THREE.Mesh)
                     .material as THREE.MeshPhysicalMaterial;
-        material.envMapIntensity = 1.5; 
-        material.roughness = 0.18;
-        material.metalness = 1.0;        
-        material.clearcoat = 0.7;
-        material.clearcoatRoughness = 0.08; 
-        material.normalScale.set(2.0,2.0);
-        /*
-        transmission: 1,
-        thickness: 0.2,
-        ior: 1.5,
-        attenuationColor: 0xffffff,
-        attenuationDistance: 2        
-        */
-
+        //material.envMapIntensity = 1.5; 
+        material.roughness = 0.6;
+        material.metalness = 0.6;        
+        //material.clearcoat = 0.7;
+        //material.clearcoatRoughness = 0.08; 
+        //material.normalScale.set(1.5,1.5);
+        //material.ior = 1.5;
         material.needsUpdate = true;
+        
         this.scene.add(this.glmachine);
         return true;
     };//end
