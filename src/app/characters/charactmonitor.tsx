@@ -8,7 +8,7 @@ import { Box, Flex } from "@radix-ui/themes";
 import { TDimension, Vector3d } from "@/common/types";
 import { MainScene } from "@/app/characters/scene/mainscene";
 import { CharacterPlayer } from "@/characters/model/chplayer";
-import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
+import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { DeltaShooterAnimation } from "@/characters/animations/model/deltashooter";
 import { GlbAnimationLoader } from "@/zone3d/three/loaders/animationloader";
@@ -108,21 +108,21 @@ export const MainMonitor = forwardRef<MainMonitorRef, MainMonitorProps>((props, 
         return(
             <Flex width="100%" height="30px" direction="row" align="center" gapX="2" >
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewRotCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewRotCfg} 
                                 index={0} 
-                                value={OrbitCamera.ORBCAMERA_ROTY_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_ROTY_DEF} 
                                 onchange={mainScene!.updateCameraParam}  />
                 </Box>              
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewDistCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewDistCfg} 
                                 index={1} 
-                                value={OrbitCamera.ORBCAMERA_DIST_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_DIST_DEF} 
                                 onchange={mainScene!.updateCameraParam}  />
                 </Box>      
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewElevCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewElevCfg} 
                                 index={2} 
-                                value={OrbitCamera.ORBCAMERA_ELEV_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_ELEV_DEF} 
                                 onchange={mainScene!.updateCameraParam}  />
                 </Box>                               
             </Flex>

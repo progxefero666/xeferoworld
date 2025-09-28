@@ -8,11 +8,11 @@ import { TCameraConfig, TDimension } from "@/common/types";
 export class IdeConfig {
 
     public static DESKTOP_CONTENT = {
-        backgroundColor: 'rgba(74, 247, 0, 1)',
+        backgroundColor: 'rgba(0, 0, 0, 1)',
         border: '1px solid rgba(47, 0, 255, 1)',
     };
     
-    public static MCANVAS_DIM:TDimension ={width:1200,height:800};
+    public static MCANVAS_DIM:TDimension ={width:1220,height:800};
 
     public static LIGHT_OBJ_RADIUS:number = 1.0;
     public static LIGHT_OBJ_COLOR:any = '#FFFF00';

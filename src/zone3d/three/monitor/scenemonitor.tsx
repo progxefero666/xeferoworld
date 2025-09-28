@@ -6,11 +6,11 @@ import * as THREE from 'three'
 import { Box, Flex} from "@radix-ui/themes";
 import { TDimension } from "@/common/types";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
-import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
+import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
 
 
 let renderer: THREE.WebGLRenderer | null = null;
-let orbitCamera: OrbitCamera | null = null;
+let orbitCamera: OrbitCamControl | null = null;
 
 const divOverCanvasStyle = {
     backgroundColor: 'none',
@@ -48,7 +48,7 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.setClearColor(backcolor, 1.0); 
 
-        orbitCamera = new OrbitCamera(canvasdim,50,Math.PI);
+        orbitCamera = new OrbitCamControl(canvasdim,50,Math.PI);
 
         animate();
         setWglReady(true);
@@ -82,21 +82,21 @@ export const GameMonitor = forwardRef<GameMonitorRef, GameMonitorProps>((props, 
         return(
             <Flex width="100%" height="auto" direction="row" gapX="2" >
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewRotCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewRotCfg} 
                                 index={0} 
-                                value={OrbitCamera.ORBCAMERA_ROTY_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_ROTY_DEF} 
                                 onchange={orbitCamera!.updateParam}  />
                 </Box>              
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewDistCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewDistCfg} 
                                 index={1} 
-                                value={OrbitCamera.ORBCAMERA_DIST_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_DIST_DEF} 
                                 onchange={orbitCamera!.updateParam}  />
                 </Box>      
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewElevCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewElevCfg} 
                                 index={2} 
-                                value={OrbitCamera.ORBCAMERA_ELEV_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_ELEV_DEF} 
                                 onchange={orbitCamera!.updateParam}  />
                 </Box>                               
             </Flex>

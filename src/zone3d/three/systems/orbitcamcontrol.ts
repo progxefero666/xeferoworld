@@ -11,7 +11,7 @@ import { SliderConfig } from '@/radix/sliders/sliderconfig';
 /**
  * class OrbitCamera
  */
-export class OrbitCamera {
+export class OrbitCamControl {
     
     public static ORBCAMERA_ROTY_DEF: number = 0;
     public static ORBCAMERA_DIST_DEF: number = 30;
@@ -34,8 +34,8 @@ export class OrbitCamera {
                 elevation?:number,distance?:number) {
         this.cvDim      = cvDim;
         this.perspective = perspective;
-        this.elevation   = elevation ?? OrbitCamera.ORBCAMERA_ELEV_DEF;
-        this.distance    = distance?? OrbitCamera.ORBCAMERA_DIST_DEF;
+        this.elevation   = elevation ?? OrbitCamControl.ORBCAMERA_ELEV_DEF;
+        this.distance    = distance?? OrbitCamControl.ORBCAMERA_DIST_DEF;
         if(rotDegreesY){
             this.rotationY = XMath2dUtil.toRadians(rotDegreesY);
         }

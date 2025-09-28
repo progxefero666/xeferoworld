@@ -8,7 +8,7 @@ import { TDimension } from "@/common/types";
 import { GameScene } from "../gamescene";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { GameConfig } from "@/app/universo/game/gameconfig";
-import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
+import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { LIB_ICON } from "@/radix/rdxthicons";
@@ -16,7 +16,7 @@ import { ThreeFbxUtil } from "@/zone3d/three/loaders/threefbxutil";
 
 
 let renderer: THREE.WebGLRenderer | null = null;
-let orbitCamera: OrbitCamera | null = null;
+let orbitCamera: OrbitCamControl | null = null;
 
 
 interface PlayerOrbitMonitorProps {
@@ -56,7 +56,7 @@ export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitM
         renderer.setClearColor(GameConfig.SCENE_BACKCOLOR, 1.0); 
 
         scene = new THREE.Scene();
-        orbitCamera = new OrbitCamera(canvasdim,50,180);
+        orbitCamera = new OrbitCamControl(canvasdim,50,180);
 
         /*
         monCamera = new THREE.PerspectiveCamera(
@@ -113,21 +113,21 @@ export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitM
         return(
             <Flex width="100%" height="30px" direction="row" align="center" gapX="2" >
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewRotCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewRotCfg} 
                                 index={0} 
-                                value={OrbitCamera.ORBCAMERA_ROTY_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_ROTY_DEF} 
                                 onchange={orbitCamera!.updateParam}  />
                 </Box>              
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewDistCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewDistCfg} 
                                 index={1} 
-                                value={OrbitCamera.ORBCAMERA_DIST_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_DIST_DEF} 
                                 onchange={orbitCamera!.updateParam}  />
                 </Box>      
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewElevCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewElevCfg} 
                                 index={2} 
-                                value={OrbitCamera.ORBCAMERA_ELEV_DEF} 
+                                value={OrbitCamControl.ORBCAMERA_ELEV_DEF} 
                                 onchange={orbitCamera!.updateParam}  />
                 </Box>                               
             </Flex>

@@ -8,7 +8,7 @@ import { TDimension } from "@/common/types";
 import { GameScene } from "../gamescene";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { GameConfig } from "@/app/universo/game/gameconfig";
-import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
+import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { LIB_ICON } from "@/radix/rdxthicons";

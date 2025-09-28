@@ -29,7 +29,7 @@ export class IdeAppWorld {
     public scene: THREE.Scene;
     public camera: THREE.PerspectiveCamera | null = null;
     public cameraRotY: number = 0;
-    public cameraDist: number = 15;
+    public cameraDist: number = 20;
     public cameraElev: number = 1.0;
 
     //public\spacegame\player\xwing8k.glb
@@ -55,11 +55,10 @@ export class IdeAppWorld {
         this.camera.lookAt(0,this.cameraElev,0);                 
     };//end
     
-    public loadInitObjects = async (renderer:THREE.WebGLRenderer) => {
-        this.scene.add(new THREE.GridHelper(1000, 1000));
-        //........................................................................
-        //configure Cube HDR
-        //........................................................................
+    //........................................................................
+    //configure Cube HDR pbr environment
+    //........................................................................
+    public confHdrEnvironment = async (renderer:THREE.WebGLRenderer):Promise<boolean> => {
         const pmrem = new THREE.PMREMGenerator(renderer!);
         pmrem.compileEquirectangularShader();
         const cubeT = await SkyBoxGenerator
@@ -71,12 +70,12 @@ export class IdeAppWorld {
         this.scene.background = cubeT;
         hdrTex.dispose();
         pmrem.dispose();
-        //........................................................................
-        this.addPBRTestSpheres();
+        // test environment
+        //this.addPBRTestSpheres();
+        return true;
     };//end
 
-    public addPBRTestSpheres = () => {
-        
+    public addPBRTestSpheres = () => {        
         const material = new THREE.MeshPhysicalMaterial({
             color: 0xaaaaaa,
             metalness: 1.0,
@@ -87,12 +86,10 @@ export class IdeAppWorld {
         });
         //for normal maps
         material.normalScale.set(2,2);
-
         const geo = new THREE.SphereGeometry(1, 64, 32);
         const m = new THREE.Mesh(geo, material);
         m.position.set(-2, 1, 0);
         this.scene.add(m);
-
     };//end
 
     public updateCameraParam = (index:number,value:number) => {
@@ -121,8 +118,80 @@ export class IdeAppWorld {
         this.scene.add(directLightObj);       
     };//end
 
-    public loadInitObject = () => {   
+    /*
+    public static async loadGLB_object(url: string): Promise<THREE.Object3D> {
+        const loader = new GLTFLoader();
+        return new Promise((resolve, reject) => {
+            loader.load(url,
+                (gltf:GLTF) => {                    
+                    let mesh: THREE.Object3D | null = null;
+                    gltf.scene.traverse((child) => {
+                        if (child instanceof THREE.Mesh && !mesh) {mesh = child;}
+                    });
+                    if (mesh) {resolve(mesh);}
+                    else { reject(new Error('No mesh in file.')); }
+                },
+                undefined,
+                (error) => { reject(error); }
+            );
+        });
+    }//end    
+    */
 
+    //más espejo,clearcoatRoughness baja a 0.04
+    public loadSceneObjects = async ():Promise<boolean> => {
+        const src: string = '/spacegame/player/xwing8k.glb';
+        this.glmachine = await GlbUtil.loadGLB_object(src);
+
+        const material = (this.glmachine as THREE.Mesh)
+                    .material as THREE.MeshPhysicalMaterial;
+        material.envMapIntensity = 1.5; 
+        material.roughness = 0.18;
+        material.metalness = 1.0;        
+        material.clearcoat = 0.7;
+        material.clearcoatRoughness = 0.08; 
+        material.normalScale.set(2.0,2.0);
+        /*
+        transmission: 1,
+        thickness: 0.2,
+        ior: 1.5,
+        attenuationColor: 0xffffff,
+        attenuationDistance: 2        
+        */
+
+        material.needsUpdate = true;
+        this.scene.add(this.glmachine);
+        return true;
     };//end
 
 };//end
+
+function summarizeMaterial(m: THREE.Material) {
+
+    const mm = m as THREE.MeshStandardMaterial as any; 
+    // name: m.name,
+
+    const summary = {       
+        color: mm.color?.getHexString?.(),
+        map: mm.map?.name ?? mm.map?.uuid,
+        normalMap: mm.normalMap?.name ?? mm.normalMap?.uuid,        
+        roughnessMap: mm.roughnessMap?.name ?? mm.roughnessMap?.uuid,
+        metalnessMap: mm.metalnessMap?.name ?? mm.metalnessMap?.uuid,
+        //aoMap: (mm as any).aoMap?.name ?? (mm as any).aoMap?.uuid,
+        //aoMapIntensity: (mm as any).aoMapIntensity,
+        //emissiveMap: mm.emissiveMap?.name ?? mm.emissiveMap?.uuid,
+        //alphaMap: mm.alphaMap?.name ?? mm.alphaMap?.uuid,        
+    };
+    console.log(summary);
+};//end
+
+/*
+        //transparent: m.transparent,
+        //opacity: (m as any).opacity,
+
+        //normalScale: mm.normalScale ? { x: mm.normalScale.x, y: mm.normalScale.y } : undefined,
+        //metalness: mm.metalness,
+        //roughness: mm.roughness,
+        //emissive: mm.emissive?.getHexString?.(),
+        //envMapIntensity: mm.envMapIntensity,
+*/

@@ -9,7 +9,7 @@ import { IdeConfig } from "@/app/ide/xethreeidecfg";
 import { IdeAppWorld } from "./ideappworld";
 import { TDimension } from "@/common/types";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
-import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
+import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
 
 
 //main three webgl elements
@@ -17,7 +17,7 @@ import { OrbitCamera } from "@/zone3d/three/cameras/orbitcamera";
 let renderer: THREE.WebGLRenderer;
 let world:IdeAppWorld;
 
-let orbitCamera: OrbitCamera | null = null;
+let orbitControl: OrbitCamControl | null = null;
 
 interface ThreeAppProps {
     value?:string;
@@ -34,7 +34,7 @@ export function ThreeApp({}: ThreeAppProps) {
 
         createMainRenderer();
         createAppWorld();
-        orbitCamera = new OrbitCamera(canvasDimRef.current,56,0);
+        orbitControl = new OrbitCamControl(canvasDimRef.current,56,0);
         animate();
         setWglReady(true);
 
@@ -66,7 +66,10 @@ export function ThreeApp({}: ThreeAppProps) {
 
     const createAppWorld = async () => {
         world = new IdeAppWorld(canvasDimRef.current);
-        await world.loadInitObjects(renderer);
+        const configRes = await world.confHdrEnvironment(renderer);
+        if(!configRes){console.log('env hdr config failed.');return;}
+
+        const loadRes = await world.loadSceneObjects();        
     }//end
 
     /**
@@ -74,7 +77,9 @@ export function ThreeApp({}: ThreeAppProps) {
      */
     const animate = () => {
         requestAnimationFrame(animate);
-        renderer!.render(world.scene,world.camera!);
+        //renderer!.render(world.scene,world.camera!);
+        renderer!.render(world.scene,orbitControl!.cam);
+        
     };//end
 
     const handleResize = () => {
@@ -87,22 +92,22 @@ export function ThreeApp({}: ThreeAppProps) {
         return(
             <Flex width="100%" height="30px" direction="row" align="center" gapX="2" >
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewRotCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewRotCfg} 
                                 index={0} 
-                                value={OrbitCamera.ORBCAMERA_ROTY_DEF} 
-                                onchange={orbitCamera!.updateParam}  />
+                                value={OrbitCamControl.ORBCAMERA_ROTY_DEF} 
+                                onchange={orbitControl!.updateParam}  />
                 </Box>              
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewDistCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewDistCfg} 
                                 index={1} 
-                                value={OrbitCamera.ORBCAMERA_DIST_DEF} 
-                                onchange={orbitCamera!.updateParam}  />
+                                value={OrbitCamControl.ORBCAMERA_DIST_DEF} 
+                                onchange={orbitControl!.updateParam}  />
                 </Box>      
                 <Box width="33%" >
-                    <SliderSimple config={OrbitCamera.sliderViewElevCfg} 
+                    <SliderSimple config={OrbitCamControl.sliderViewElevCfg} 
                                 index={2} 
-                                value={OrbitCamera.ORBCAMERA_ELEV_DEF} 
-                                onchange={orbitCamera!.updateParam}  />
+                                value={OrbitCamControl.ORBCAMERA_ELEV_DEF} 
+                                onchange={orbitControl!.updateParam}  />
                 </Box>                               
             </Flex>
         )
@@ -111,8 +116,9 @@ export function ThreeApp({}: ThreeAppProps) {
     return (
         <Flex width="100%" direction="column" 
               style={IdeConfig.DESKTOP_CONTENT}>
-                
-            {renderOrbitCamControls()}    
+
+            {wglready ? renderOrbitCamControls():null}   
+
             <canvas ref={canvasRef}
                 width={canvasDimRef.current.width}
                 height={canvasDimRef.current.height} />
