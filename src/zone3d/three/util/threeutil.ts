@@ -1,7 +1,7 @@
 //src\zone3d\three\threeutil.ts
-
-import { Vector3d } from '@/common/types';
 import * as THREE from 'three'
+import { Vector3d } from '@/common/types';
+
 import { ThreeLine3d } from '../objects/thline3d';
 import { Pivot3d } from '@/math3d/pivot/pivot3d';
 import { GeoFunction } from '../functions/geofunction';

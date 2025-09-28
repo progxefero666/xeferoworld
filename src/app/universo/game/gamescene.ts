@@ -53,7 +53,7 @@ export class GameScene {
         const skyboxFolder = "/spacegame/skybox/skyboxspace_a";
         const skyboxDim:TDimension3d = {width:5000,height:5000,depth:5000};
         this.skyboxInit = await SkyBoxGenerator
-            .genSkyBox(skyboxFolder,'skybox','jpg',2500,1); 
+            .genSkyBox(skyboxFolder,'skybox','jpg',2500,"#FFFFFF",1); 
         this.scene.add(this.skyboxInit);           
     };//end
 

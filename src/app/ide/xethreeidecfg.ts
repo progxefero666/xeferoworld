@@ -23,11 +23,13 @@ export class IdeConfig {
 }//end
 
 /**
- * class IdeWorldCfg.SKYBOX_TYPE
+ * class IdeWorldCfg.HDR_MOTOR
  */
 export class IdeWorldCfg {
 
-    public static SKYBOX_SIZE:number = 2500;
+    public static HDR_MOTOR:string = '/ide/hdr/studio_small_09_2k.hdr';
+
+    public static SKYBOX_RADIUS:number = 2500;
     public static SKYBOX_NAME:string = 'skybox';
     public static SKYBOX_TYPE:string = 'jpg';
 

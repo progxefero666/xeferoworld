@@ -11,6 +11,12 @@ import { MaterialMapLoader } from '@/zone3d/three/materials/matmaploader';
  */
 export class SkyBoxGenerator {
 
+    /*
+        //const cubeT = await SkyBoxGenerator
+        //    .getCubeTexture('/spacegame/skybox/skyboxspace_a/');
+        //this.scene.background = cubeT;   
+    */
+
     //[+X, −X, +Y, −Y, +Z, −Z]
     public static CUBE_SIDES:string[]=['skybox_rt.jpg','skybox_lf.jpg',
                                        'skybox_up.jpg','skybox_dn.jpg',
@@ -53,11 +59,10 @@ export class SkyBoxGenerator {
 		});		
 		return allpaths;
 	}//end    
-    
-    public static async genSkyBox(folder:string,fname:string,typeExtension:string,
-                                  radius:number,alpha?:number ):Promise<THREE.Mesh> {
 
-        const colorBase:any ="#FFFFFF";                               
+    public static async genSkyBox(folder:string,fname:string,typeExtension:string,
+                                  radius:number,colorBase:any,
+                                  alpha?:number ):Promise<THREE.Mesh> {                             
         const listPaths:string[]= SkyBoxGenerator.getAllPaths(folder,fname,typeExtension);
         console.log(listPaths);
         const skyboxMaterials:THREE.MeshBasicMaterial[] = await Promise.all(

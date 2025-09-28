@@ -13,6 +13,7 @@ import { SkyBoxGenerator } from '@/system3d/util/genskybox';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { IdeWorldCfg } from '../xethreeidecfg';
+import { AppWorldFunct } from './ideworlfunct';
 
 
 let lightDirA_int:number =1.0;
@@ -25,6 +26,7 @@ let lightDirA:THREE.DirectionalLight;
     public terrain:THREE.Object3D|null=null;
  */
 export class IdeAppWorld {
+    public static showGrid:boolean = true;
 
     public canvasDim:TDimension;
     public scene: THREE.Scene;
@@ -35,87 +37,33 @@ export class IdeAppWorld {
 
     public skyboxInit:THREE.Mesh|null=null;
     
-    //public\spacegame\player\xwing8k.glb
-    public glmachine: THREE.Object3D|null = null;    
 
     //onSceneCharged:() => void
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
         this.scene = new THREE.Scene();
-        //this.scene.add(new THREE.GridHelper(500,500));        
         this.loadLights();
         this.loadCamera();
     };//end
    
-    public loadCamera = () => {          
-        const coord2d:Point2d=CircunfUtil
-            .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
-        const camConfig:TCameraConfig = {fov:60,near:1.0,far:5000};
-        console.log(this.canvasDim);
-        this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
-        this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
-        //this.camera.position.set(-15, 1.0, -15);
-        this.camera.lookAt(0,this.cameraElev,0);                 
-    };//end
-    
-
-
-    //........................................................................
     //configure Cube HDR pbr environment
     //........................................................................
     public confHdrEnvironment = async (renderer:THREE.WebGLRenderer):Promise<boolean> => {
         const pmrem = new THREE.PMREMGenerator(renderer!);
         pmrem.compileEquirectangularShader();
-        
-        //const cubeT = await SkyBoxGenerator
-        //    .getCubeTexture('/spacegame/skybox/skyboxspace_a/');
-        //this.scene.background = cubeT;
-
-        const hdrTex = await new RGBELoader()
-                .loadAsync('/ide/hdr/studio_small_09_2k.hdr');
+        const hdrTex = await new RGBELoader().loadAsync(IdeWorldCfg.HDR_MOTOR);
         const envHDR = pmrem.fromEquirectangular(hdrTex).texture;
         this.scene.environment = envHDR;
-
         hdrTex.dispose();
         pmrem.dispose();
         // test environment
-        //this.addPBRTestSpheres();
+        //AppWorldFunct.addPBRTestSpheres(this.scene);
         return true;
     };//end
+  
 
-    public addPBRTestSpheres = () => {        
-        const material = new THREE.MeshPhysicalMaterial({
-            color: 0xaaaaaa,
-            metalness: 1.0,
-            roughness: 0.15,
-            clearcoat: 0.7,
-            clearcoatRoughness: 0.1,
-            envMapIntensity: 1.6,
-        });
-        //for normal maps
-        material.normalScale.set(2,2);
-        const geo = new THREE.SphereGeometry(1, 64, 32);
-        const m = new THREE.Mesh(geo, material);
-        m.position.set(-2, 1, 0);
-        this.scene.add(m);
-    };//end
-
-    public updateCameraParam = (index:number,value:number) => {
-        if(index === 0) {
-            this.cameraRotY = XMath2dUtil.toRadians(value);
-        }
-        else if(index === 1) {
-            this.cameraDist = value;
-        }
-        else if(index === 2) {
-            this.cameraElev = value;
-        }
-        const coord2d:Point2d=CircunfUtil
-            .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);                    
-        this.camera!.position.set(coord2d.x,this.cameraElev,coord2d.y);
-        this.camera!.lookAt(0,this.cameraElev,0); 
-    };//end  
-
+    //load scene Lights
+    //........................................................................    
     public loadLights = () => {   
         //light A:
         lightDirA = LightsUtil.createDirectLight(lightDirA_color,lightDirA_int);
@@ -130,74 +78,47 @@ export class IdeAppWorld {
         this.scene.add(ptLight);   
     };//end
 
-    //más espejo,clearcoatRoughness baja a 0.04
-    //El contraste viene sobre todo de 
-    // roughness (nitidez del brillo) y 
-    // envMapIntensity (potencia del reflejo).
+
+    // Main Camera 
+    //........................................................................    
+    public loadCamera = () => {          
+        const coord2d:Point2d=CircunfUtil
+            .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
+        const camConfig:TCameraConfig = {fov:60,near:1.0,far:5000};
+        this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
+        this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
+        this.camera.lookAt(0,this.cameraElev,0);                 
+    };//end
+    
+    public updateCameraParam = (index:number,value:number) => {
+        if(index === 0) {this.cameraRotY = XMath2dUtil.toRadians(value);}
+        else if(index === 1) {this.cameraDist = value;}
+        else if(index === 2) {this.cameraElev = value;}
+        const coord2d:Point2d=CircunfUtil
+            .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);                    
+        this.camera!.position.set(coord2d.x,this.cameraElev,coord2d.y);
+        this.camera!.lookAt(0,this.cameraElev,0); 
+    };//end   
+
+    // load scene objects 
+    //........................................................................    
     public loadSceneObjects = async (model:string):Promise<boolean> => {
+        if(IdeAppWorld.showGrid){
+            this.scene.add(new THREE.GridHelper(500,500));
+        }
+        //
 
         //SkyBox
         this.skyboxInit = await SkyBoxGenerator.genSkyBox(
-            model,
-            IdeWorldCfg.SKYBOX_NAME,
+            model,IdeWorldCfg.SKYBOX_NAME,
             IdeWorldCfg.SKYBOX_TYPE,
-            IdeWorldCfg.SKYBOX_SIZE,1); 
-        this.scene.add(this.skyboxInit);  
+            IdeWorldCfg.SKYBOX_RADIUS,
+            "#FFFFFF",1); 
+        this.scene.add(this.skyboxInit);
 
-        const loadRes = await this.loadTestObjects();
-        return true;
+        //3d objects
+        const loadRes = await AppWorldFunct.loadAircraft(this.scene);
+        return loadRes;
     };//end
 
-    public loadTestObjects = async ():Promise<boolean> => {
-
-        //const src: string = '/spacegame/player/xwing8k.glb';
-        //Longitud: 19'10 m. ; Altura: 4'88 m
-        const src: string = '/spacegame/player/aircraftblackhigh.glb';
-        this.glmachine = await GlbUtil.loadGLB_object(src);
-        
-        const material = (this.glmachine as THREE.Mesh)
-                    .material as THREE.MeshPhysicalMaterial;
-        //material.envMapIntensity = 1.5; 
-        material.roughness = 0.6;
-        material.metalness = 0.6;        
-        //material.clearcoat = 0.7;
-        //material.clearcoatRoughness = 0.08; 
-        //material.normalScale.set(1.5,1.5);
-        //material.ior = 1.5;
-        material.needsUpdate = true;
-        
-        this.scene.add(this.glmachine);
-        return true;
-    }
-
-};//end
-
-function summarizeMaterial(m: THREE.Material) {
-
-    const mm = m as THREE.MeshStandardMaterial as any; 
-    // name: m.name,
-
-    const summary = {       
-        color: mm.color?.getHexString?.(),
-        map: mm.map?.name ?? mm.map?.uuid,
-        normalMap: mm.normalMap?.name ?? mm.normalMap?.uuid,        
-        roughnessMap: mm.roughnessMap?.name ?? mm.roughnessMap?.uuid,
-        metalnessMap: mm.metalnessMap?.name ?? mm.metalnessMap?.uuid,
-        //aoMap: (mm as any).aoMap?.name ?? (mm as any).aoMap?.uuid,
-        //aoMapIntensity: (mm as any).aoMapIntensity,
-        //emissiveMap: mm.emissiveMap?.name ?? mm.emissiveMap?.uuid,
-        //alphaMap: mm.alphaMap?.name ?? mm.alphaMap?.uuid,        
-    };
-    console.log(summary);
-};//end
-
-/*
-        //transparent: m.transparent,
-        //opacity: (m as any).opacity,
-
-        //normalScale: mm.normalScale ? { x: mm.normalScale.x, y: mm.normalScale.y } : undefined,
-        //metalness: mm.metalness,
-        //roughness: mm.roughness,
-        //emissive: mm.emissive?.getHexString?.(),
-        //envMapIntensity: mm.envMapIntensity,
-*/
+}//end
