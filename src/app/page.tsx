@@ -1,48 +1,36 @@
 'use client';
 
-import { useEffect } from "react";
-import { Grid, Flex } from "@radix-ui/themes";
-import { ThreeApp } from "./ide/application/threeapp";
+import { useRouter } from "next/navigation";
+import { Box } from "@radix-ui/themes";
+import { GameLayout } from "@/app/universo/game/gameeditor";
+import { LayoutPageOneColumn } from "@/layouts/lypageonecolumn";
+import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 
-const LAYOUT_DEF = {
-    background: 'rgba(0, 0, 0, 1)'
-};
-const PRIMBAR_STYLE = {
-    background: 'rgba(198, 17, 17, 1)'
-};
-const header_CONTENT = {
-    backgroundColor: 'rgba(0, 0, 0, 1)'
-};
 
 /**
- * PageXeThreeIde
+ * Page Space Game
  */
-export default function PageXeThreeIde()  {
+export default function PageSpaceGameEditor() {
+
+    const router = useRouter();
+    const loadSection = (sectionId: string) => {        
+        const route:string = Universo3dConfig.APP_FOLDER + sectionId;
+        router.push(route);
+    };
+
+    const headerContent = () => {
+        return(
+            <Box>Space Game</Box>
+        );
+    };//end
 
     return (
-        
-        <Grid height="100vh" rows="auto 1fr" columns="16% 80% 4%" style={LAYOUT_DEF}>
-
-            <Flex height="40px" gridColumn="1/4" gridRow="1" >                
-                <Flex width="100%" direction="column" gapY="2" 
-                    style={header_CONTENT} >
-                    Xefero I
-                </Flex>
-            </Flex>
-
-            <Flex gridColumn="1" gridRow="2" style={PRIMBAR_STYLE}>
-                Side Bar
-            </Flex>
-
-            <Flex gridColumn="2" gridRow="2" >
-                <ThreeApp />
-            </Flex>
-
-            <Flex gridColumn="3" gridRow="2" >
-                rbar
-            </Flex>
-
-        </Grid>
+        <LayoutPageOneColumn 
+            headertitle   = {"By Xefero"} 
+            headercontent = {headerContent()}        
+            main = {<GameLayout />}
+            options     = {[]} 
+            onselection = {loadSection} />
     );
 
 }//end page

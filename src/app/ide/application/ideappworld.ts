@@ -15,9 +15,9 @@ import { IdeWorldCfg } from '../xethreeidecfg';
 import { AppWorldFunct } from './ideworlfunct';
 
 
-let lightDirA_int:number =1.0;
+let lightDirA_int:number =4.0;
 let lightDirA_color:any  = '#FFFFFF';
-let lightDirA_pos:THREE.Vector3 = new THREE.Vector3(10,20,10);
+let lightDirA_pos:THREE.Vector3 = new THREE.Vector3(3,3,3);
 let lightDirA:THREE.DirectionalLight;
 let useLightDirA:boolean = true;
 
@@ -38,13 +38,13 @@ export class IdeAppWorld {
     public cameraElev: number = 1.0;
         
     public ambientLight:THREE.AmbientLight|null=null;
-    public useWorldLights:boolean = false;
+    public useWorldLights:boolean = true;
     
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
         this.scene = new THREE.Scene();
-        
-        this.loadCamera();
+        //this.loadLights();
+        //this.loadCamera();
     };//end
    
     //configure Cube HDR pbr environment
@@ -59,9 +59,9 @@ export class IdeAppWorld {
         hdrTex.dispose();
         pmrem.dispose();
 
-        this.loadLights();
+        
         // test environment
-        AppWorldFunct.addPBRTestSpheres(this.scene);
+        //AppWorldFunct.addPBRTestSpheres(this.scene);
         return true;
     };//end
   
@@ -76,6 +76,19 @@ export class IdeAppWorld {
             this.scene.add(this.ambientLight);  
         }
 
+        /*
+        export function loadLights(scene: THREE.Scene) {
+            const dir = new THREE.DirectionalLight(0xffffff, 4);
+            dir.position.set(5, 10, 5);
+            scene.add(dir);
+
+            const pt = new THREE.PointLight(0xffffff, 120, 0);
+            pt.decay = 2;
+            pt.position.set(1, 4, 1);
+            scene.add(pt);
+        }        
+        */
+
         //light A:
         if(useLightDirA){
             lightDirA = LightsUtil.createDirectLight(lightDirA_color,lightDirA_int);
@@ -83,11 +96,11 @@ export class IdeAppWorld {
             this.scene.add(lightDirA);
             const directLightObj:THREE.Mesh = IdeThreeUtil.getLightMesh();        
             directLightObj.position.copy(lightDirA_pos);        
-            this.scene.add(directLightObj);
+            //this.scene.add(directLightObj);
         }
        
-        const ptLight:THREE.PointLight = LightsUtil.createPointLight('#FFFFFF',1,30,2);
-        ptLight.position.set(1.0,4,1.0);
+        //const ptLight:THREE.PointLight = LightsUtil.createPointLight('#FFFFFF',10,30,2);
+        //ptLight.position.set(1.0,3,1.0);
         //this.scene.add(ptLight);   
     };//end
 
@@ -116,6 +129,8 @@ export class IdeAppWorld {
     // load scene elements 
     //........................................................................    
     public loadSceneElements = async (model:string):Promise<boolean> => {
+        //this.loadLights();
+        this.loadCamera();
 
         //GridHelper
         if(IdeAppWorld.showGrid){
@@ -136,7 +151,18 @@ export class IdeAppWorld {
 
         //3d objects
         const loadRes = await AppWorldFunct.loadAircraft(this.scene);
+
+       //dimIBL(this.scene, 0.8);        
         return loadRes;
     };//end
 
 }//end
+
+export function dimIBL(scene: THREE.Scene, value = 0.3) {
+  scene.traverse(o => {
+    const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+    const set = (x:any)=>{ if (x?.isMeshStandardMaterial || x?.isMeshPhysicalMaterial) { x.envMapIntensity = value; x.needsUpdate = true; } };
+    if (!m) return;
+    Array.isArray(m) ? m.forEach(set) : set(m);
+  });
+}

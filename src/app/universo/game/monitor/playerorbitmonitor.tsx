@@ -8,7 +8,7 @@ import { TDimension } from "@/common/types";
 import { GameScene } from "../gamescene";
 import { SliderSimple } from "@/radix/sliders/slidersimple";
 import { GameConfig } from "@/app/universo/game/gameconfig";
-import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
+import { OrbitCamControl, OrbitCameraConf } from "@/zone3d/three/systems/orbitcamcontrol";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { LIB_ICON } from "@/radix/rdxthicons";
@@ -31,6 +31,12 @@ export interface PlayerOrbitMonitorRef {
 let scene:THREE.Scene|null = null;
 let monCamera: THREE.PerspectiveCamera | null = null;
 
+const ORBIT_CAM_CONFIG: OrbitCameraConf = {
+    rotDegreesY:270,
+    elevation:1.6,
+    distance:10
+};
+
 export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitMonitorProps>((props, ref) => {
     const { canvasdim,gamesc } = props;
  
@@ -42,8 +48,8 @@ export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitM
 
     const [wglready, setWglReady] = useState<boolean>(false);
     
-    let obj1:THREE.Object3D|null = null;
-    let obj2:THREE.Object3D|null = null;
+    //let obj1:THREE.Object3D|null = null;
+
 
     useEffect(() => {
         if (typeof window === "undefined" || typeof document === "undefined") return;
@@ -56,7 +62,7 @@ export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitM
         renderer.setClearColor(GameConfig.SCENE_BACKCOLOR, 1.0); 
 
         scene = new THREE.Scene();
-        orbitCamera = new OrbitCamControl(canvasdim,50,180);
+        orbitCamera = new OrbitCamControl(canvasdim,ORBIT_CAM_CONFIG);
 
         /*
         monCamera = new THREE.PerspectiveCamera(
@@ -89,10 +95,7 @@ export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitM
 
     //ThreeFbxUtil.loadFbx
     const loadObjects = async () => {        
-        obj1 = await ThreeFbxUtil.loadFbx("/universo/ship/xwingv1.fbx");
-        obj2 = await ThreeFbxUtil.loadFbx("/universo/ship/xwingv2.fbx");
-        scene!.add(obj1);
-        scene!.add(obj2);
+
         scene!.add(new THREE.GridHelper(1000,1000));
     }//end 
 

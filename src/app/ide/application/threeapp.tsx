@@ -62,15 +62,14 @@ export function ThreeApp({}: ThreeAppProps) {
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.toneMappingExposure = 1.0; //(0.8–1.3)
-        renderer.debug.checkShaderErrors = true;
+        renderer.toneMappingExposure = 1.0; 
+        //renderer.debug.checkShaderErrors = true;
     };//end
 
     const createAppWorld = async () => {
         world = new IdeAppWorld(canvasDimRef.current);
         const configRes = await world.confHdrEnvironment(renderer);
         if(!configRes){console.log('env hdr config failed.');return;}
-
         const loadRes = await world
             .loadSceneElements(IdeWorldCfg.SKYBOX_DAY_FOLDER);        
     }//end

@@ -12,9 +12,10 @@ export class AppWorldFunct {
 
         //const src: string = '/spacegame/player/xwing8k.glb';
         //Longitud: 19'10 m. ; Altura: 4'88 m
-        const src: string = '/spacegame/player/aircraftblackhigh.glb';
+        //const src: string = '/spacegame/player/aircraftblackhigh.glb';
+        const src: string = '/spacegame/player/spaceshipAfewpolys.glb';
         const glObject: THREE.Object3D = await GlbUtil.loadGLB_object(src);
-        
+        glObject.scale.set(3.0,3.0,3.0);
         /*
         const material = (glObject as THREE.Mesh)
                     .material as THREE.MeshPhysicalMaterial;

@@ -14,6 +14,17 @@ import { Pivot3d } from '@/math3d/pivot/pivot3d';
  */
 export class GlbUtil {
 
+    /*
+    loader.load(url, gltf => {
+    gltf.parser.getDependencies('material').then((mats:any[]) => {
+        mats.forEach(m => {
+        if (m.isMeshStandardMaterial || m.isMeshPhysicalMaterial) m.envMapIntensity = 0.3;
+        });
+    });
+    scene.add(gltf.scene);
+    });
+    */
+
     public static async loadGLB_object(url: string): Promise<THREE.Object3D> {
         const loader = new GLTFLoader();
         return new Promise((resolve, reject) => {

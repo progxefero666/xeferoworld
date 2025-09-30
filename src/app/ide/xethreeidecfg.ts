@@ -37,7 +37,7 @@ export class IdeWorldCfg {
     public static SKYBOX_DAY_FOLDER = "/ide/skybox/skybox_day";
     public static SKYBOX_NIGHT_FOLDER = "/ide/skybox/skybox_night";
 
-    public static AMB_LIGHT_INT:number = 1;
+    public static AMB_LIGHT_INT:number = 10;
     public static AMB_LIGHT_COLOR:any = '#ffffff';
 
     public static ORBIT_CAM_CONFIG: OrbitCameraConf = {

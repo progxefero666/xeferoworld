@@ -35,7 +35,7 @@ export class GameScene {
 
     public loadLights = () => {   
         const ambientLight = new THREE.AmbientLight('#ffffff', 4.0);                
-        //this.scene.add(ambientLight);  
+        this.scene.add(ambientLight);  
 
         const pointLightA = new THREE.PointLight('#ffffff',20.0,40.0,2.0);
         pointLightA.position.set( 1, 10, 1 );
@@ -76,6 +76,7 @@ export class GameScene {
     }//end 
 
     public loadPlayer(glObject:THREE.Object3D){
+        
         this.scene.add(glObject);
     };//end
 
