@@ -71,6 +71,7 @@ export class PlayerSystemAttack {
         this.bulletsA = [];
     }//end
 
+     //const objMesh:THREE.Mesh =GenWeapons.genBulletA();
     public fireBulletsA() {
         const cannonsCoord:Vector3d[] = this.player.getCannonsPosition();
         const cannondDir:MVector3d[] = this.player.getCannonsDirections(cannonsCoord);

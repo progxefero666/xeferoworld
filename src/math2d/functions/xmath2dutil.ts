@@ -6,7 +6,7 @@ import { TDimension } from "@/common/types";
 
 
 /**
- * class XMath2dUtil.getAspect
+ * class XMath2dUtil.getAleatNumberInRange(min:number,max: number):
  */
 export class XMath2dUtil {
 

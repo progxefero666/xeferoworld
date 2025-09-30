@@ -8,8 +8,10 @@ import { GeoFunction } from '@/zone3d/three/functions/geofunction';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { GenColorMaterial } from '@/zone3d/three/materials/genmatcolor';
 import {SkyBoxGenerator} from '@/system3d/util/genskybox';
-import { TDimension3d } from '@/common/types';
+import { Point2d, TDimension, TDimension3d } from '@/common/types';
 import { GenWeapons } from './player/playersysattack';
+import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
+import { PlaneUtil } from '@/math2d/functions/planeutils';
 
 /**
  * class GameScene
@@ -23,7 +25,8 @@ export class GameScene {
 
     public skyboxInit:THREE.Mesh|null=null;
 
-    
+    public  terrainBlocks:THREE.Mesh[] = []; 
+
     //,onSceneCharged:() => void
     constructor(showGrid:boolean) {
         this.scene = new THREE.Scene();
@@ -51,8 +54,33 @@ export class GameScene {
 
     public  loadTestObjects = async () => { 
 
-        //const objMesh:THREE.Mesh =GenWeapons.genBulletA();
-        //this.scene.add(objMesh);
+        const planeDim: TDimension = {width:500,height:500};
+        const countBlocks = 80;
+
+        const material: THREE.MeshStandardMaterial 
+            = GenColorMaterial.getStandardMaterial('#9d5100',0.85,0.3);
+        this.terrainBlocks =  [];
+        for(let idx:number=0;idx<countBlocks;idx++) {
+            
+            const xPos =XMath2dUtil.getAleatBoolean();
+            const zPos =XMath2dUtil.getAleatBoolean();            
+            let coordX:number = XMath2dUtil.getAleatNumberInRange(1,planeDim.width);
+            let coordZ:number = XMath2dUtil.getAleatNumberInRange(1,planeDim.height);
+            if(!xPos){coordX *= -1;}
+            if(!zPos){coordZ *= -1;}
+
+            const itemW = XMath2dUtil.getAleatNumberInRange(2,6);
+            const itemH = XMath2dUtil.getAleatNumberInRange(2,46);
+            const itemD = itemW;            
+            const geom = new THREE.BoxGeometry(itemW,itemH,itemD); 
+            const item:THREE.Mesh = new THREE.Mesh(geom,material);
+            item.position.set(coordX,(itemH/2),coordZ);
+            console.log(idx);
+            this.terrainBlocks.push(item);
+        }
+        for(let idx:number=0;idx<this.terrainBlocks.length;idx++) {
+            this.scene.add(this.terrainBlocks[idx]);
+        }
     };//end 
 
     public  loadInitObjects = async () => {            
