@@ -9,6 +9,12 @@ import { SliderConfig } from '@/radix/sliders/sliderconfig';
 import { XMath2d } from '@/math2d/xmath2d';
 
 
+export type OrbitCameraConf = {
+    rotDegreesY: number;
+    elevation: number;
+    distance: number;
+};
+
 /**
  * class OrbitCamera
  */
@@ -25,26 +31,22 @@ export class OrbitCamControl {
 
     public static ORBCAMERA_ROTY_DEF: number = 0;
     public static ORBCAMERA_DIST_DEF: number = 15;
-    public static ORBCAMERA_ELEV_DEF: number = 1;
+    public static ORBCAMERA_ELEV_DEF: number = 0;
 
     public cam: THREE.PerspectiveCamera;
     public cvDim:TDimension;
 
     public elevation: number = 0;
-    public distance: number = 0;
+    public distance: number = 15;
     public rotationY: number = 0;
     
     public config:TCameraConfig = {fov:60,near:0.1,far:5000}
 
-    constructor(cvDim:TDimension,rotDegreesY:number,elevation?:number,distance?:number) {
-
+    constructor(cvDim:TDimension,orbitConfig:OrbitCameraConf) {
         this.cvDim      = cvDim;
-        console.log(this.cvDim);
-        this.elevation   = elevation ?? OrbitCamControl.ORBCAMERA_ELEV_DEF;
-        this.distance    = distance?? OrbitCamControl.ORBCAMERA_DIST_DEF;
-        if(rotDegreesY){
-            this.rotationY = XMath2dUtil.toRadians(rotDegreesY);
-        }
+        this.elevation   = orbitConfig.elevation;
+        this.distance    = orbitConfig.distance;
+        this.rotationY = XMath2dUtil.toRadians(orbitConfig.rotDegreesY);
         this.cam = new THREE.PerspectiveCamera(
             this.config.fov,
             XMath2d.getAspect(this.cvDim),

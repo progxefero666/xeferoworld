@@ -34,7 +34,8 @@ export function ThreeApp({}: ThreeAppProps) {
 
         createMainRenderer();
         createAppWorld();
-        orbitControl = new OrbitCamControl(canvasDimRef.current,56,45);
+        orbitControl = new OrbitCamControl
+            (canvasDimRef.current,IdeWorldCfg.ORBIT_CAM_CONFIG);
         animate();
         setWglReady(true);
 
@@ -71,7 +72,7 @@ export function ThreeApp({}: ThreeAppProps) {
         if(!configRes){console.log('env hdr config failed.');return;}
 
         const loadRes = await world
-            .loadSceneObjects(IdeWorldCfg.SKYBOX_DAY_FOLDER);        
+            .loadSceneElements(IdeWorldCfg.SKYBOX_DAY_FOLDER);        
     }//end
 
     /**
@@ -79,8 +80,8 @@ export function ThreeApp({}: ThreeAppProps) {
      */
     const animate = () => {
         requestAnimationFrame(animate);
-        renderer!.render(world.scene,world.camera!);
-        //renderer!.render(world.scene,orbitControl!.cam);
+        //renderer!.render(world.scene,world.camera!);
+        renderer!.render(world.scene,orbitControl!.cam);
         
     };//end
 

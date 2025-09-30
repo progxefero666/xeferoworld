@@ -1,6 +1,7 @@
 //src\ide\xethreeidecfg.ts
 
 import { TCameraConfig, TDimension } from "@/common/types";
+import { OrbitCameraConf } from "@/zone3d/three/systems/orbitcamcontrol";
 
 /**
  * class IdeConfig.LIGHT_OBJ_RADIUS
@@ -23,7 +24,7 @@ export class IdeConfig {
 }//end
 
 /**
- * class IdeWorldCfg.HDR_MOTOR
+ * class IdeWorldCfg.ORBIT_CAM_CONFIG
  */
 export class IdeWorldCfg {
 
@@ -35,5 +36,14 @@ export class IdeWorldCfg {
 
     public static SKYBOX_DAY_FOLDER = "/ide/skybox/skybox_day";
     public static SKYBOX_NIGHT_FOLDER = "/ide/skybox/skybox_night";
+
+    public static AMB_LIGHT_INT:number = 1;
+    public static AMB_LIGHT_COLOR:any = '#ffffff';
+
+    public static ORBIT_CAM_CONFIG: OrbitCameraConf = {
+        rotDegreesY:270,
+        elevation:1.6,
+        distance:10
+    };
 
 }//end

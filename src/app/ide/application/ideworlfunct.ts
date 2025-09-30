@@ -15,6 +15,7 @@ export class AppWorldFunct {
         const src: string = '/spacegame/player/aircraftblackhigh.glb';
         const glObject: THREE.Object3D = await GlbUtil.loadGLB_object(src);
         
+        /*
         const material = (glObject as THREE.Mesh)
                     .material as THREE.MeshPhysicalMaterial;
         //material.envMapIntensity = 1.5; 
@@ -25,6 +26,7 @@ export class AppWorldFunct {
         //material.normalScale.set(1.5,1.5);
         //material.ior = 1.5;
         material.needsUpdate = true;        
+        */
         scene.add(glObject);
         return true;
     }//end
