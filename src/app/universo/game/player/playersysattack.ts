@@ -9,7 +9,44 @@ import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { BulletSimple } from '@/app/universo/game/armament/bulletsimple';
 import { Player } from '@/app/universo/game/player/player';
 import { PlayerArmyCfg, PlayerShipCfg } from './playerconfig';
+import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
+import { Pivot3d } from '@/math3d/pivot/pivot3d';
+import { XMath2d } from '@/math2d/xmath2d';
 
+
+/**
+ * class GenWeapons.genBulletA();
+ */
+export class GenWeapons {
+
+    public static MODEL_BULLET_A:THREE.Mesh = GenWeapons.genBulletModelA();
+
+    public static genBulletModelA():THREE.Mesh {
+        
+        const config:TCylinderConfig = PlayerArmyCfg.BULLETS_A_CFG; 
+
+        const material = new THREE.MeshBasicMaterial({color:config.color});        
+        const geometry = new THREE.CylinderGeometry(            
+            config.radius,config.radius,config.len,
+            config.radialseg,config.lenseg
+        );
+        const objMesh:THREE.Mesh = new THREE.Mesh(geometry, material); 
+        const vertexBase = GlbUtil.getGlMeshVertexArray(objMesh);
+        const pivot:Pivot3d = new Pivot3d();
+        const vertexMesh:Float32Array = pivot
+            .rotateArrayPointsInAxis(0,vertexBase,XMath2d.ROTATION_90);
+        objMesh.geometry.setAttribute('position', new THREE.BufferAttribute(vertexMesh,3));
+        objMesh.geometry.attributes.position.needsUpdate = true;
+        objMesh.geometry.computeBoundingBox();
+        objMesh.geometry.computeBoundingSphere();    
+        return objMesh;
+    }//end 
+
+    public static genBulletA():THREE.Mesh {
+        return GenWeapons.MODEL_BULLET_A.clone();
+    }//end 
+
+}//end
 
 /*
 gunsight     // Mira de arma/cañón
@@ -17,9 +54,7 @@ targeting reticle  // Mira de targeting
 HUD crosshair      // Crosshair del HUD
 Elige un tiempo-a-mirilla 𝜏
 τ fijo (sensación de respuesta).
-
 Regla típica: 0.4–0.6 s.
-
 Elige vida útil de la bala 
 Típico: 1.5–2.5 s.
 */
@@ -40,23 +75,12 @@ export class PlayerSystemAttack {
         this.bulletsA = [];
     }//end
 
-    public fireBulletA(coordsInit:Vector3d,direction:MVector3d):BulletSimple{
-        console.log('bullet fired');
-        const bullet = new BulletSimple(
-            this.bulletsA_mat,
-            PlayerArmyCfg.BULLETS_A_CFG,            
-            PlayerArmyCfg.ATT_TIME_TO_CONVERG,
-            PlayerArmyCfg.ATT_BULL_A_PHYVEL,
-            coordsInit,direction);
-        return bullet;    
-    }//end
 
     public fireBulletsA() {
         const cannonsCoord:Vector3d[] = this.player.getCannonsPosition();
         const cannondDir:MVector3d[] = this.player.getCannonsDirections(cannonsCoord);
-        
-        const newBulletR:BulletSimple = this.fireBulletA(cannonsCoord[0],cannondDir[0]);        
-        //const newBulletL:BulletSimple = this.fireBulletA(cannonsCoord[1],cannondDir[1]);
+           
+        const newBulletR:BulletSimple = new BulletSimple(cannonsCoord[0],cannondDir[0]);    
         this.bulletsA.push(newBulletR);
         
     }//end

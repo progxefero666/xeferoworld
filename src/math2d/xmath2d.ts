@@ -6,13 +6,14 @@ import { Vector2d } from "@/math2d/math2dtypes";
 // !!!! npm i geometric -S !!! 
 
 /**
- * class XMath2d.getPointsDistance
+ * class XMath2d.ROTATION_90
  */
 export class XMath2d {
 
     public static readonly RAD: number = Math.PI / 180;
     public static readonly DEG_TO_RAD_FACTOR: number = 180 / Math.PI;
     public static readonly ROTATION_0: number = 0;
+    public static readonly ROTATION_90: number = Math.PI/2;
     public static CC: Point2d = {x:0,y:0};
 
     public static DIM_0: TDimension = { width: 0, height: 0 };

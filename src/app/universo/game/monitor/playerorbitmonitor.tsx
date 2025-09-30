@@ -31,11 +31,8 @@ export interface PlayerOrbitMonitorRef {
 let scene:THREE.Scene|null = null;
 let monCamera: THREE.PerspectiveCamera | null = null;
 
-const ORBIT_CAM_CONFIG: OrbitCameraConf = {
-    rotDegreesY:270,
-    elevation:1.6,
-    distance:10
-};
+const BASIC_CAM_CONFIG: OrbitCameraConf = {rotDegreesY:0,elevation:0.5,distance:5};
+const ORBIT_CAM_CONFIG: OrbitCameraConf = {rotDegreesY:270,elevation:1.6,distance:10};
 
 export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitMonitorProps>((props, ref) => {
     const { canvasdim,gamesc } = props;
@@ -62,7 +59,8 @@ export const PlayerOrbitMonitor = forwardRef<PlayerOrbitMonitorRef, PlayerOrbitM
         renderer.setClearColor(GameConfig.SCENE_BACKCOLOR, 1.0); 
 
         scene = new THREE.Scene();
-        orbitCamera = new OrbitCamControl(canvasdim,ORBIT_CAM_CONFIG);
+        orbitCamera = new OrbitCamControl(canvasdim,BASIC_CAM_CONFIG);
+        //orbitCamera = new OrbitCamControl(canvasdim,ORBIT_CAM_CONFIG);
 
         /*
         monCamera = new THREE.PerspectiveCamera(

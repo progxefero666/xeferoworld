@@ -1,16 +1,15 @@
 //src\app\universo\game\scene\universoscene.ts
 
-
+import * as THREE from 'three';
 import { TerrainControl } from '@/terrains/xterrains/terraincontrol';
 import { XTerrMaterial } from '@/terrains/xterrains/xterrains';
 import { GameConfig } from '@/app/universo/game/gameconfig';
 import { GeoFunction } from '@/zone3d/three/functions/geofunction';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { GenColorMaterial } from '@/zone3d/three/materials/genmatcolor';
-import * as THREE from 'three';
-
 import {SkyBoxGenerator} from '@/system3d/util/genskybox';
 import { TDimension3d } from '@/common/types';
+import { GenWeapons } from './player/playersysattack';
 
 /**
  * class GameScene
@@ -28,8 +27,9 @@ export class GameScene {
     //,onSceneCharged:() => void
     constructor(showGrid:boolean) {
         this.scene = new THREE.Scene();
-        //if(showGrid){this.scene.add(new THREE.GridHelper(1000,1000));}
+        if(showGrid){this.scene.add(new THREE.GridHelper(1000,1000));}
         this.loadLights();
+        this.loadTestObjects();
         //this.loadInitObjects();
     }//end
 
@@ -48,6 +48,14 @@ export class GameScene {
         //directionalLight.shadow.mapSize.height = 1024;        
         //this.scene.add(directionalLight);                      
     };//end
+
+    public  loadTestObjects = async () => { 
+
+        
+        const objMesh:THREE.Mesh =GenWeapons.genBulletA();
+
+        this.scene.add(objMesh);
+    };//end 
 
     public  loadInitObjects = async () => {            
         const skyboxFolder = "/spacegame/skybox/skyboxspace_a";

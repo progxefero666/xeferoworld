@@ -27,6 +27,7 @@ interface OrthoMonitorProps {
 
 export function OrthoMonitor({ canvasdim, gamesc, game }: OrthoMonitorProps) {
 
+    const heightValue:number = 50;//200
     const monCsswidth = canvasdim.width + "px";
     const monCssheight = canvasdim.height + "px";
     const threeContainerRef = useRef<HTMLCanvasElement>(null);
@@ -55,14 +56,14 @@ export function OrthoMonitor({ canvasdim, gamesc, game }: OrthoMonitorProps) {
 
     const chargeCamera = () => {
         const aspect = canvasdim.width / canvasdim.height;
-        const viewSize = 200;
+        const viewSize = 50;
         const top = viewSize / 2;
         const bottom = -top;
         const right = top * aspect;
         const left = -right;
         
         camera = new THREE.OrthographicCamera(left, right, top, bottom, 0.1, 1000);
-        camera.position.set(0, 200, 0);
+        camera.position.set(0, heightValue, 0);
         camera.rotation.set(-Math.PI/2, 0, Math.PI);
     };
 
