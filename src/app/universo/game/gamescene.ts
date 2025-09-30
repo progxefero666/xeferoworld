@@ -1,17 +1,15 @@
 //src\app\universo\game\scene\universoscene.ts
 
 import * as THREE from 'three';
-import { TerrainControl } from '@/terrains/xterrains/terraincontrol';
+
 import { XTerrMaterial } from '@/terrains/xterrains/xterrains';
 import { GameConfig } from '@/app/universo/game/gameconfig';
 import { GeoFunction } from '@/zone3d/three/functions/geofunction';
-import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { GenColorMaterial } from '@/zone3d/three/materials/genmatcolor';
 import {SkyBoxGenerator} from '@/system3d/util/genskybox';
-import { Point2d, TDimension, TDimension3d } from '@/common/types';
-import { GenWeapons } from './player/playersysattack';
+import { TDimension } from '@/common/types';
 import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
-import { PlaneUtil } from '@/math2d/functions/planeutils';
+
 
 /**
  * class GameScene
@@ -24,10 +22,8 @@ export class GameScene {
     public modeGrid:boolean = true;
 
     public skyboxInit:THREE.Mesh|null=null;
+    public terrainBlocks:THREE.Mesh[] = []; 
 
-    public  terrainBlocks:THREE.Mesh[] = []; 
-
-    //,onSceneCharged:() => void
     constructor(showGrid:boolean) {
         this.scene = new THREE.Scene();
         if(showGrid){this.scene.add(new THREE.GridHelper(1000,1000));}
@@ -85,7 +81,6 @@ export class GameScene {
 
     public  loadInitObjects = async () => {            
         const skyboxFolder = "/spacegame/skybox/skyboxspace_a";
-        const skyboxDim:TDimension3d = {width:5000,height:5000,depth:5000};
         this.skyboxInit = await SkyBoxGenerator
             .genSkyBox(skyboxFolder,'skybox','jpg',2500,"#FFFFFF",1); 
         this.scene.add(this.skyboxInit);           
@@ -109,15 +104,8 @@ export class GameScene {
         //this.scene.add(this.plane); 
     }//end 
 
-    public loadPlayer(glObject:THREE.Object3D){
-        
+    public loadPlayer(glObject:THREE.Object3D){        
         this.scene.add(glObject);
     };//end
 
-    /*
-    public loadPlayer(glObject:THREE.Object3D,glTarget:THREE.Sprite){
-        this.scene.add(glObject);
-        this.scene.add(glTarget);
-    };//end    
-    */
 }//end

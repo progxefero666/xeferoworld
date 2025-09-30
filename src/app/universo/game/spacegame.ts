@@ -4,7 +4,6 @@ import * as THREE from 'three'
 import RAPIER from "@dimforge/rapier3d-compat";
 
 import { GameConfig } from '@/app/universo/game/gameconfig';
-
 import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
 import { Player } from '@/app/universo/game/player/player';

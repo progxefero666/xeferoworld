@@ -3,10 +3,11 @@
 import * as THREE from 'three';
 
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
-import { PlayerArmyCfg } from '../player/playerconfig';
-import { GenWeapons } from '../player/playersysattack';
+
 import { Vector3d } from '@/common/types';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
+import { PlayerArmyCfg } from '@/app/universo/game/player/playerconfig';
+import { GenWeapons } from '@/app/universo/game/player/playersysattack';
 
 /**
  * class BulletSimple

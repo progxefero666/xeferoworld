@@ -4,11 +4,10 @@ import * as THREE from 'three';
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 
 import { TCylinderConfig, Vector3d } from '@/common/types';
-import { System3d } from '@/system3d/system3d';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { BulletModA } from '@/app/universo/game/armament/bullets_a';
 import { Player } from '@/app/universo/game/player/player';
-import { PlayerArmyCfg, PlayerShipCfg } from './playerconfig';
+import { PlayerArmyCfg } from './playerconfig';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { Pivot3d } from '@/math3d/pivot/pivot3d';
 import { XMath2d } from '@/math2d/xmath2d';
