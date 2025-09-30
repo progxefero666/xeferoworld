@@ -9,6 +9,9 @@ import { Radar } from "../monitor/radar";
 import { FlyRollMonitor, FlyRollControlRef } 
     from "@/app/universo/game/player/monitor/flyrollmonitor";
 import { FlyControlRoll } from "./flycontrolroll";
+import { XIconButton } from "@/radix/buttons/xiconbutton";
+import { LIB_ICON } from "@/radix/rdxthicons";
+import { RADIX_COLORS } from "@/radix/rdxconf";
 
 
 const CONTROL_STYLE = {
@@ -21,6 +24,7 @@ interface PlMachineControlsProps {
     execroll:(rollRight:boolean) => void;
     execpitch:(pitchDown:boolean) => void;
     changevelocity:(increment:boolean) => void;
+    execfire:() => void;
 };
 
 export interface PlMachineControlsRef {
@@ -28,7 +32,7 @@ export interface PlMachineControlsRef {
 };
 
 export const PlFlyControls = forwardRef<PlMachineControlsRef, PlMachineControlsProps>((props, ref) => {
-    const { phyvelocity,maxphyvelocity,changevelocity,execroll,execpitch } = props;
+    const { phyvelocity,maxphyvelocity,changevelocity,execroll,execpitch,execfire } = props;
 
     const vertCtrlssHeight:number = 182;
     const flyRollControlRef = useRef<FlyRollControlRef>(null);
@@ -51,6 +55,11 @@ export const PlFlyControls = forwardRef<PlMachineControlsRef, PlMachineControlsP
         if(operation === "press_up") {
             changevelocity(true);
         }        
+    };//end
+
+    const onFireButtonClick = () => {
+       
+        execfire();
     };//end
 
     return (
@@ -87,8 +96,10 @@ export const PlFlyControls = forwardRef<PlMachineControlsRef, PlMachineControlsP
                     <Box width="60%" height="auto" > 
                         <FlyControlRoll changeValue={onRollControlChange}/>
                     </Box>
-                    <Box width="40%" height="auto" >
-                                          
+                    <Box width="40%" height="auto" ml="3" >
+                        <XIconButton icon={LIB_ICON.RAY}
+                                     color={RADIX_COLORS.orange}
+                                     onclick={onFireButtonClick} />                      
                     </Box>                    
                 </Flex>
 

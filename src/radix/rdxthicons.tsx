@@ -31,7 +31,8 @@ import {
     ColorWheelIcon,
     AspectRatioIcon,
     ChevronUpIcon,
-    ChevronDownIcon
+    ChevronDownIcon,
+    LightningBoltIcon
 
 } from "@radix-ui/react-icons";
 import { RadixConf } from "./rdxconf";
@@ -92,6 +93,7 @@ export enum LIB_ICON {
     VIEWGRID    = "ViewGridIcon",
     EXPAND      = "AspectRatioIcon",
     COLOR       = "ColorWheelIcon",
+    RAY         = "LightningBoltIcon",
     INSERT      = "insert",
     UPDATE      = "update",    
     CLOSE       = "close",
@@ -166,6 +168,8 @@ export function XIcon ({name,width,height,color}: CompProps) {
         else if(name==LIB_ICON.VIEWGRID)  {return <ViewGridIcon color={i_c} width={i_w} height={i_h}/>;}
         else if(name==LIB_ICON.EXPAND)  {return <AspectRatioIcon color={i_c} width={i_w} height={i_h}/>;}
 
+        
+        else if(name==LIB_ICON.RAY)  {return <LightningBoltIcon color={i_c} width={i_w} height={i_h}/>;}
         else if(name==LIB_ICON.UP)  {return <ChevronUpIcon color={i_c} width={i_w} height={i_h}/>;}
         else if(name==LIB_ICON.DOWN)  {return <ChevronDownIcon color={i_c} width={i_w} height={i_h}/>;}
         

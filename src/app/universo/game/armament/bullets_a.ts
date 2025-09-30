@@ -1,16 +1,17 @@
 //src\universo3d\game\military\bullets\bulletmod_a.ts
 
-import { TCylinderConfig, Vector3d } from '@/common/types';
-import { MVector3d } from '@/math3d/pivot/mathpivot3d';
-import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import * as THREE from 'three';
+
+import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { PlayerArmyCfg } from '../player/playerconfig';
 import { GenWeapons } from '../player/playersysattack';
+import { Vector3d } from '@/common/types';
+import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 
 /**
  * class BulletSimple
  */
-export class BulletSimple {
+export class BulletModA {
 
     public mesh: THREE.Mesh;
     public distMax:number = PlayerArmyCfg.ATT_DIST_TO_CONVERG;

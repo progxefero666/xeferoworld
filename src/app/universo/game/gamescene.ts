@@ -51,10 +51,8 @@ export class GameScene {
 
     public  loadTestObjects = async () => { 
 
-        
-        const objMesh:THREE.Mesh =GenWeapons.genBulletA();
-
-        this.scene.add(objMesh);
+        //const objMesh:THREE.Mesh =GenWeapons.genBulletA();
+        //this.scene.add(objMesh);
     };//end 
 
     public  loadInitObjects = async () => {            

@@ -129,7 +129,8 @@ export class GameAircraft {
     // attack actions
     //......................................................................
     public execPlayerFire = () => {
-        this.player!.systemAttack.fireBulletsA();
+         alert('Fire');
+        //this.player!.systemAttack.fireBulletsA();
     };//end
 
 }//end

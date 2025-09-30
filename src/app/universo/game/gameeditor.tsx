@@ -261,11 +261,13 @@ export function GameLayout() {
         <Flex width="100%" direction="row" style={RdxThContainers.PRIMARY_CONTENT} >
 
             <Flex width="40%" direction="column" py="1" mb="2">
-                {wglready ? <PlFlyControls phyvelocity={game.player!.getCurrVelocityKmH()}
+                {wglready ? <PlFlyControls 
+                                   phyvelocity={game.player!.getCurrVelocityKmH()}
                                    maxphyvelocity={PlayerShipCfg.getMaxVelocityKmH()}
                                    changevelocity={game.changePlayerVelocity}
                                    execroll={game.execPlayerRoll}
-                                   execpitch={game.execPlayerPitch} /> : null}
+                                   execpitch={game.execPlayerPitch}
+                                   execfire={game.execPlayerFire}/> : null}
             </Flex>
 
             <Flex width="60%" direction="column" px="2" py="1" gapY="2" mb="2">

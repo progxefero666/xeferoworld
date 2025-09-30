@@ -6,7 +6,7 @@ import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { TCylinderConfig, Vector3d } from '@/common/types';
 import { System3d } from '@/system3d/system3d';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
-import { BulletSimple } from '@/app/universo/game/armament/bulletsimple';
+import { BulletModA } from '@/app/universo/game/armament/bullets_a';
 import { Player } from '@/app/universo/game/player/player';
 import { PlayerArmyCfg, PlayerShipCfg } from './playerconfig';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
@@ -63,26 +63,20 @@ export class PlayerSystemAttack {
     //force attack
     public player:Player;
  
-    public bulletsA_mat:THREE.MeshBasicMaterial;  
-    public bulletsA: BulletSimple[];
+    public bulletsA: BulletModA[];
 
     //constructor
     constructor(player:Player){
         this.player = player;
-
-        this.bulletsA_mat = new THREE.MeshBasicMaterial
-                ({color:PlayerArmyCfg.BULLETS_A_CFG.color});
         this.bulletsA = [];
     }//end
-
 
     public fireBulletsA() {
         const cannonsCoord:Vector3d[] = this.player.getCannonsPosition();
         const cannondDir:MVector3d[] = this.player.getCannonsDirections(cannonsCoord);
            
-        const newBulletR:BulletSimple = new BulletSimple(cannonsCoord[0],cannondDir[0]);    
-        this.bulletsA.push(newBulletR);
-        
+        const newBulletR:BulletModA = new BulletModA(cannonsCoord[0],cannondDir[0]);    
+        this.bulletsA.push(newBulletR);        
     }//end
 
     public dinamic(delta:number) {
