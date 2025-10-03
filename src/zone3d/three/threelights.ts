@@ -16,7 +16,7 @@ export class LightsCfg {
 }//end
 
 /**
- * class three LightsUtil.createPointLight
+ * class three LightsUtil.createDirectLight
  */
 export class LightsUtil {
 

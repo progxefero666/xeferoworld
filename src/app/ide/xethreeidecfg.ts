@@ -42,7 +42,7 @@ export class IdeWorldCfg {
 
     public static ORBIT_CAM_CONFIG: OrbitCameraConf = {
         rotDegreesY:270,
-        elevation:1.6,
+        elevation:4,
         distance:10
     };
 

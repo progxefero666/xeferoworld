@@ -19,7 +19,7 @@ let lightDirA_int:number =4.0;
 let lightDirA_color:any  = '#FFFFFF';
 let lightDirA_pos:THREE.Vector3 = new THREE.Vector3(3,3,3);
 let lightDirA:THREE.DirectionalLight;
-let useLightDirA:boolean = true;
+
 
 /**
  * class IdeAppWorld.showSkyBox
@@ -27,15 +27,15 @@ let useLightDirA:boolean = true;
  */
 export class IdeAppWorld {
     public static showGrid:boolean = false;
-    public static showSkyBox:boolean = false;
+    public static showSkyBox:boolean = true;
 
     public canvasDim:TDimension;
     public scene: THREE.Scene;
     public skybox:THREE.Mesh|null=null;
     public camera: THREE.PerspectiveCamera | null = null;
-    public cameraRotY: number = 0;
-    public cameraDist: number = 10;
-    public cameraElev: number = 1.0;
+    public cameraRotY: number = 90;
+    public cameraDist: number = 14;
+    public cameraElev: number = 2.0;
         
     public ambientLight:THREE.AmbientLight|null=null;
     public useWorldLights:boolean = true;
@@ -43,8 +43,8 @@ export class IdeAppWorld {
     constructor(canvasDim:TDimension) {
         this.canvasDim = canvasDim;        
         this.scene = new THREE.Scene();
-        //this.loadLights();
-        //this.loadCamera();
+        this.loadLights();
+        this.loadCamera();
     };//end
    
     //configure Cube HDR pbr environment
@@ -55,11 +55,8 @@ export class IdeAppWorld {
         const hdrTex = await new RGBELoader().loadAsync(IdeWorldCfg.HDR_MOTOR);
         const envHDR = pmrem.fromEquirectangular(hdrTex).texture;
         this.scene.environment = envHDR;
-
         hdrTex.dispose();
         pmrem.dispose();
-
-        
         // test environment
         //AppWorldFunct.addPBRTestSpheres(this.scene);
         return true;
@@ -68,40 +65,26 @@ export class IdeAppWorld {
     //load scene Lights
     //........................................................................    
     public loadLights = () => {   
-
         if(this.useWorldLights){
-            this.ambientLight = new THREE.AmbientLight(
-                IdeWorldCfg.AMB_LIGHT_COLOR,
-                IdeWorldCfg.AMB_LIGHT_INT);                
-            this.scene.add(this.ambientLight);  
-        }
+            //const dirLight:THREE.DirectionalLight = LightsUtil.createDirectLight('#FFFFFF',4);
 
-        /*
-        export function loadLights(scene: THREE.Scene) {
-            const dir = new THREE.DirectionalLight(0xffffff, 4);
-            dir.position.set(5, 10, 5);
-            scene.add(dir);
-
-            const pt = new THREE.PointLight(0xffffff, 120, 0);
-            pt.decay = 2;
-            pt.position.set(1, 4, 1);
-            scene.add(pt);
+            const color = 0x0000FF;
+            const intensity = 10;
+            const light = new THREE.DirectionalLight(color, intensity);
+            light.position.set(0, 10, 0);
+            light.target.position.set(0, -10, 0);
+            this.scene.add(light);
+            this.scene.add(light.target);            
         }        
-        */
 
         //light A:
+        let useLightDirA:boolean = false;
         if(useLightDirA){
-            lightDirA = LightsUtil.createDirectLight(lightDirA_color,lightDirA_int);
-            lightDirA.position.copy(lightDirA_pos);
-            this.scene.add(lightDirA);
-            const directLightObj:THREE.Mesh = IdeThreeUtil.getLightMesh();        
-            directLightObj.position.copy(lightDirA_pos);        
-            //this.scene.add(directLightObj);
+            const lightPointTop = new THREE.PointLight(0xff0000,40.5, 0);
+            lightPointTop.position.set(0, 5, 0);
+            this.scene.add(lightPointTop);
         }
-       
-        //const ptLight:THREE.PointLight = LightsUtil.createPointLight('#FFFFFF',10,30,2);
-        //ptLight.position.set(1.0,3,1.0);
-        //this.scene.add(ptLight);   
+        
     };//end
 
 
@@ -111,9 +94,12 @@ export class IdeAppWorld {
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(System3d.CC,this.cameraDist,this.cameraRotY);    
         const camConfig:TCameraConfig = {fov:60,near:1.0,far:5000};
-        this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig);        
-        this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
-        this.camera.lookAt(0,this.cameraElev,0);                 
+        this.camera = CameraUtil.createPerspCamera(this.canvasDim,camConfig); 
+        this.camera.position.z = 10;
+        this.camera.position.y = 6;    
+        this.camera.lookAt(0,0,0);  
+        //this.camera.position.set(coord2d.x,this.cameraElev,coord2d.y);
+        //this.camera.lookAt(0,this.cameraElev,0);                 
     };//end
     
     public updateCameraParam = (index:number,value:number) => {
@@ -149,6 +135,7 @@ export class IdeAppWorld {
             this.scene.add(this.skybox);
         }
 
+
         //3d objects
         const loadRes = await AppWorldFunct.loadAircraft(this.scene);
 
@@ -166,3 +153,10 @@ export function dimIBL(scene: THREE.Scene, value = 0.3) {
     Array.isArray(m) ? m.forEach(set) : set(m);
   });
 }
+
+/*
+            this.ambientLight = new THREE.AmbientLight(
+                IdeWorldCfg.AMB_LIGHT_COLOR,
+                IdeWorldCfg.AMB_LIGHT_INT);                
+            this.scene.add(this.ambientLight);  
+*/

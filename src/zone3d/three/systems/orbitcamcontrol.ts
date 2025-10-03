@@ -7,6 +7,7 @@ import { CircunfUtil } from '@/math2d/functions/circunfutil';
 import { XMath2dUtil } from '@/math2d/functions/xmath2dutil';
 import { SliderConfig } from '@/radix/sliders/sliderconfig';
 import { XMath2d } from '@/math2d/xmath2d';
+import { IdeWorldCfg } from '@/app/ide/xethreeidecfg';
 
 
 export type OrbitCameraConf = {
@@ -29,16 +30,16 @@ export class OrbitCamControl {
     public static sliderViewElevCfg: SliderConfig 
         = new SliderConfig("camera_elev","Dist.",{min:0,max:50});
 
-    public static ORBCAMERA_ROTY_DEF: number = 0;
-    public static ORBCAMERA_DIST_DEF: number = 15;
-    public static ORBCAMERA_ELEV_DEF: number = 0;
+    public static ORBCAMERA_ROTY_DEF: number = IdeWorldCfg.ORBIT_CAM_CONFIG.rotDegreesY;
+    public static ORBCAMERA_DIST_DEF: number = IdeWorldCfg.ORBIT_CAM_CONFIG.distance;
+    public static ORBCAMERA_ELEV_DEF: number = IdeWorldCfg.ORBIT_CAM_CONFIG.elevation;
 
     public cam: THREE.PerspectiveCamera;
     public cvDim:TDimension;
 
-    public elevation: number = 0;
-    public distance: number = 15;
-    public rotationY: number = 0;
+    public elevation: number;
+    public distance: number;
+    public rotationY: number;
     
     public config:TCameraConfig = {fov:60,near:0.1,far:5000}
 
@@ -73,7 +74,8 @@ export class OrbitCamControl {
         const coord2d:Point2d=CircunfUtil
             .getCfCoords(center,this.distance,this.rotationY);
         this.cam.position.set(coord2d.x,this.elevation,coord2d.y);
-        this.cam.lookAt(0,this.elevation,0);
+        //this.cam.lookAt(0,this.elevation,0);
+        this.cam.lookAt(0,1,0);
     }//end    
 
     //this.aspect = this.aspect;

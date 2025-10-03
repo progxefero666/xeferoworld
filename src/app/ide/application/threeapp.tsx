@@ -71,7 +71,7 @@ export function ThreeApp({}: ThreeAppProps) {
         const configRes = await world.confHdrEnvironment(renderer);
         if(!configRes){console.log('env hdr config failed.');return;}
         const loadRes = await world
-            .loadSceneElements(IdeWorldCfg.SKYBOX_DAY_FOLDER);        
+            .loadSceneElements(IdeWorldCfg.SKYBOX_DAY_FOLDER);     
     }//end
 
     /**
