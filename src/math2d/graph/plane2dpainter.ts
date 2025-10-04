@@ -77,6 +77,26 @@ export class Plane2dPainter {
         this.ctx.lineWidth = 1;
     }//end
 
+    public fillCf(center:Point2d,radius:number,color:string) {
+        this.ctx.beginPath();        
+        this.ctx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+        this.ctx.fillStyle = color;
+        this.ctx.fill();        
+    }//end
+
+    /*
+    public paintCf(center: Point2d, radius: number, 
+                lineWidth: number, strokeColor: string, fillColor: string) {
+        this.ctx.beginPath();
+        this.ctx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+        this.ctx.fillStyle = fillColor;
+        this.ctx.fill();
+        this.ctx.strokeStyle = strokeColor;
+        this.ctx.lineWidth = lineWidth;
+        this.ctx.stroke();
+    }   
+    */
+
     // lines
     //.................................................................................    
 

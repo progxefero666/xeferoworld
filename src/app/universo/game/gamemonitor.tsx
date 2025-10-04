@@ -193,14 +193,12 @@ export function SpaceGameMonitor() {
         setWglReady(true);
     };//end
 
-    const flyRollControlRef = useRef<FlyRollControlRef>(null);
+    //const flyRollControlRef = useRef<FlyRollControlRef>(null);
 
     const execControlPlayerRoll = (rollRight: boolean) => {
         game.execPlayerRoll(rollRight);
-        
-        flyRollControlRef.current!.changeValue(game.player!.roll_angle);
-        //const angleDegrees = XMath2d.toDegrees(game.player!.roll_angle);
-        //console.log(angleDegrees);
+        gameMonitorRef.current!.updatecontrols();
+        //flyRollControlRef.current!.changeValue(game.player!.roll_angle);
     } ;//end 
 
     // jsx
@@ -217,11 +215,7 @@ export function SpaceGameMonitor() {
                     execroll={execControlPlayerRoll}
                     execpitch={game.execPlayerPitch} /> : null}
 
-                {wglready ?<Flex width="100%" height="auto" direction="column" >
-                    <Box width="auto" height="182px" style={CONTROL_STYLE}>   
-                        <FlyRollMonitor ref={flyRollControlRef}                                         
-                                        value={0.0}  />
-                    </Box>                       
+                {wglready ?<Flex width="100%" height="auto" direction="column" >                      
                     <Box width="auto" height="182px" style={CONTROL_STYLE}> 
                         <Radar />
                     </Box>
@@ -248,8 +242,10 @@ export function SpaceGameMonitor() {
 }//end component
 
 /*
-    const onLayoutReset = () => {
-    };//end
+    <Box width="auto" height="182px" style={CONTROL_STYLE}>   
+        <FlyRollMonitor ref={flyRollControlRef}                                         
+                        value={0.0}  />
+    </Box> 
     const renderLayoutHeader = () => {
         return (
             <Flex width="100%" direction="row" justify="between" pt="1" px="2" pb="2" align="center" >

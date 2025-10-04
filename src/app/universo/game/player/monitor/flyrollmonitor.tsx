@@ -64,7 +64,7 @@ export class FlyRollPainter {
 
     public render(rotation:number) {
         //alert(rotation);
-        this.painter.fillbackColor(this.frontcolor);
+        this.painter.fillCf(this.center,(this.radiusBorder),this.backcolor);
         this.painter.drawCf(this.center,this.radiusBorder,2,FlyRollPainter.EXT_BORDER_COLOR);
         this.painter.drawCf(this.center,(this.radiusBorder-2),2,FlyRollPainter.INT_BORDER_COLOR);
         const diameterLine:Line2d= CircunfUtil.getCfDiameterLine(this.center,this.radiusObject,rotation);
@@ -95,7 +95,7 @@ export interface FlyRollControlRef {
 
 export const FlyRollMonitor = forwardRef<FlyRollControlRef, FlyRollControlProps>((props, ref) => {
 
-    const [rotation, setRotation] = useState<number>(XMath2d.RAD * 15);
+    const [rotation, setRotation] = useState<number>(0);//XMath2d.RAD * 15
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const controlPainter = useRef<FlyRollPainter | null>(null);
     const cssDimension = '180px';
@@ -106,20 +106,21 @@ export const FlyRollMonitor = forwardRef<FlyRollControlRef, FlyRollControlProps>
         if (!canvas.getContext("2d")) return;
         controlPainter.current = new FlyRollPainter
             (canvas.getContext("2d")!,180,CTR_MARKS_CONFIG);
-        renderControl();
+        renderControl(rotation);
     }, []);
 
     
-    const changeValue = (newRotation: number) => {
-        setRotation(newRotation);
+    const changeValue = (angle: number) => {
+        setRotation(angle);
+        renderControl(angle);
     };
 
     useImperativeHandle(ref, () => ({
         changeValue,
     }), []);
 
-    const renderControl = () => {
-        controlPainter.current!.render(rotation);
+    const renderControl = (angle:number) => {
+        controlPainter.current!.render(angle);
     };
 
     return (

@@ -12,14 +12,21 @@ import { LIB_ICON } from "@/radix/rdxthicons";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { FlySystemUtil } from "@/system3d/flysystem/flysystemutil";
+import { GameCamCfg } from "./gcamerascfg";
+import { FlyRollControlRef, FlyRollMonitor } from "./player/monitor/flyrollmonitor";
+import { XMath2d } from "@/math2d/xmath2d";
 
 const divOverCanvasStyle = {
     backgroundColor: 'none',
     border: '1px solid rgba(222, 255, 9, 1)',
 };
 
+const ROLL_MONITOR_STYLE = {border: '1px solid rgba(0, 0, 0, 1)',};
 
-export interface GameMonitorRef{test:()=>void;};
+export interface GameMonitorRef{
+    updatecontrols:()=>void;
+};
+
 interface GameMonitorProps {
     canvasdim: TDimension;
     gamesc:GameScene;
@@ -38,6 +45,9 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
     const monCsswidth:string      = canvasdim.width + "px";
     const monCssheight:string     = canvasdim.height + "px";
     
+    const playerControlsRef = useRef<HTMLDivElement>(null);
+    const flyRollControlRef = useRef<FlyRollControlRef>(null);
+
     useEffect(() => {
         if (typeof window === "undefined" || typeof document === "undefined") return;
         if (wglready) { return; }
@@ -69,10 +79,10 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
 
     const loadFixDebugCamera = () => {
         fixCamera = new THREE.PerspectiveCamera(
-            GameConfig.M_CAMERA_FOV,
+            GameCamCfg.MCAM_FOV,
             canvasdim.width/ canvasdim.height, 
-            GameConfig.M_CAMERA_NEAR,
-            GameConfig.M_CAMERA_FAR);
+            GameCamCfg.MCAM_NEAR,
+            GameCamCfg.MCAM_FAR);
         fixCamera.position.set(0,0,-6);
         fixCamera.lookAt(0,0,0);
     };//end
@@ -81,8 +91,14 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
         console.log("onclick expand");
     };//end
 
-    const test = () => {};
-    useImperativeHandle(ref,()=>({test}),[]);
+    useImperativeHandle(ref,()=>({updatecontrols}),[]);
+
+    const updatecontrols = () => {
+        const roll_angle:number = game.player!.roll_angle;
+        console.log(XMath2d.toDegrees(roll_angle));
+
+        flyRollControlRef.current!.changeValue(roll_angle);
+    };
 
     const execSleep = async(ms: number): Promise<void> =>{
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -136,12 +152,27 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
                     style={{zIndex:1, position:'absolute',left:0,top:0,
                             width:monCsswidth, height:monCssheight,
                             backgroundColor: GameConfig.SCENE_BACKCOLOR}} />
+
+            <Flex ref={playerControlsRef} direction="row"   
+                  width={monCsswidth} height={monCssheight}
+                  px="3" py="3"
+                  style={{zIndex:2,position:'absolute',left:0,top:0,
+                         backgroundColor: 'transparent',border: '1px solid rgba(222, 255, 9, 1)'}} >
+                
+                <Flex width="20%" height="100%" direction="column" >
+                    <FlyRollMonitor ref={flyRollControlRef}                                         
+                                    value={0.0}  />                    
+                </Flex>            
+            </Flex>
+
         </Box>
     );
 
 });//end GameMonitor
 
 /*
+border: '1px solid rgba(222, 255, 9, 1)'
+
 //before animate
 let lastTelemetry = 0;
 //debug telemetry
@@ -151,15 +182,3 @@ if (now - lastTelemetry >= 500 && game.player) {
     lastTelemetry = now;
 }
 */  
-
-/*
-const divOverCanvasRef = useRef<HTMLDivElement>(null);
-<div ref={divOverCanvasRef}    
-    style={{zIndex: 2,
-            position:'absolute',left:0,top: 0,
-            width: monitorCsswidth,
-            height: monitorCssheight,
-            backgroundColor: 'transparent',
-            border: '1px solid rgba(222, 255, 9, 1)'}} />  
-if (universoScene!.orbitControls) {universoScene!.orbitControls.update(); }                         
-*/

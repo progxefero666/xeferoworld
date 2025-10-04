@@ -1,5 +1,9 @@
 //src\app\universo\game\gcamerascfg.ts
 
+
+/**
+ * class GameCamCfg.MCAM_FOV
+ */
 export class GameCamCfg {
 
     public static MCAM_FOV:number = 50.0;
