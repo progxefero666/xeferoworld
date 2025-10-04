@@ -23,7 +23,7 @@ import { PlayerOrbitMonitor, PlayerOrbitMonitorRef }
     from "@/app/universo/game/monitor/playerorbitmonitor";
 
 import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameapplication";
-import { GameAircraft } from "@/app/universo/game/spacegame";
+import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrolpanel";
 
 import { PlayerShipCfg } from "@/app/universo/game/player/playerconfig";

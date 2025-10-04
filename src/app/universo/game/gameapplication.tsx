@@ -10,7 +10,7 @@ import { GameConfig } from "@/app/universo/game/gameconfig";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { LIB_ICON } from "@/radix/rdxthicons";
 import { ButtonsStyle } from "@/radix/rdxtheme";
-import { GameAircraft } from "@/app/universo/game/spacegame";
+import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { FlySystemUtil } from "@/system3d/flysystem/flysystemutil";
 
 const divOverCanvasStyle = {

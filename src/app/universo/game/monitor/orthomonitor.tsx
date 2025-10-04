@@ -12,7 +12,7 @@ import { OrbitCamControl } from "@/zone3d/three/systems/orbitcamcontrol";
 import { XIconButton } from "@/radix/buttons/xiconbutton";
 import { ButtonsStyle } from "@/radix/rdxtheme";
 import { LIB_ICON } from "@/radix/rdxthicons";
-import { GameAircraft } from "@/app/universo/game/spacegame";
+import { GameAircraft } from "@/app/universo/game/gameaircraft";
 
 
 

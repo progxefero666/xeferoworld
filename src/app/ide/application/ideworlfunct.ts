@@ -19,7 +19,7 @@ export class AppWorldFunct {
 
     public static loadAircraft = async (scene:THREE.Scene):Promise<boolean> => {
         
-        const src: string = '/spacegame/player/gamedarkblue.glb';
+        const src: string = '/spacegame/player_lib/gamedarkblue.glb';
         const glObject: THREE.Object3D = await GlbUtil.loadGLB_object(src);
         const objMesh = glObject as THREE.Mesh;
         //(objMesh.material as THREE.MeshPhysicalMaterial).envMapIntensity = 0.0; 

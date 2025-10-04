@@ -79,8 +79,8 @@ export function ThreeApp({}: ThreeAppProps) {
      */
     const animate = () => {
         requestAnimationFrame(animate);
-        //renderer!.render(world.scene,world.camera!);
-        renderer!.render(world.scene,orbitControl!.cam);
+        renderer!.render(world.scene,world.camera!);
+        //renderer!.render(world.scene,orbitControl!.cam);
         
     };//end
 

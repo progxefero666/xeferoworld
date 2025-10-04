@@ -8,7 +8,7 @@ import { RdxThContainers } from "@/radix/rdxthcontainers";
 import { TDimension } from "@/common/types";
 import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameapplication";
-import { GameAircraft } from "@/app/universo/game/spacegame";
+import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { PlayerShipCfg } from "@/app/universo/game/player/playerconfig";
 import { GameScene } from "@/app/universo/game/gamescene";
 import { PlFlyBasicControls } from "./player/controls/flybasiccontrols";
