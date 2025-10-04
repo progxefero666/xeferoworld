@@ -3,20 +3,25 @@
 
 
 import React, { useEffect, useRef, useState } from "react";
-import { Flex} from "@radix-ui/themes";
+import { Box, Flex} from "@radix-ui/themes";
 import { RdxThContainers } from "@/radix/rdxthcontainers";
 import { TDimension } from "@/common/types";
 import { Universo3dConfig } from "@/app/universo/universo3dcfg";
 import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameapplication";
 import { GameAircraft } from "@/app/universo/game/gameaircraft";
-import { PlayerShipCfg } from "@/app/universo/game/player/playerconfig";
+import { PlayerConfig } from "@/app/universo/game/player/playerconfig";
 import { GameScene } from "@/app/universo/game/gamescene";
 import { PlFlyBasicControls } from "./player/controls/flybasiccontrols";
+import { FlyRollControlRef, FlyRollMonitor } from "./player/monitor/flyrollmonitor";
+import { Radar } from "./player/monitor/radar";
+import { XMath2d } from "@/math2d/xmath2d";
 
 //import { GAMEPAD_BUTTONS, GAMEPAD_DEADZONE } from '@/lib/gamepad';
 //import { GamepadsContext } from '@/lib/gamepad/GamepadContext';
 //import { useGamepads } from '@/lib/gamepad/useGamepads';
 
+
+const CONTROL_STYLE = {border: '1px solid rgba(0, 0, 0, 1)',};
 
 const game: GameAircraft = new GameAircraft();
 
@@ -188,6 +193,16 @@ export function SpaceGameMonitor() {
         setWglReady(true);
     };//end
 
+    const flyRollControlRef = useRef<FlyRollControlRef>(null);
+
+    const execControlPlayerRoll = (rollRight: boolean) => {
+        game.execPlayerRoll(rollRight);
+        
+        flyRollControlRef.current!.changeValue(game.player!.roll_angle);
+        //const angleDegrees = XMath2d.toDegrees(game.player!.roll_angle);
+        //console.log(angleDegrees);
+    } ;//end 
+
     // jsx
     //.........................................................................................
     return (
@@ -197,10 +212,21 @@ export function SpaceGameMonitor() {
                 {wglready ? 
                 <PlFlyBasicControls 
                     phyvelocity={game.player!.getCurrVelocityKmH()}
-                    maxphyvelocity={PlayerShipCfg.getMaxVelocityKmH()}
+                    maxphyvelocity={PlayerConfig.getMaxVelocityKmH()}
                     changevelocity={game.changePlayerVelocity}
-                    execroll={game.execPlayerRoll}
+                    execroll={execControlPlayerRoll}
                     execpitch={game.execPlayerPitch} /> : null}
+
+                {wglready ?<Flex width="100%" height="auto" direction="column" >
+                    <Box width="auto" height="182px" style={CONTROL_STYLE}>   
+                        <FlyRollMonitor ref={flyRollControlRef}                                         
+                                        value={0.0}  />
+                    </Box>                       
+                    <Box width="auto" height="182px" style={CONTROL_STYLE}> 
+                        <Radar />
+                    </Box>
+                </Flex> : null}
+
             </Flex> 
 
             <Flex ref={layoutRef} width="82%" direction="column" 

@@ -6,7 +6,7 @@ import { Vector2d } from "@/math2d/math2dtypes";
 // !!!! npm i geometric -S !!! 
 
 /**
- * class XMath2d.ROTATION_90
+ * class XMath2d.toDegrees
  */
 export class XMath2d {
 
@@ -21,6 +21,12 @@ export class XMath2d {
 
     public static toRadians(valueDegrees: number): number {
         return valueDegrees * XMath2d.RAD;
+    };//end
+    
+    public static toDegrees(valueRad: number): number {
+        let valueDegress=  Math.abs(valueRad) * XMath2d.DEG_TO_RAD_FACTOR;
+        if(valueRad < 0) {valueDegress *= (-1);}
+        return valueDegress;
     };//end
 
     public static esPar(numero: number): boolean {

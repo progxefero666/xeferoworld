@@ -13,7 +13,7 @@ import { TCylinderConfig, TDimension3d, Vector3d } from "@/common/types";
 import { System3d } from "@/system3d/system3d";
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
-import { GameCamCfg } from '../gcamerascfg';
+import { GameCamCfg } from '@/app/universo/game/gcamerascfg';
 
 
 /**
@@ -36,46 +36,22 @@ export class PlayerArmyCfg {
         = {radius:0.15,len:1.0,radialseg:16,lenseg:1,color: 0xFFD700};
 
     //military cannons
-    public static CANNON_RU_COORDS:Vector3d = {x: 5.4, y: 1.6, z:-6.4};
-    public static CANNON_RD_COORDS:Vector3d = {x: 5.4, y:-1.6, z:-6.4};
-    public static CANNON_LU_COORDS:Vector3d = {x:-5.4, y: 1.6, z:-6.4};
-    public static CANNON_LD_COORDS:Vector3d = {x:-5.4, y:-1.6, z:-6.4};    
+    public static CANN_RIGHT_COORDS:Vector3d = {x: 6.51, y: -1.0, z:-2.6};
+    public static CANN_LEFT_COORDS:Vector3d  = {x:-6.51, y: -1.0, z:-2.6};
         
     public static getGlCannons():Mesh[] {
 
-        const material:MeshBasicMaterial
-                    = new MeshBasicMaterial( { color: 0xFF00FF } ); 
+        const material:MeshBasicMaterial = new MeshBasicMaterial({color:'#00FF00'}); 
+        const objRight = new Mesh(new SphereGeometry(0.5,16,16),material);
+        objRight.position.set(PlayerArmyCfg.CANN_RIGHT_COORDS.x,
+                                  PlayerArmyCfg.CANN_RIGHT_COORDS.y,
+                                  PlayerArmyCfg.CANN_RIGHT_COORDS.z);
 
-        const gunRefObj_RU = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LU = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-
-        const gunRefObj_RD = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LD = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-
-        gunRefObj_RU.position.set(PlayerArmyCfg.CANNON_RU_COORDS.x,
-                                  PlayerArmyCfg.CANNON_RU_COORDS.y,
-                                  PlayerArmyCfg.CANNON_RU_COORDS.z);
-       gunRefObj_LU.position.set(PlayerArmyCfg.CANNON_LU_COORDS.x,
-                                  PlayerArmyCfg.CANNON_LU_COORDS.y,
-                                  PlayerArmyCfg.CANNON_LU_COORDS.z);
-
-        gunRefObj_RD.position.set(PlayerArmyCfg.CANNON_RD_COORDS.x,
-                                  PlayerArmyCfg.CANNON_RD_COORDS.y,
-                                  PlayerArmyCfg.CANNON_RD_COORDS.z); 
-        gunRefObj_LD.position.set(PlayerArmyCfg.CANNON_LD_COORDS.x,
-                                  PlayerArmyCfg.CANNON_LD_COORDS.y,
-                                  PlayerArmyCfg.CANNON_LD_COORDS.z); 
-
-        const glGuns:Mesh[] = [];
-        glGuns.push(gunRefObj_RU);
-        glGuns.push(gunRefObj_LU);
-        glGuns.push(gunRefObj_RD);        
-        glGuns.push(gunRefObj_LD); 
-        return glGuns;
+        const objLeft = new Mesh(new SphereGeometry(0.5,16,16),material);
+        objLeft.position.set(PlayerArmyCfg.CANN_LEFT_COORDS.x,
+                                  PlayerArmyCfg.CANN_LEFT_COORDS.y,
+                                  PlayerArmyCfg.CANN_LEFT_COORDS.z);
+        return [objRight,objLeft];
     }//end
 
     public static getGlTarget():Mesh {
@@ -92,50 +68,24 @@ export class PlayerArmyCfg {
 export class PlayerEngineCfg {
 
     // engines motors
-    public static ENGINE_RU_COORDS:Vector3d = {x: 1.4, y: 0.94,  z:3.6};
-    public static ENGINE_RD_COORDS:Vector3d = {x: 1.5,y:-1.28, z:3.6};
-    public static ENGINE_LU_COORDS:Vector3d = {x:-1.4, y: 0.94,  z:3.6};
-    public static ENGINE_LD_COORDS:Vector3d = {x:-1.5,y:-1.28, z:3.6};
+    public static ENG_RIGHT_COORDS:Vector3d = {x: 1.4, y: 0.94,  z:3.6};
+    public static ENG_LEFT_COORDS:Vector3d  = {x:-1.4, y: 0.94,  z:3.6};
 
     public static getGlEngines():Mesh[] {
         
-        const material:MeshBasicMaterial
-                    = new MeshBasicMaterial( { color: 0xff0000 } ); 
+        const material:MeshBasicMaterial= new MeshBasicMaterial({color:'#FF0000'}); 
 
-        const engineObj_RU = new Mesh(
-                new SphereGeometry(0.25,32,32),material);
+        const obj_right = new Mesh(new SphereGeometry(0.25,32,32),material);
+        obj_right.position.set(PlayerEngineCfg.ENG_RIGHT_COORDS.x,
+                                  PlayerEngineCfg.ENG_RIGHT_COORDS.y,
+                                  PlayerEngineCfg.ENG_RIGHT_COORDS.z); 
 
-        const engineObj_RD = new Mesh(
-                new SphereGeometry(0.25,32,32),material);
+        const obj_left = new Mesh(new SphereGeometry(0.25,32,32),material);
+        obj_left.position.set(PlayerEngineCfg.ENG_LEFT_COORDS.x,
+                                  PlayerEngineCfg.ENG_LEFT_COORDS.y,
+                                  PlayerEngineCfg.ENG_LEFT_COORDS.z);
 
-        const engineObj_LU = new Mesh(
-                new SphereGeometry(0.25,32,32),material);
-
-        const engineObj_LD = new Mesh(
-                new SphereGeometry(0.25,32,32),material);  
-
-        engineObj_RU.position.set(PlayerEngineCfg.ENGINE_RU_COORDS.x,
-                                  PlayerEngineCfg.ENGINE_RU_COORDS.y,
-                                  PlayerEngineCfg.ENGINE_RU_COORDS.z); 
-
-        engineObj_RD.position.set(PlayerEngineCfg.ENGINE_RD_COORDS.x,
-                                  PlayerEngineCfg.ENGINE_RD_COORDS.y,
-                                  PlayerEngineCfg.ENGINE_RD_COORDS.z);
-
-        engineObj_LU.position.set(PlayerEngineCfg.ENGINE_LU_COORDS.x,
-                                  PlayerEngineCfg.ENGINE_LU_COORDS.y,
-                                  PlayerEngineCfg.ENGINE_LU_COORDS.z);
-
-        engineObj_LD.position.set(PlayerEngineCfg.ENGINE_LD_COORDS.x,
-                                  PlayerEngineCfg.ENGINE_LD_COORDS.y,
-                                  PlayerEngineCfg.ENGINE_LD_COORDS.z);  
-
-        const glEngines:Mesh[] = [];
-        glEngines.push(engineObj_RU);
-        glEngines.push(engineObj_RD);
-        glEngines.push(engineObj_LU);
-        glEngines.push(engineObj_LD);   
-        return glEngines;
+        return [obj_right,obj_left];
     }//end
 
 };//end
@@ -150,8 +100,11 @@ relation factor: 1/290 = 0,003448
 
 /**
  * class PlayerShipCfg
+ *   for --> spacejet 3d object
+ *      dim: width:15.5 height:2.48 m deepth:11.9 m -> cm_y: 1.24  
+ *      ext box: width:15.7 height:2.68 deepth:12.1
  */
-export class PlayerShipCfg {
+export class PlayerConfig {
 
     //public static SOURCE_URL: string = '/spacegame/player/xwing.glb';
     public static SOURCE_URL: string = '/spacegame/player/spacejet.glb';
@@ -162,10 +115,8 @@ export class PlayerShipCfg {
     public static PITCH_AXIS: number = System3d.AXIS_X;
     public static YAW_AXIS: number = System3d.AXIS_Y;
 
-    //ext box: width:6.2 height:1.9 deepth:7.2
-    //cm_y: 1.2  mass: 10000 kg; 11.76/2=5.88
-    public static GLOBJECT_DIM: TDimension3d = {width:11.76,height:2.4,depth:13.4};
-    public static COLLIDER_DIM: TDimension3d = {width:11.96,height:2.6,depth:13.6};
+    public static GLOBJECT_DIM: TDimension3d = {width:15.5,height:2.48,depth:11.9};
+    public static COLLIDER_DIM: TDimension3d = {width:15.7,height:2.68,depth:12.1};
     
     public static PHY_VELOCITY_MAX       = 290; //m/s 
     public static PHY_ACELERATION_MAX    = 36.297; //m/s² 
@@ -178,7 +129,8 @@ export class PlayerShipCfg {
     public static PITCH_VEL_UNIT: number = 0.02;
 
     //crosshair config 
-    public static DIRTARGET_DIST_MAX:number = 90;          
+    public static DIRTARGET_DIST_MAX:number = 90;  
+
     public static CRH_POSITION:number[] = [
         0,GameCamCfg.MCAM_ELVINC,
         PlayerArmyCfg.ATT_DIST_TO_CONVERG*(-1)];    
@@ -186,9 +138,9 @@ export class PlayerShipCfg {
        
     //crosshair gl object 
     public static getGlCrosshair = async () => {    
-        const scale = PlayerShipCfg.CRH_GLOBJ_SCALE;        
+        const scale = PlayerConfig.CRH_GLOBJ_SCALE;        
         const material:THREE.SpriteMaterial = await GenSpriteMaterials
-                .getMaterial(PlayerShipCfg.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
+                .getMaterial(PlayerConfig.CROSSHAIR_MAP_PATH,false,'#FFFFFF',1.0);
         const glCrosshair = new THREE.Sprite(material);
         glCrosshair.scale.set(scale,scale,scale);
         return glCrosshair;
@@ -196,46 +148,7 @@ export class PlayerShipCfg {
 
     //util
     public static getMaxVelocityKmH = ():number => {
-        return FlySystemUtil.tickToKmH(PlayerShipCfg.LN_VEL_MAX);
+        return FlySystemUtil.tickToKmH(PlayerConfig.LN_VEL_MAX);
     };//end
         
 };//end
-
-/*
-    public static getGlTargets():Mesh[] {
-        const material:MeshBasicMaterial
-                    = new MeshBasicMaterial( { color: 0xFFFF00 } ); 
-
-        const gunRefObj_RU = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_RD = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LU = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-        const gunRefObj_LD = new Mesh
-                (new SphereGeometry(0.5,16,16),material);
-
-        const coordZ = PlayerConfig.ATT_DIST_TO_CONVERG * (-1);
-        gunRefObj_RU.position.set(PlayerConfig.CANNON_RU_COORDS.x,
-                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_RU_COORDS.y,
-                                  coordZ);
-        gunRefObj_RD.position.set(PlayerConfig.CANNON_RD_COORDS.x,
-                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_RD_COORDS.y,
-                                  coordZ); 
-
-        gunRefObj_LU.position.set(PlayerConfig.CANNON_LU_COORDS.x,
-                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_LU_COORDS.y,
-                                  coordZ);
-        gunRefObj_LD.position.set(PlayerConfig.CANNON_LD_COORDS.x,
-                                  GameConfig.M_CAMERA_PLINCY+PlayerConfig.CANNON_LD_COORDS.y,
-                                  coordZ); 
-
-        const glTargets:Mesh[] = [];
-        glTargets.push(gunRefObj_RU);
-        glTargets.push(gunRefObj_RD);
-        glTargets.push(gunRefObj_LU);
-        glTargets.push(gunRefObj_LD);         
-        return glTargets;
-    }//end
-
-*/

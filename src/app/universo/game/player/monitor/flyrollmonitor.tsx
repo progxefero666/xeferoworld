@@ -63,6 +63,7 @@ export class FlyRollPainter {
     };
 
     public render(rotation:number) {
+        //alert(rotation);
         this.painter.fillbackColor(this.frontcolor);
         this.painter.drawCf(this.center,this.radiusBorder,2,FlyRollPainter.EXT_BORDER_COLOR);
         this.painter.drawCf(this.center,(this.radiusBorder-2),2,FlyRollPainter.INT_BORDER_COLOR);

@@ -26,7 +26,7 @@ import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameap
 import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { PlFlyControls } from "@/app/universo/game/player/controls/flycontrolpanel";
 
-import { PlayerShipCfg } from "@/app/universo/game/player/playerconfig";
+import { PlayerConfig } from "@/app/universo/game/player/playerconfig";
 import { GameScene } from "@/app/universo/game/gamescene";
 import { OrthoMonitor } from "@/app/universo/game/monitor/orthomonitor";
 
@@ -263,7 +263,7 @@ export function GameLayout() {
             <Flex width="40%" direction="column" py="1" mb="2">
                 {wglready ? <PlFlyControls 
                                    phyvelocity={game.player!.getCurrVelocityKmH()}
-                                   maxphyvelocity={PlayerShipCfg.getMaxVelocityKmH()}
+                                   maxphyvelocity={PlayerConfig.getMaxVelocityKmH()}
                                    changevelocity={game.changePlayerVelocity}
                                    execroll={game.execPlayerRoll}
                                    execpitch={game.execPlayerPitch}
