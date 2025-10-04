@@ -63,15 +63,14 @@ export class FlyRollPainter {
     };
 
     public render(rotation:number) {
-        //alert(rotation);
         this.painter.fillCf(this.center,(this.radiusBorder),this.backcolor);
         this.painter.drawCf(this.center,this.radiusBorder,2,FlyRollPainter.EXT_BORDER_COLOR);
         this.painter.drawCf(this.center,(this.radiusBorder-2),2,FlyRollPainter.INT_BORDER_COLOR);
         const diameterLine:Line2d= CircunfUtil.getCfDiameterLine(this.center,this.radiusObject,rotation);
         const polyPoints:Vector2d[] = CircunfUtil.getCfArcPiPoints(this.center,this.radiusObject,rotation);
         this.painter.fillPolygon(polyPoints,this.objcolor);
-        this.painter.drawLines2d(this.marks,1,"#ffffff");
-        this.painter.drawLine2d(diameterLine,2,"#ffffff");
+        this.painter.drawLines2d(this.marks,1,"#151515ff");
+        this.painter.drawLine2d(diameterLine,2,"#282828ff");
     };
     
 }//end class

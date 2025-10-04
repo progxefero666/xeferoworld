@@ -11,10 +11,9 @@ import { GameWebGlApplication, GameMonitorRef } from "@/app/universo/game/gameap
 import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { PlayerConfig } from "@/app/universo/game/player/playerconfig";
 import { GameScene } from "@/app/universo/game/gamescene";
-import { PlFlyBasicControls } from "./player/controls/flybasiccontrols";
-import { FlyRollControlRef, FlyRollMonitor } from "./player/monitor/flyrollmonitor";
-import { Radar } from "./player/monitor/radar";
-import { XMath2d } from "@/math2d/xmath2d";
+import { PlFlyBasicControls } from "@/app/universo/game/player/controls/flybasiccontrols";
+import { Radar } from "@/app/universo/game/player/monitor/radar";
+
 
 //import { GAMEPAD_BUTTONS, GAMEPAD_DEADZONE } from '@/lib/gamepad';
 //import { GamepadsContext } from '@/lib/gamepad/GamepadContext';
@@ -193,12 +192,9 @@ export function SpaceGameMonitor() {
         setWglReady(true);
     };//end
 
-    //const flyRollControlRef = useRef<FlyRollControlRef>(null);
-
     const execControlPlayerRoll = (rollRight: boolean) => {
         game.execPlayerRoll(rollRight);
         gameMonitorRef.current!.updatecontrols();
-        //flyRollControlRef.current!.changeValue(game.player!.roll_angle);
     } ;//end 
 
     // jsx
@@ -225,9 +221,7 @@ export function SpaceGameMonitor() {
 
             <Flex ref={layoutRef} width="82%" direction="column" 
                   px="2" py="1" gapY="2" mb="2">
-
                 {/*<Box width="100%">{renderLayoutHeader()}</Box> */}
-
                 {wglready ? 
                 <GameWebGlApplication 
                     ref={gameMonitorRef}
@@ -239,27 +233,4 @@ export function SpaceGameMonitor() {
         </Flex>
     );
 
-}//end component
-
-/*
-    <Box width="auto" height="182px" style={CONTROL_STYLE}>   
-        <FlyRollMonitor ref={flyRollControlRef}                                         
-                        value={0.0}  />
-    </Box> 
-    const renderLayoutHeader = () => {
-        return (
-            <Flex width="100%" direction="row" justify="between" pt="1" px="2" pb="2" align="center" >
-                <Box >
-                    <XText value="Layout 3D"
-                        style={TextStyle.ST_CONT_HEADER_COLOR} />
-                </Box>
-                <Flex width="auto" direction="row" gapX="2" align="center" >
-                    <XButton text={OpConstants.OP_TEXT_RESET}
-                        icon={LIB_ICON.RESET}
-                        color={ButtonsStyle.COLOR_RESET}
-                        onclick={onLayoutReset} />
-                </Flex>
-            </Flex>
-        )
-    };//end
-*/
+}//end
