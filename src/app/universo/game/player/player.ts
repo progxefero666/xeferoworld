@@ -15,6 +15,8 @@ import { Math3dUtil } from '@/math3d/functions/math3dutil';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
 import { PlayerArmyCfg, PlayerEngineCfg, PlayerShipCfg } from '@/app/universo/game/player/playerconfig';
 import { System3d } from '@/system3d/system3d';
+import { GameCamCfg } from '../gcamerascfg';
+
 
 /**
  * class GamePlayer
@@ -69,8 +71,8 @@ export class Player {
         this.shipDirection = new MVector3d([0, 0, 1]);
 
         this.targetPivot = new Pivot3d();
-        this.targetPivot.moveInAxis(System3d.AXIS_Y,1,GameConfig.M_CAMERA_PLINCY);
-        this.targetDirection = new MVector3d([0,GameConfig.M_CAMERA_PLINCY,1]);
+        this.targetPivot.moveInAxis(System3d.AXIS_Y,1,GameCamCfg.MCAM_ELVINC);
+        this.targetDirection = new MVector3d([0,GameCamCfg.MCAM_ELVINC,1]);
         
         this.systemAttack = new PlayerSystemAttack(this);
     }//end

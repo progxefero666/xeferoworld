@@ -3,11 +3,12 @@
 import * as THREE from 'three'
 import RAPIER from "@dimforge/rapier3d-compat";
 
-import { GameConfig } from '@/app/universo/game/gameconfig';
+
 import { GameScene } from '@/app/universo/game/gamescene';
 import { TDimension } from '@/common/types';
 import { Player } from '@/app/universo/game/player/player';
 import { PlayerShipCfg } from './player/playerconfig';
+import { GameCamCfg } from './gcamerascfg';
 
 /*
 export const initRapier = async () => {
@@ -18,6 +19,7 @@ export const initRapier = async () => {
     return world;
 };
 */
+
 
 /**
  * class GameAircraft
@@ -58,11 +60,18 @@ export class GameAircraft {
     }//end
 
     public chargeCameraPlayer = (canvasDim:TDimension) => {
-        const aspect  =canvasDim.width/ canvasDim.height;
-        this.cameraPlayer = new THREE.PerspectiveCamera
-            (GameConfig.M_CAMERA_FOV,aspect,GameConfig.M_CAMERA_NEAR,GameConfig.M_CAMERA_FAR);
-        this.cameraPlayer.position
-            .set(0,GameConfig.M_CAMERA_PLINCY,GameConfig.M_CAMERA_PLDIST);   
+        
+        const elevAdd     = GameCamCfg.MCAM_ELVINC;
+        const distance    = GameCamCfg.MCAM_DIST;
+        const aspect      = canvasDim.width/ canvasDim.height;
+
+        this.cameraPlayer = new THREE.PerspectiveCamera(
+            GameCamCfg.MCAM_FOV,
+            aspect,
+            GameCamCfg.MCAM_NEAR,
+            GameCamCfg.MCAM_FAR);
+
+        this.cameraPlayer.position.set(0,elevAdd,distance);   
         this.player!.glmachine?.add(this.cameraPlayer);
     };//end
 

@@ -12,12 +12,9 @@ import {
 import { TCylinderConfig, TDimension3d, Vector3d } from "@/common/types";
 import { System3d } from "@/system3d/system3d";
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
-import { GameConfig } from '@/app/universo/game/gameconfig';
 import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
+import { GameCamCfg } from '../gcamerascfg';
 
-/*
-
-*/
 
 /**
  * class PlayerCfg
@@ -183,7 +180,7 @@ export class PlayerShipCfg {
     //crosshair config 
     public static DIRTARGET_DIST_MAX:number = 90;          
     public static CRH_POSITION:number[] = [
-        0,GameConfig.M_CAMERA_PLINCY,
+        0,GameCamCfg.MCAM_ELVINC,
         PlayerArmyCfg.ATT_DIST_TO_CONVERG*(-1)];    
     public static CRH_GLOBJ_SCALE:number= 0.15; 
        

@@ -36,12 +36,7 @@ export class GameConfig {
     public static INIT_ROTATION:number[] = [0,0,0];
     public static INIT_POSITION:number[] = [0,0,0];
 
-    public static M_CAMERA_FOV:number = 50.0;
-    public static M_CAMERA_NEAR:number = 0.1;
-    public static M_CAMERA_FAR:number = 8000;
 
-    public static M_CAMERA_PLDIST:number = 20.0;
-    public static M_CAMERA_PLINCY:number = 4.0;
 
 
 }//end
