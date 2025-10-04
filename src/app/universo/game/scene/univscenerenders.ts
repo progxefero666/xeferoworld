@@ -8,7 +8,7 @@ import { GeoUtil } from '@/zone3d/three/util/geoutil';
 import { TDimension3d } from '@/common/types';
 import { ThreeFbxUtil } from '@/zone3d/three/loaders/threefbxutil';
 
-
+/*
 export const loadStarts = async(scene: THREE.Scene) => {
     console.log("loadTestObjects");
     const stars:THREE.Mesh[] = ThreeGenSpheres.getAleatMiniSpheres(10000, System3dConfig.CC, 500,1000);
@@ -16,6 +16,7 @@ export const loadStarts = async(scene: THREE.Scene) => {
         scene.add(stars[objIndex]);
     }
 };//end
+*/
 
 export const loadFighter = async(scene: THREE.Scene) => {
     const obj_avion:THREE.Object3D  = await ThreeFbxUtil.loadFbx('/models3d/avion.fbx');

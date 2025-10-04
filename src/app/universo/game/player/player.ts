@@ -17,6 +17,7 @@ import { PlayerArmyCfg, PlayerEngineCfg, PlayerConfig } from '@/app/universo/gam
 import { System3d } from '@/system3d/system3d';
 import { GameCamCfg } from '../gcamerascfg';
 import { GeoUtil } from '@/zone3d/three/util/geoutil';
+import { GenColorMaterial } from '@/zone3d/three/materials/genmatcolor';
 
 
 /**
@@ -25,6 +26,8 @@ import { GeoUtil } from '@/zone3d/three/util/geoutil';
 export class Player {
 
     public readonly upWorld = new THREE.Vector3(0, 1, 0);
+
+    public shipDim: THREE.Vector3 =new THREE.Vector3();
 
     public shipPivot: Pivot3d;
     public shipDirection: MVector3d;  
@@ -57,7 +60,9 @@ export class Player {
     public tmpQ = new THREE.Quaternion();
 
     // gl objects
-    public glmachine: THREE.Object3D|null = null;    
+    public glmachine: THREE.Object3D|null = null;       
+    public glrigidbody: THREE.Mesh|null = null;  
+
     public glCrosshair: THREE.Sprite|null = null;
     public glEngines:THREE.Mesh[] = [];
     public glCannonsObjs:THREE.Mesh[] = [];
@@ -80,17 +85,32 @@ export class Player {
 
     public async init(): Promise<boolean> {
         this.ln_velocity = FlySystemUtil.msToTick(GameConfig.INIT_LVELOCITY); 
-        this.glmachine = await GlbUtil.loadGLB_object(PlayerConfig.SOURCE_URL);
 
-        const dim3d:TDimension3d =  GeoUtil.getSingleObjBounds( this.glmachine);
-        console.log(dim3d);
-        
+        //read gl file object and update 3d dimension
+        this.glmachine = await GlbUtil.loadGLB_object(PlayerConfig.SOURCE_URL);
+        const objMesh = this.glmachine as THREE.Mesh;
+        objMesh.geometry.attributes.position.needsUpdate = true;
+        objMesh.geometry.computeBoundingBox();
+        objMesh.geometry.boundingBox!.getSize(this.shipDim);
+
+        this.createRigidBody();
         await this.loadCrosshair();        
         this.initGuns();
+
         //this.glmachine.add(new THREE.AxesHelper(2)); 
         //this.initGlPivot();
         //this.initEngines();        
         return true;
+    };//end
+
+    public createRigidBody = () => {
+        //create gl ext rigid body 3d rect box
+        const boxMaterial = GenColorMaterial.getGridMaterial('#FF00FF',1.0);
+
+        const boxGeometry = new THREE.BoxGeometry
+            (this.shipDim.x,this.shipDim.y,this.shipDim.z,2,1,2); 
+        this.glrigidbody = new THREE.Mesh(boxGeometry,boxMaterial);  
+        this.glmachine!.add(this.glrigidbody);
     };//end
 
     public initGuns = () => {
