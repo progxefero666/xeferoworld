@@ -13,6 +13,8 @@ import { PlayerConfig } from "@/app/universo/game/player/playerconfig";
 import { GameScene } from "@/app/universo/game/gamescene";
 import { PlFlyBasicControls } from "@/app/universo/game/player/controls/flybasiccontrols";
 import { Radar } from "@/app/universo/game/player/monitor/radar";
+import { GameConfig } from "./gameconfig";
+import { GameScenePainterMap } from "./scene/scenepaintermap";
 
 
 //import { GAMEPAD_BUTTONS, GAMEPAD_DEADZONE } from '@/lib/gamepad';
@@ -21,6 +23,7 @@ import { Radar } from "@/app/universo/game/player/monitor/radar";
 
 
 const CONTROL_STYLE = {border: '1px solid rgba(0, 0, 0, 1)',};
+const mapCanvasDim: TDimension = {width:182,height:182}
 
 const game: GameAircraft = new GameAircraft();
 
@@ -165,10 +168,21 @@ export function SpaceGameMonitor() {
     const gameMonitorRef = useRef<GameMonitorRef>(null);
     const [gameScene, setGameScene] = useState<GameScene | null>(null);
 
+    const scenePainterRef = useRef<GameScenePainterMap>(null);
+    const mapCanvasRef = useRef<HTMLCanvasElement>(null);
+
     useEffect(() => {
         const init = async () => {
             if (typeof window === "undefined" || typeof document === "undefined") return;
 
+            if(!mapCanvasRef.current!.getContext("2d")){return;}
+            
+            const ctx = mapCanvasRef.current!.getContext("2d");
+            if (ctx) {
+                //const glCanvas = mapCanvasRef.current!;                
+                scenePainterRef.current = new GameScenePainterMap(ctx,mapCanvasDim);
+            }
+                    
             const dim_width  = layoutRef.current?.clientWidth ?? Universo3dConfig.GL_LAYOUT_W_DEF;
             canvasDim.current.width = Math.floor(dim_width);
             canvasDim.current.height = Universo3dConfig.GL_LAYOUT_H;
@@ -197,12 +211,19 @@ export function SpaceGameMonitor() {
         gameMonitorRef.current!.updatecontrols();
     } ;//end 
 
+    /*
+            <canvas ref={threeContainerRef}
+                    style={{zIndex:1, position:'absolute',left:0,top:0,
+                            width:monCsswidth, height:monCssheight,
+                            backgroundColor: GameConfig.SCENE_BACKCOLOR}} />    
+    */
+
     // jsx
     //.........................................................................................
     return (
         <Flex width="100%" direction="row" style={RdxThContainers.PRIMARY_CONTENT} >
 
-            <Flex width="18%" direction="column" py="1" mb="2">
+            <Flex width="184px" direction="column" py="1" mb="2">
                 {wglready ? 
                 <PlFlyBasicControls 
                     phyvelocity={game.player!.getCurrVelocityKmH()}
@@ -210,6 +231,12 @@ export function SpaceGameMonitor() {
                     changevelocity={game.changePlayerVelocity}
                     execroll={execControlPlayerRoll}
                     execpitch={game.execPlayerPitch} /> : null}
+
+                <Flex width="100%" height="auto" direction="column" > 
+                    <canvas ref={mapCanvasRef}
+                            width="182px" height="182px"
+                            style={{backgroundColor:'#a1792f'}} />                    
+                </Flex>
 
                 {wglready ?<Flex width="100%" height="auto" direction="column" >                      
                     <Box width="auto" height="182px" style={CONTROL_STYLE}> 

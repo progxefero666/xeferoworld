@@ -47,7 +47,7 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
     const monCsswidth:string      = canvasdim.width + "px";
     const monCssheight:string     = canvasdim.height + "px";
     
-    const scenePainterRef = useRef<GameScenePainterMap>(null);
+    
     const playerControlsRef = useRef<HTMLDivElement>(null);
     const flyRollControlRef = useRef<FlyRollControlRef>(null);
 
@@ -56,15 +56,6 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
         if (typeof window === "undefined" || typeof document === "undefined") return;
         if (wglready) { return; }
 
-        if(!threeContainerRef.current!.getContext("2d")){return;}
-
-        /*
-        const ctx = threeContainerRef.current!.getContext("2d");
-        if (ctx) {
-            //const glCanvas = threeContainerRef.current!;
-            scenePainterRef.current = new GameScenePainterMap(ctx, canvasdim);
-        }
-        */
         createGlRendered();
         loadFixDebugCamera();
         setWglReady(true);
