@@ -15,6 +15,7 @@ import { FlySystemUtil } from "@/system3d/flysystem/flysystemutil";
 import { GameCamCfg } from "./gcamerascfg";
 import { FlyRollControlRef, FlyRollMonitor } from "./player/monitor/flyrollmonitor";
 import { XMath2d } from "@/math2d/xmath2d";
+import { GameScenePainterMap } from "./scene/scenepaintermap";
 
 const divOverCanvasStyle = {
     backgroundColor: 'none',
@@ -37,6 +38,7 @@ interface GameMonitorProps {
 let renderer: THREE.WebGLRenderer | null = null;
 let fixCamera: THREE.PerspectiveCamera | null = null;
 
+
 export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>((props, ref) => {
     
     const {canvasdim,gamesc,game} = props;
@@ -45,13 +47,24 @@ export const GameWebGlApplication = forwardRef<GameMonitorRef, GameMonitorProps>
     const monCsswidth:string      = canvasdim.width + "px";
     const monCssheight:string     = canvasdim.height + "px";
     
+    const scenePainterRef = useRef<GameScenePainterMap>(null);
     const playerControlsRef = useRef<HTMLDivElement>(null);
     const flyRollControlRef = useRef<FlyRollControlRef>(null);
+
 
     useEffect(() => {
         if (typeof window === "undefined" || typeof document === "undefined") return;
         if (wglready) { return; }
 
+        if(!threeContainerRef.current!.getContext("2d")){return;}
+
+        /*
+        const ctx = threeContainerRef.current!.getContext("2d");
+        if (ctx) {
+            //const glCanvas = threeContainerRef.current!;
+            scenePainterRef.current = new GameScenePainterMap(ctx, canvasdim);
+        }
+        */
         createGlRendered();
         loadFixDebugCamera();
         setWglReady(true);
