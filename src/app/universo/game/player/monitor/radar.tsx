@@ -4,7 +4,9 @@ import React, { useRef, forwardRef, useImperativeHandle, useEffect } from "react
 import { Box } from "@radix-ui/themes";
 import { Point2d, TDimension } from "@/common/types";
 import { TCfMarksConfig } from "@/lib/graph2d/types2d";
-import { CvPainter } from "@/lib/graph2d/painters/cvpaint";
+
+import { CanvasPainter } from "src/app/universo/game/scene/canvaspainter";
+import { Planedriver } from "@/lib/graph2d/planedriver";
 
 export const CTR_MARKS_CONFIG: TCfMarksConfig = {
     color: "#ffffff",
@@ -19,37 +21,43 @@ interface RadarProps {
 };
 
 export interface RadarRef {
-    changeValue: (newValue: number) => void;
+    updateScene: (elements:any[]) => void;
 };
 
 const EXT_BORDER_COLOR: any = "#2d2d2dff";
 const INT_BORDER_COLOR: any = "#0a0a0aff";
+
+let driver:Planedriver;
 
 export const Radar = forwardRef<RadarRef, RadarProps>((props, ref) => {
 
     const sideLength = 180;
     const cssSideLen = '180px';
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const cvPainter = useRef<CvPainter | null>(null);
+    const cvPainter = useRef<CanvasPainter | null>(null);
     
     useEffect(() => {
        const canvas = canvasRef.current;
         if (!canvas) return;
         if (!canvas.getContext("2d")) return;
         const cvDim:TDimension = {width:sideLength,height:sideLength};
-        cvPainter.current = new CvPainter
+        cvPainter.current = new CanvasPainter
             (canvas.getContext("2d")!,cvDim,"#207100ff");
-        renderCanvas();
+        driver = new Planedriver(cvDim);
+        renderLayout();
     }, []);
     
-    const changeValue = (value: number) => {     
+
+    useImperativeHandle(ref, () => ({updateScene,}), []);
+
+    const updateScene = (elements:any[]) => {  
+        
     };
 
-    useImperativeHandle(ref, () => ({
-        changeValue,
-    }), []);
-
-    const renderCanvas = () => {
+    //.....................................................................................
+    // render base elements, not data
+    //.....................................................................................
+    const renderLayout = () => {
         renderBase();
         renderGrid();
         renderAxis();
@@ -70,14 +78,12 @@ export const Radar = forwardRef<RadarRef, RadarProps>((props, ref) => {
     const renderGrid = () => {
         const countSubdiv:number = 28;
         const lenUnit:number = sideLength/countSubdiv;
-
         for (let x=0;x<countSubdiv;x++) {
             const coordX:number = Math.floor(x*lenUnit);
             const start:Point2d = {x:coordX,y:2};
             const end:Point2d   = {x:coordX,y:sideLength-2};
             cvPainter.current!.drawLine(start,end,1,"rgba(0,0,0,0.5)");
         }
-
         for (let y=0;y<countSubdiv;y++) {
             const coordY:number = Math.floor(y*lenUnit);
             const start:Point2d = {x:2,y:coordY};
@@ -109,15 +115,28 @@ export const Radar = forwardRef<RadarRef, RadarProps>((props, ref) => {
         for (let cfIdx=1;cfIdx<=countCfs;cfIdx++) {
             const radius:number = cfIdx*radiusInc;
             cvPainter.current!.drawCf(center,radius,1,cfsColor);
-        }
-        
+        }        
+    };//end
+    //.....................................................................................
+
+    //.....................................................................................
+    // render data: scene elements
+    //.....................................................................................
+    //const point = this.driver.getPoint(endPoint); 
+    //const points = this.driver.getListPoint(endPoint);    
+    
+    const renderScene = () => {
+
     };//end
 
+    //.....................................................................................
+
+    // jsx
+    //.....................................................................................
     return (
         <Box width="auto" height="auto" >
-            <canvas ref={canvasRef}
-                    width={cssSideLen}
-                    height={cssSideLen}/>
+            <canvas ref={canvasRef} width={cssSideLen} height={cssSideLen}/>
         </Box>
     );
+
 })//end

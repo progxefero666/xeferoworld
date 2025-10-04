@@ -6,7 +6,7 @@ import { RdxThContainers } from "@/radix/rdxthcontainers";
 import { FXColumnSlider } from "@/radix/future/columnslider";
 
 import { FlyRollMonitor, FlyRollControlRef } 
-    from "@/app/universo/game/player/monitor/flyrollmonitor";
+    from "@/app/universo/game/player/monitor/flyroll";
 import { FlyControlRoll } from "src/app/universo/game/player/controls/flycontrolroll";
 
 

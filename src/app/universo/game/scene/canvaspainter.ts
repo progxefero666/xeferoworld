@@ -32,7 +32,7 @@ export class CanvasPainter {
         this.center.y = Math.floor(this.dim.height / 2);
     };//end
 
-    public fillback(color: string) {
+    public fillback() {
         this.ctx.fillStyle = this.backcolor;
         this.ctx.fillRect(0, 0, this.dim.width, this.dim.height);
     }
@@ -93,7 +93,6 @@ export class CanvasPainter {
         this.ctx.stroke();
     }//end 
 
-    /*
     // lines
     //.................................................................................    
 
@@ -107,6 +106,18 @@ export class CanvasPainter {
         this.ctx.stroke();
     }//end
 
+    // rectangles
+    //.................................................................................
+    
+    public drawRect(point: Point2d, dim: TDimension, color: string) {
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = color;
+        this.ctx.strokeRect(point.x, point.y, dim.width, dim.height);
+        this.ctx.stroke();
+    };//end
+
+    /*
+
     public drawLine2d(line2d:Line2d,lineWidth:number,color:string) {
         this.drawLine(line2d.start,line2d.end,lineWidth,color);
     };//end
@@ -117,15 +128,7 @@ export class CanvasPainter {
         }
     };//end
 
-    // rectangles
-    //.................................................................................
-    
-    public drawRect(point: Point2d, dim: TDimension, color: string) {
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeStyle = color;
-        this.ctx.strokeRect(point.x, point.y, dim.width, dim.height);
-        this.ctx.stroke();
-    };//end
+
 
     public fillRect(point: Point2d, dim: TDimension, color: string) {
         this.ctx.fillStyle = color;

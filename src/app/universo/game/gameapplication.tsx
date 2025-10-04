@@ -13,7 +13,7 @@ import { ButtonsStyle } from "@/radix/rdxtheme";
 import { GameAircraft } from "@/app/universo/game/gameaircraft";
 import { FlySystemUtil } from "@/system3d/flysystem/flysystemutil";
 import { GameCamCfg } from "./gcamerascfg";
-import { FlyRollControlRef, FlyRollMonitor } from "./player/monitor/flyrollmonitor";
+import { FlyRollControlRef, FlyRollMonitor } from "./player/monitor/flyroll";
 import { XMath2d } from "@/math2d/xmath2d";
 import { GameScenePainterMap } from "./scene/scenepaintermap";
 
