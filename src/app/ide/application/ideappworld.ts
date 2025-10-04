@@ -67,9 +67,8 @@ export class IdeAppWorld {
     public loadLights = () => {   
         if(this.useWorldLights){
             //const dirLight:THREE.DirectionalLight = LightsUtil.createDirectLight('#FFFFFF',4);
-
-            const color = 0x0000FF;
-            const intensity = 10;
+            const color = 0xFFFFFF;
+            const intensity = 2;
             const light = new THREE.DirectionalLight(color, intensity);
             light.position.set(0, 10, 0);
             light.target.position.set(0, -10, 0);

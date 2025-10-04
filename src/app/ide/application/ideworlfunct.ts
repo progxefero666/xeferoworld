@@ -8,27 +8,27 @@ import * as THREE from 'three';
  */
 export class AppWorldFunct {
 
+    /*
+    //const src: string = '/spacegame/player/xwing8k.glb';
+    //const src: string = '/spacegame/player/xwingfewpolys.glb';
+    //Longitud: 19'10 m. ; Altura: 4'88 m
+    //const src: string = '/spacegame/player/aircraftblackhigh.glb';        
+    //const src: string = '/spacegame/player/spaceshipAfewpolys.glb';     
+    */
+
+
     public static loadAircraft = async (scene:THREE.Scene):Promise<boolean> => {
-
-        //const src: string = '/spacegame/player/xwing8k.glb';
-        //Longitud: 19'10 m. ; Altura: 4'88 m
-        //const src: string = '/spacegame/player/aircraftblackhigh.glb';        
-        //const src: string = '/spacegame/player/spaceshipAfewpolys.glb';        
         
-
-        //const src: string = '/spacegame/player/xwingfewpolys.glb';
         const src: string = '/spacegame/player/gamedarkblue.glb';
         const glObject: THREE.Object3D = await GlbUtil.loadGLB_object(src);
-    
-        //material.clearcoat = 0.7;
-        //material.clearcoatRoughness = 0.08; 
-        //material.normalScale.set(1.0,1.0);
-        //material.ior = 1.5;
-
         const objMesh = glObject as THREE.Mesh;
-        (objMesh.material as THREE.MeshPhysicalMaterial).envMapIntensity = 0.0; 
-        (objMesh.material as THREE.MeshPhysicalMaterial).roughness = 0.5; 
-        (objMesh.material as THREE.MeshPhysicalMaterial).metalness = 0.5; 
+        //(objMesh.material as THREE.MeshPhysicalMaterial).envMapIntensity = 0.0; 
+        (objMesh.material as THREE.MeshPhysicalMaterial).roughness = 0.2; 
+        (objMesh.material as THREE.MeshPhysicalMaterial).metalness = 0.3; 
+        (objMesh.material as THREE.MeshPhysicalMaterial).clearcoat = 0.7; 
+        (objMesh.material as THREE.MeshPhysicalMaterial).clearcoatRoughness = 0.08; 
+        //(objMesh.material as THREE.MeshPhysicalMaterial).normalScale.set(1.0,1.0);
+        //(objMesh.material as THREE.MeshPhysicalMaterial).ior = 1.5;        
         (objMesh.material as THREE.MeshPhysicalMaterial).needsUpdate = true;                
         scene.add(objMesh);
         return true;

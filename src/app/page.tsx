@@ -1,48 +1,26 @@
 'use client';
 
-import { useEffect } from "react";
-import { Grid, Flex } from "@radix-ui/themes";
-import { ThreeApp } from "./ide/application/threeapp";
-
-const LAYOUT_DEF = {
-    background: 'rgba(0, 0, 0, 1)'
-};
-const PRIMBAR_STYLE = {
-    background: 'rgba(198, 17, 17, 1)'
-};
-const header_CONTENT = {
-    backgroundColor: 'rgba(0, 0, 0, 1)'
-};
+import { useRouter } from "next/navigation";
+import { Universo3dConfig } from "@/app/universo/universo3dcfg";
+import { SpaceGameMonitor } from "./universo/game/gamemonitor";
+import { LayoutPageGame } from "@/layouts/lypagegame";
 
 /**
- * PageXeThreeIde
+ * Page Space Game
  */
-export default function PageXeThreeIde()  {
+export default function PageSpaceGame() {
+
+    const router = useRouter();
+    const loadSection = (sectionId: string) => {        
+        const route:string = Universo3dConfig.APP_FOLDER + sectionId;
+        router.push(route);
+    };
 
     return (
-        
-        <Grid height="100vh" rows="auto 1fr" columns="16% 80% 4%" style={LAYOUT_DEF}>
-
-            <Flex height="40px" gridColumn="1/4" gridRow="1" >                
-                <Flex width="100%" direction="column" gapY="2" 
-                    style={header_CONTENT} >
-                    Xefero I
-                </Flex>
-            </Flex>
-
-            <Flex gridColumn="1" gridRow="2" style={PRIMBAR_STYLE}>
-                Side Bar
-            </Flex>
-
-            <Flex gridColumn="2" gridRow="2" >
-                <ThreeApp />
-            </Flex>
-
-            <Flex gridColumn="3" gridRow="2" >
-                rbar
-            </Flex>
-
-        </Grid>
+        <LayoutPageGame 
+            main        = {<SpaceGameMonitor />}
+            options     = {[]} 
+            onselection = {loadSection} />
     );
 
 }//end page

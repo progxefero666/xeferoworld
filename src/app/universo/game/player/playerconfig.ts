@@ -156,8 +156,8 @@ relation factor: 1/290 = 0,003448
  */
 export class PlayerShipCfg {
 
-    //public static SOURCE_URL: string = '/spacegame/player/xwingfinal.glb';
-    public static SOURCE_URL: string = '/spacegame/player/xwingfewpolys.glb';
+    public static SOURCE_URL: string = '/spacegame/player/xwingfinal.glb';
+    //public static SOURCE_URL: string = '/spacegame/player/xwingfewpolys.glb';
     
     public static CROSSHAIR_MAP_PATH: string = '/spacegame/spritemaps/crosshairwhite.png'
 
