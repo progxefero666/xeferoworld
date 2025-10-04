@@ -178,10 +178,7 @@ export function SpaceGameMonitor() {
             if(!mapCanvasRef.current!.getContext("2d")){return;}
             
             const ctx = mapCanvasRef.current!.getContext("2d");
-            if (ctx) {
-                //const glCanvas = mapCanvasRef.current!;                
-                scenePainterRef.current = new GameScenePainterMap(ctx,mapCanvasDim);
-            }
+            scenePainterRef.current = new GameScenePainterMap(ctx!,mapCanvasDim);
                     
             const dim_width  = layoutRef.current?.clientWidth ?? Universo3dConfig.GL_LAYOUT_W_DEF;
             canvasDim.current.width = Math.floor(dim_width);
@@ -210,13 +207,6 @@ export function SpaceGameMonitor() {
         game.execPlayerRoll(rollRight);
         gameMonitorRef.current!.updatecontrols();
     } ;//end 
-
-    /*
-            <canvas ref={threeContainerRef}
-                    style={{zIndex:1, position:'absolute',left:0,top:0,
-                            width:monCsswidth, height:monCssheight,
-                            backgroundColor: GameConfig.SCENE_BACKCOLOR}} />    
-    */
 
     // jsx
     //.........................................................................................

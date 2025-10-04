@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { GlbUtil } from '@/zone3d/three/loaders/glbutil';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
 import { Pivot3d } from '@/math3d/pivot/pivot3d';
-import { Plane3dPoint,Vector3d } from "@/common/types";
+import { Plane3dPoint,TDimension3d,Vector3d } from "@/common/types";
 import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
 import { GameConfig } from '@/app/universo/game/gameconfig';
 import { Sys3dThreeUtil } from '@/system3d/util/sys3dthreeutil';
@@ -16,6 +16,7 @@ import { GenSpriteMaterials } from '@/zone3d/three/materials/genmatsprite';
 import { PlayerArmyCfg, PlayerEngineCfg, PlayerConfig } from '@/app/universo/game/player/playerconfig';
 import { System3d } from '@/system3d/system3d';
 import { GameCamCfg } from '../gcamerascfg';
+import { GeoUtil } from '@/zone3d/three/util/geoutil';
 
 
 /**
@@ -80,6 +81,10 @@ export class Player {
     public async init(): Promise<boolean> {
         this.ln_velocity = FlySystemUtil.msToTick(GameConfig.INIT_LVELOCITY); 
         this.glmachine = await GlbUtil.loadGLB_object(PlayerConfig.SOURCE_URL);
+
+        const dim3d:TDimension3d =  GeoUtil.getSingleObjBounds( this.glmachine);
+        console.log(dim3d);
+        
         await this.loadCrosshair();        
         this.initGuns();
         //this.glmachine.add(new THREE.AxesHelper(2)); 

@@ -1,7 +1,7 @@
 //src\universo3d\game\player\playerarmy.ts
 
 import * as THREE from 'three';
-import { FlySystemUtil } from '@/system3d/flysystem/flysystemutil';
+
 
 import { TCylinderConfig, Vector3d } from '@/common/types';
 import { MVector3d } from '@/math3d/pivot/mathpivot3d';
