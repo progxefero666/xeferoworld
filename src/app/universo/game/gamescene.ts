@@ -19,7 +19,7 @@ export class GameScene {
     public scene: THREE.Scene;
     public terrain:THREE.Object3D|null=null;
     public plane: THREE.Mesh|null = null;
-    public modeGrid:boolean = true;
+    public modeGrid:boolean = false;
 
     public skyboxInit:THREE.Mesh|null=null;
     public terrainBlocks:THREE.Mesh[] = []; 

@@ -206,7 +206,7 @@ export function GameLayout() {
         if (!result) { alert("Error loading game"); return; }
 
         const game_scene: GameScene = new GameScene(true);
-        //game_scene.loadPlayer(game.player!.glmachine!);
+        game_scene.loadPlayer(game.player!.glmachine!);
         //game.chargeRapierWorld(game_scene);
 
         setGameScene(game_scene);

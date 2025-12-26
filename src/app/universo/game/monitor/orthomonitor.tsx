@@ -27,7 +27,7 @@ interface OrthoMonitorProps {
 
 export function OrthoMonitor({ canvasdim, gamesc, game }: OrthoMonitorProps) {
 
-    const heightValue:number = 50;//200
+    const heightValue:number = 30;//200
     const monCsswidth = canvasdim.width + "px";
     const monCssheight = canvasdim.height + "px";
     const threeContainerRef = useRef<HTMLCanvasElement>(null);
@@ -56,7 +56,7 @@ export function OrthoMonitor({ canvasdim, gamesc, game }: OrthoMonitorProps) {
 
     const chargeCamera = () => {
         const aspect = canvasdim.width / canvasdim.height;
-        const viewSize = 50;
+        const viewSize = 25;
         const top = viewSize / 2;
         const bottom = -top;
         const right = top * aspect;

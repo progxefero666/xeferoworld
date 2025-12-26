@@ -24,6 +24,7 @@ export class MainScene {
     public cameraElev: number = 1.0;
 
     public terrain:THREE.Object3D|null=null;
+    public cell_one:THREE.Object3D|null=null;
 
     constructor(onSceneCharged:() => void) {
         this.loadCamera();
@@ -36,6 +37,10 @@ export class MainScene {
     public  loadInitObjects = async (onSceneCharged:() => void) => {
         //this.terrain = await GlbUtil.loadGLB_object(CharacterSystem.SRC_TERRAIN);
         //this.scene.add(this.terrain); 
+
+        this.cell_one = await GlbUtil.loadGLB_object(CharacterSystem.SRC_CELL_MOD_A);
+        this.scene.add(this.cell_one);         
+
         console.log('terrain loaded');
         onSceneCharged();
     };

@@ -1,26 +1,37 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { Universo3dConfig } from "@/app/universo/universo3dcfg";
-import { SpaceGameMonitor } from "./universo/game/gamemonitor";
-import { LayoutPageGame } from "@/layouts/lypagegame";
+import { useEffect } from "react";
+import { AppConfig } from "@/app/index/appconfig";
+import { LayoutPageOneColumn } from "@/layouts/lypageonecolumn";
+import { PageMain } from "@/app/index/main";
+import { PageHeader } from "@/app/index/header";
+
 
 /**
- * Page Space Game
+ * Web App Home Page Client Component (Main View)
  */
-export default function PageSpaceGame() {
+export default function PageHome() {
 
     const router = useRouter();
-    const loadSection = (sectionId: string) => {        
-        const route:string = Universo3dConfig.APP_FOLDER + sectionId;
-        router.push(route);
+    useEffect(() => {
+        //loadSection(AppConfig.MOD_CHARACTERS.id);
+        //loadSection(AppConfig.MOD_UNIVERSO.id);
+        //loadSection(AppConfig.IMAGE_TOOLS.id);
+        //loadSection(AppConfig.MOD_TERRAINS.id);
+    }, []);
+        
+    const loadSection = (sectionId: string) => {
+        router.push(`/${sectionId}`);
     };
 
     return (
-        <LayoutPageGame 
-            main        = {<SpaceGameMonitor />}
-            options     = {[]} 
-            onselection = {loadSection} />
+        <LayoutPageOneColumn 
+            headertitle   = {"Xefero AI"} 
+            headercontent = {<PageHeader />}
+            main          = {<PageMain />}
+            options       = {AppConfig.MODULES} 
+            onselection   = {loadSection} />
     );
 
 }//end page

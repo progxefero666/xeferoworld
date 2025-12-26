@@ -32,7 +32,8 @@ export class CharacterSystem {
     public static ARMBODY_ANM_ACTBASE:string = "default";
 
     public static SRC_TERRAIN: string='/terrains/terrain.glb';
-
+    public static SRC_CELL_MOD_A: string='/terrains/roomA_hp.glb';
+    
     //const frameDuration = 1/CharacterSystem.FRAME_RATE;
     
 }//end
