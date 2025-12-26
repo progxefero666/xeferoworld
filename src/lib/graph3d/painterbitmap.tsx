@@ -5,7 +5,7 @@ import { Box,Flex, } from "@radix-ui/themes";
 
 import { TDimension } from "@/common/types";
 import { CvPainter } from "@/lib/graph2d/painters/cvpaint";
-import { Point2d } from "../../lib/graph2d/types2d";
+import { Point2d } from "../graph2d/types2d";
 
 //import { PainterTextureCanvas } from "@/zone3d/textures/texturecanvas";
 
